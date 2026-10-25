@@ -14,9 +14,9 @@ class Lattice:
 
     def get_number_of_nodes_up_to_layer( self, layer_num : int ):
         # a = 1 to layer_num case of an incrementing series
-        output = 1
+        output = 0
 
-        if layer_num != 0:
+        if layer_num > 0:
             output = int( ( ( 1 + layer_num ) * layer_num ) / 2 )
 
         return output
@@ -88,5 +88,60 @@ class Lattice:
 
         return output
 
-    # TODO: Define parent logic
+    def get_node_layer_index( self, index : int ):
+        output = None
+
+        layer_num = self.get_node_layer( index )
+        # Getting number of nodes in previous layer
+        # and subtracting from the index
+        output = index - self.get_number_of_nodes_up_to_layer( layer_num - 1 )
+
+        return output
+
+    def does_node_have_up_parent( self, index : int ):
+        output = True
+
+        layer_num = self.get_node_layer( index )
+        node_layer_index = self.get_node_layer_index( index )
+
+        if node_layer_index == layer_num - 1:
+            output = False
+
+        return output
+
+    def does_node_have_down_parent( self, index : int ):
+        output = True
+
+        layer_num = self.get_node_layer( index )
+        node_layer_index = self.get_node_layer_index( index )
+
+        if node_layer_index == 0:
+            output = False
+
+        return output
+
+    def is_node_root( self, index : int ):
+        # Root at index zero
+        output = ( index == 0 )
+
+        return output
+
+    def get_node_up_parent( self, index : int ):
+        output = None
+
+        if self.does_node_have_up_parent( index ):
+            layer_num = self.get_node_layer( index )
+            output = index - layer_num + 1
+
+        return index
+
+    def get_node_down_parent( self, index : int ):
+        output = None
+
+        if self.does_node_have_up_parent( index ):
+            layer_num = self.get_node_layer( index )
+            output = index - layer_num
+
+        return index
+
 
