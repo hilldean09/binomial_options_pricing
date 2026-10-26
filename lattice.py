@@ -2,15 +2,15 @@
 import numpy as np
 
 class Lattice:
+    def get_number_of_nodes( self ):
+        # a = 1 to num_layers case of an incrementing series
+        return int( ( ( 1 + self.num_layers ) * self.num_layers ) / 2 )
+
     def __init__( self, num_layers ):
         self.num_layers: int = num_layers
         
         # Initialising array
         self.array = np.zeros( self.get_number_of_nodes(), dtype=np.float64 )
-
-    def get_number_of_nodes( self ):
-        # a = 1 to num_layers case of an incrementing series
-        return int( ( ( 1 + self.num_layers ) * self.num_layers ) / 2 )
 
     def get_number_of_nodes_up_to_layer( self, layer_num : int ):
         # a = 1 to layer_num case of an incrementing series
@@ -145,6 +145,6 @@ class Lattice:
         return index
 
     def get_array_view( self ):
-        return self.array.view()
+        return self.array.
 
 
