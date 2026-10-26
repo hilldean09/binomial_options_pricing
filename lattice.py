@@ -144,4 +144,7 @@ class Lattice:
 
         return index
 
+    def get_array_view( self ):
+        return self.array.view()
+
 
