@@ -5,11 +5,13 @@ import math
 
 from lattice import Lattice
 
+
 def calculate_timestep( time_to_expiry, num_layers : int ):
     """
     Returns timestep length measured in months
     """
     return time_to_expiry / num_layers
+
 
 def adjust_annual_value_to_step( value, timestep ):
     """
@@ -20,15 +22,18 @@ def adjust_annual_value_to_step( value, timestep ):
     """
     return np.pow( ( 1 + value ), timestep / 12 ) - 1
 
+
 def _calculate_crr_delta( spot, down_child_price, up_child_price, step_volatility ):
     # \Delta = ( C_u - C_d ) / (( u - d ) * S )
     return delta = ( up_child_price - down_child_price ) / ( 2 * step_volatility * spot )
+
 
 def _calculate_crr_leverage( down_child_price, up_child_price, step_volatility, step_risk_free_rate ):
     # B = ( u*C_u - d*C_d ) / (( u - d ) * r )
     u = 1 + step_volatility
     d = 1 - step_volatility
     return delta = ( u * up_child_price - d * down_child_price ) / ( 2 * step_volatility * step_risk_free_rate )
+
 
 def _calculate_virtual_spot_in_lattice( spot, step_volatility, \
                                         layer_num : int, index_in_layer : int ):
@@ -64,6 +69,7 @@ def _calculate_virtual_spot_in_lattice( spot, step_volatility, \
 
     return virtual_spot
 
+
 def _run_crr_european_call_pricing( spot, strike, \
                                     step_volatility, step_risk_free_rate, \
                                     time_to_expiry, num_layers ):
@@ -74,6 +80,7 @@ def _run_crr_european_call_pricing( spot, strike, \
     reduce numerical errors (recalculation
     of node prices)
     """
+    option_price = None
     price_lattice = Lattice( num_layers )
     delta_lattice = Lattice( num_layers )
     leverage_lattice = Lattice( num_layers )
@@ -115,6 +122,11 @@ def _run_crr_european_call_pricing( spot, strike, \
         delta_lattice.set_node_value( index, new_node_delta )
         leverage_lattice.set_node_value( index, new_node_leverage )
 
+    option_price = price_lattice.get_node_value( 0 )
+
+    return option_price, price_lattice, delta_lattice, leverage_lattice
+
+
 def run_crr_binomial_pricing( spot, strike, \
                               volatility, risk_free_rate, \
                               time_to_expiry, num_layers, \
@@ -145,7 +157,7 @@ def run_crr_binomial_pricing( spot, strike, \
             # Running CRR for European Call Options
             option_price, price_lattice, delta_lattice, leverage_lattice = _run_crr_european_call_pricing( spot, strike, step_volatility, step_risk_free_rate, time_to_expiry, num_layers )
 
-    # TODO: Add return
+    return option_price, price_lattice, delta_lattice, leverage_lattice
 
 
 def run_engine( data ):
@@ -168,11 +180,14 @@ def run_engine( data ):
         # TODO: Add some more significant response
         return None
 
-    binomial_call_price = None
+    binomial_option_price = None
     binomial_pricing_lattice = None
+    binomial_delta_lattice = None
+    binomial_leverage_lattice = None
 
     if binomial_pricing_model == "crr":
-        binomial_call_price, binomial_pricing_lattice = \
+        binomial_option_price, binomial_pricing_lattice, \
+        binomial_delta_lattice, binomial_leverage_lattice = \
                                  run_crr_binomial_pricing( spot, strike, \
                                                            volatility, risk_free_rate, \
                                                            time_to_expiry, num_layers, \
@@ -181,7 +196,7 @@ def run_engine( data ):
     # TODO: Closed-form CRR European pricing
     # TODO: Black-Scholes pricing
 
-    return ( binomial_call_price, binomial_pricing_lattice )
+    return binomial_option_price, binomial_pricing_lattice, binomial_delta_lattice, binomial_leverage_lattice
 
     
 
