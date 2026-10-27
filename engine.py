@@ -20,6 +20,16 @@ def adjust_annual_value_to_step( value, timestep ):
     """
     return np.pow( ( 1 + value ), timestep / 12 ) - 1
 
+def _calculate_crr_delta( spot, up_child_price, down_child_price, step_volatility ):
+    # \Delta = ( C_u - C_d ) / (( u - d ) * S )
+    return delta = ( up_child_price - down_child_price ) / ( 2 * step_volatility * spot )
+
+def _calculate_crr_leverage( up_child_price, down_child_price, step_volatility, step_risk_free_rate ):
+    # B = ( u*C_u - d*C_d ) / (( u - d ) * r )
+    u = 1 + step_volatility
+    d = 1 - step_volatility
+    return delta = ( u * up_child_price - d * down_child_price ) / ( 2 * step_volatility * step_risk_free_rate )
+
 def _calculate_virtual_spot_in_lattice( spot, step_volatility, \
                                         layer_num : int, index_in_layer : int ):
     """
@@ -73,6 +83,7 @@ def _run_crr_european_call_pricing( spot, strike, \
     assert number_of_nodes == delta_lattice.get_number_of_nodes()
     assert number_of_nodes == leverage_lattice.get_number_of_nodes()
 
+
     # Reverse order iteration from n-1 to 0
     for index in range( number_of_nodes - 1, -1, 0 ):
         layer_num = price_lattice.get_node_layer( index )
@@ -80,12 +91,25 @@ def _run_crr_european_call_pricing( spot, strike, \
 
         virtual_spot = _calculate_virtual_spot_in_lattice( spot, step_volatility, layer_num, index_in_layer )
 
-        if price_lattice.does_node_have_child( index ):
-            # TODO: Add
-            pass
-        else:
-            price_lattice.set_node_value( index, virtual_spot )
+        new_node_price = None
+        new_node_delta = None
+        new_node_leverage = None
 
+        if price_lattice.does_node_have_child( index ):
+            down_child_index = price_lattice.get_down_child( index )
+            up_child_index = price_lattice.get_up_child( index )
+
+            down_child_price = price_lattice.get_node_value( down_child_index )
+            up_child_price = price_lattice.get_node_value( up_child_index )
+
+            # C = \Delta S + B
+            new_node_delta =
+            
+        else:
+            new_node_price = max( 0, virtual_spot - strike )
+            # TODO: Consider delta and leverage in this case
+
+        price_lattice.set_node_value( index, new_node_price )
 
 def run_crr_binomial_pricing( spot, strike, \
                               volatility, risk_free_rate, \
