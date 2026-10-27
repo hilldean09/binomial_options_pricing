@@ -4,6 +4,7 @@ import numpy as np
 import math
 
 from lattice import Lattice
+from structs import Binomial_Pricing_Return_Data
 
 
 def calculate_timestep( time_to_expiry, num_layers : int ):
@@ -186,18 +187,17 @@ def run_engine( data ):
     binomial_leverage_lattice = None
 
     if binomial_pricing_model == "crr":
-        binomial_option_price, binomial_pricing_lattice, \
+        binomial_option_price, binomial_price_lattice, \
         binomial_delta_lattice, binomial_leverage_lattice = \
                                  run_crr_binomial_pricing( spot, strike, \
                                                            volatility, risk_free_rate, \
                                                            time_to_expiry, num_layers, \
                                                            option_type, option_exercise )
-        
+        binomial_return = Binomial_Pricing_Return_Data( binomial_option_price, binomial_price_lattice, binomial_delta_lattice, binomial_leverage_lattice )
+
     # TODO: Closed-form CRR European pricing
     # TODO: Black-Scholes pricing
 
-    return binomial_option_price, binomial_pricing_lattice, binomial_delta_lattice, binomial_leverage_lattice
-
-    
+    return binomial_return
 
 
