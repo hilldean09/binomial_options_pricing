@@ -20,11 +20,11 @@ def adjust_annual_value_to_step( value, timestep ):
     """
     return np.pow( ( 1 + value ), timestep / 12 ) - 1
 
-def _calculate_crr_delta( spot, up_child_price, down_child_price, step_volatility ):
+def _calculate_crr_delta( spot, down_child_price, up_child_price, step_volatility ):
     # \Delta = ( C_u - C_d ) / (( u - d ) * S )
     return delta = ( up_child_price - down_child_price ) / ( 2 * step_volatility * spot )
 
-def _calculate_crr_leverage( up_child_price, down_child_price, step_volatility, step_risk_free_rate ):
+def _calculate_crr_leverage( down_child_price, up_child_price, step_volatility, step_risk_free_rate ):
     # B = ( u*C_u - d*C_d ) / (( u - d ) * r )
     u = 1 + step_volatility
     d = 1 - step_volatility
@@ -83,7 +83,6 @@ def _run_crr_european_call_pricing( spot, strike, \
     assert number_of_nodes == delta_lattice.get_number_of_nodes()
     assert number_of_nodes == leverage_lattice.get_number_of_nodes()
 
-
     # Reverse order iteration from n-1 to 0
     for index in range( number_of_nodes - 1, -1, 0 ):
         layer_num = price_lattice.get_node_layer( index )
@@ -103,13 +102,18 @@ def _run_crr_european_call_pricing( spot, strike, \
             up_child_price = price_lattice.get_node_value( up_child_index )
 
             # C = \Delta S + B
-            new_node_delta =
+            new_node_delta = _calculate_crr_delta( spot, down_child_price, up_child_price, step_volatility )
+            new_node_leverage = _calculate_crr_leverage( down_child_price, up_child_price, step_volatility, step_risk_free_rate )
+            new_node_price = new_node_delta * spot + new_node_leverage
             
         else:
+            # Assumes a rational exercise policy
             new_node_price = max( 0, virtual_spot - strike )
             # TODO: Consider delta and leverage in this case
 
         price_lattice.set_node_value( index, new_node_price )
+        delta_lattice.set_node_value( index, new_node_delta )
+        leverage_lattice.set_node_value( index, new_node_leverage )
 
 def run_crr_binomial_pricing( spot, strike, \
                               volatility, risk_free_rate, \
