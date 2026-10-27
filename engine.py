@@ -5,6 +5,21 @@ import math
 
 from lattice import Lattice
 
+def calculate_timestep( time_to_expiry, num_layers : int ):
+    """
+    Returns timestep length measured in months
+    """
+    return time_to_expiry / num_layers
+
+def adjust_annual_value_to_step( value, timestep ):
+    """
+    Uses a rearrangement of the compounding
+    interest formula. 
+
+    timestep : Measured in months
+    """
+    return np.pow( ( 1 + value ), timestep / 12 ) - 1
+
 def _calculate_virtual_spot_in_lattice( spot, step_volatility, \
                                         layer_num : int, index_in_layer : int ):
     """
@@ -93,10 +108,14 @@ def run_crr_binomial_pricing( spot, strike, \
     delta_lattice = None
     leverage_lattice = None
 
+    timestep = calculate_timestep( time_to_expiry, num_layers )
+    step_volatility = adjust_annual_value_to_step( volatility, timestep )
+    step_risk_free_rate = adjust_annual_value_to_step( risk_free_rate, timestep )
+
     if option_type == "call":
         if option_exercise == "exercise":
             # Running CRR for European Call Options
-            option_price, price_lattice, delta_lattice, leverage_lattice = _run_crr_european_call_pricing( spot, strike, volatility, risk_free_rate, time_to_expiry, num_layers )
+            option_price, price_lattice, delta_lattice, leverage_lattice = _run_crr_european_call_pricing( spot, strike, step_volatility, step_risk_free_rate, time_to_expiry, num_layers )
 
     # TODO: Add return
 
@@ -107,6 +126,9 @@ def run_engine( data ):
         strike = float( data[ "strike" ] )
         volatility = float( data[ "volatility" ] )
         risk_free_rate = float( data[ "risk_free_rate" ] )
+
+        # Time-to-expiry in months to reduce
+        # possible floating point error
         time_to_expiry = float( data[ "time_to_expiry" ] )
 
         num_layers = float( data[ "num_layers" ] )
@@ -120,8 +142,6 @@ def run_engine( data ):
 
     binomial_call_price = None
     binomial_pricing_lattice = None
-
-    # TODO: Adjust annual rates to step
 
     if binomial_pricing_model == "crr":
         binomial_call_price, binomial_pricing_lattice = \
