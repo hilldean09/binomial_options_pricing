@@ -1,33 +1,26 @@
+/* Dark by default; neutrals carry a faint violet tint to sit with the accent. */
 :root {
-    --bg: #f4f5f7;
-    --surface: #ffffff;
-    --border: #dcdfe4;
-    --text: #1d2128;
-    --text-muted: #5c6470;
-    --accent: #2f5fd0;
-    --accent-hover: #244bab;
-    --accent-text: #ffffff;
-    --code-bg: #f0f2f5;
-    --error: #c0392b;
+    color-scheme: dark;
+
+    --bg: #121117;
+    --surface: #1b1a22;
+    --border: #2c2a36;
+    --text: #e8e6ef;
+    --text-muted: #9d99ab;
+    --accent: #a78bfa;
+    --accent-hover: #c4b5fd;
+    --accent-text: #15121f;
+    --code-bg: #16151c;
+    --error: #ef6f61;
     --radius: 10px;
     --gap: 1.25rem;
     --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --bg: #14161a;
-        --surface: #1d2026;
-        --border: #2e333b;
-        --text: #e6e8eb;
-        --text-muted: #9aa2ad;
-        --accent: #6b93f0;
-        --accent-hover: #8aaaf4;
-        --accent-text: #0e1116;
-        --code-bg: #171a1f;
-        --error: #ef6f61;
-    }
+::selection {
+    background: var(--accent);
+    color: var(--accent-text);
 }
 
 *,
@@ -139,6 +132,7 @@ h1, h2, h3 {
 
 .field input {
     font: inherit;
+    font-family: var(--mono);
     padding: 0.5rem 0.65rem;
     border: 1px solid var(--border);
     border-radius: 6px;
@@ -192,6 +186,7 @@ button:disabled {
 
 .price-value {
     display: block;
+    font-family: var(--mono);
     font-size: 2.5rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
