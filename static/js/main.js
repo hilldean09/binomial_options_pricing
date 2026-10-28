@@ -52,27 +52,46 @@
         return { params, invalid };
     }
 
+    // "—" is reserved for "not yet priced", so empty values returned by
+    // the server are shown explicitly rather than looking like no update.
+    const MISSING_TEXT = "(not in response)";
+
     function formatPrice(value) {
+        if (value === undefined) {
+            return MISSING_TEXT;
+        }
         if (typeof value === "number" && Number.isFinite(value)) {
             return value.toFixed(4);
         }
-        return value === null || value === undefined ? "—" : String(value);
+        return String(value);
     }
 
     function formatLattice(value) {
-        if (value === null || value === undefined) {
-            return "—";
+        if (value === undefined) {
+            return MISSING_TEXT;
         }
         return typeof value === "string" ? value : JSON.stringify(value);
     }
 
+    // Returns the names of any outputs that came back null or missing.
     function render(result) {
-        priceOutput.textContent = formatPrice(result.binomial_option_price);
+        const empty = [];
+        const price = result.binomial_option_price;
+
+        priceOutput.textContent = formatPrice(price);
+        if (price === null || price === undefined) {
+            empty.push("binomial_option_price");
+        }
 
         const lattices = result.binomial_lattices || {};
         for (const [key, element] of Object.entries(latticeOutputs)) {
             element.textContent = formatLattice(lattices[key]);
+            if (lattices[key] === null || lattices[key] === undefined) {
+                empty.push("binomial_lattices." + key);
+            }
         }
+
+        return empty;
     }
 
     async function submit(event) {
@@ -107,8 +126,13 @@
                 throw new Error("Response was not valid JSON");
             }
 
-            render(result);
-            setStatus("Updated " + new Date().toLocaleTimeString(), false);
+            const empty = render(result);
+            const time = new Date().toLocaleTimeString();
+            if (empty.length > 0) {
+                setStatus(`Updated ${time}, but the response had no value for: ${empty.join(", ")}`, true);
+            } else {
+                setStatus("Updated " + time, false);
+            }
         } catch (error) {
             setStatus(error.message, true);
         } finally {
