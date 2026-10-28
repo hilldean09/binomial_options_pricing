@@ -22,7 +22,7 @@ class Lattice:
         return output
 
     def is_index_valid( self, index : int ):
-        return ( index < self.get_number_of_nodes ) and ( index >= 0 )
+        return ( index < self.get_number_of_nodes() ) and ( index >= 0 )
 
     def get_node_value( self, index : int ):
         output = None
@@ -54,7 +54,7 @@ class Lattice:
     def get_node_layer( self, index : int ):
         output = 0
 
-        while index < self.get_number_of_nodes_up_to_layer( layer_num ) and layer_num < self.num_layers:
+        while index < self.get_number_of_nodes_up_to_layer( output ) and layer_num < self.num_layers:
             output += 1
 
         return output
@@ -143,6 +143,9 @@ class Lattice:
             output = index - layer_num
 
         return index
+
+    def get_array( self ):
+        return self.array
 
     def get_array_view( self ):
         return self.array.view()

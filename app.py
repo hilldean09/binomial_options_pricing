@@ -1,5 +1,6 @@
 # Binomial Options Pricing App
 
+import numpy as np
 import json
 from flask import Flask, jsonify, request, render_template
 from plotly import graph_objects as go
@@ -45,12 +46,19 @@ def api_price():
     data = request.get_json(force=True)
     binomial_output = engine.run_engine( data )
 
+    # Debugging
+    print( f"Binomial Option Price : {binomial_output.option_price}" )
+    print( f"Binomials Lattices : " )
+    print( f"\tPrice: {np.array2string( binomial_output.price_lattice.get_array() )}" )
+    print( f"\tDelta: {np.array2string( binomial_output.delta_lattice.get_array() )}" )
+    print( f"\tLeverage: {np.array2string( binomial_output.leverage_lattice.get_array() )}" )
+
     return json.dumps( { 
         "binomial_option_price": binomial_output.option_price,
         "binomial_lattices": {
-            "price": binomial_output.price_lattice,
-            "delta": binomial_output.delta_lattice,
-            "leverage": binomial_output.leverage_lattice
+            "price": binomial_output.price_lattice.array.tolist(),
+            "delta": binomial_output.delta_lattice.array.tolist(),
+            "leverage": binomial_output.leverage_lattice.array.tolist()
         }
     } )
 

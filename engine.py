@@ -92,9 +92,9 @@ def _run_crr_european_call_pricing( spot, strike, \
     assert number_of_nodes == leverage_lattice.get_number_of_nodes()
 
     # Reverse order iteration from n-1 to 0
-    for index in range( number_of_nodes - 1, -1, 0 ):
+    for index in range( number_of_nodes - 1, -1, -1 ):
         layer_num = price_lattice.get_node_layer( index )
-        index_in_layer = price_lattice.get_node_index_in_lattice( index )
+        index_in_layer = price_lattice.get_node_layer_index( index )
 
         virtual_spot = _calculate_virtual_spot_in_lattice( spot, step_volatility, layer_num, index_in_layer )
 
@@ -103,8 +103,8 @@ def _run_crr_european_call_pricing( spot, strike, \
         new_node_leverage = None
 
         if price_lattice.does_node_have_child( index ):
-            down_child_index = price_lattice.get_down_child( index )
-            up_child_index = price_lattice.get_up_child( index )
+            down_child_index = price_lattice.get_node_down_child( index )
+            up_child_index = price_lattice.get_node_up_child( index )
 
             down_child_price = price_lattice.get_node_value( down_child_index )
             up_child_price = price_lattice.get_node_value( up_child_index )
@@ -154,7 +154,7 @@ def run_crr_binomial_pricing( spot, strike, \
     step_risk_free_rate = adjust_annual_value_to_step( risk_free_rate, timestep )
 
     if option_type == "call":
-        if option_exercise == "exercise":
+        if option_exercise == "european":
             # Running CRR for European Call Options
             option_price, price_lattice, delta_lattice, leverage_lattice = _run_crr_european_call_pricing( spot, strike, step_volatility, step_risk_free_rate, time_to_expiry, num_layers )
 
