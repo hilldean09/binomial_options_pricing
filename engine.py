@@ -33,7 +33,7 @@ def _calculate_crr_leverage( down_child_price, up_child_price, step_volatility, 
     # B = ( u*C_u - d*C_d ) / (( u - d ) * r )
     u = 1 + step_volatility
     d = 1 - step_volatility
-    return ( u * up_child_price - d * down_child_price ) / ( 2 * step_volatility * step_risk_free_rate )
+    return ( u * down_child_price - d * up_child_price ) / ( 2 * step_volatility * ( 1 + step_risk_free_rate ) )
 
 
 def _calculate_virtual_spot_in_lattice( spot, step_volatility, \
@@ -114,6 +114,7 @@ def _run_crr_european_call_pricing( spot, strike, \
             # C = \Delta S + B
             new_node_delta = _calculate_crr_delta( spot, down_child_price, up_child_price, step_volatility )
             new_node_leverage = _calculate_crr_leverage( down_child_price, up_child_price, step_volatility, step_risk_free_rate )
+            print( f"delta, leverage : {new_node_delta}, {new_node_leverage}" )
             new_node_price = new_node_delta * spot + new_node_leverage
             
         else:
