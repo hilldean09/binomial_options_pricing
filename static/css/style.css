@@ -15,11 +15,19 @@
     --gild-size: 14px;
     --gild-width: 2px;
     --code-bg: #16151c;
+    --scrollbar-thumb: #3b3848;
     --error: #ef6f61;
     --radius: 10px;
     --gap: 1.25rem;
     --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+
+/* Thin, themed scrollbars on a transparent track so they read as part
+   of the page. scrollbar-color is inherited; scrollbar-width is not. */
+:root {
+    scrollbar-color: var(--scrollbar-thumb) transparent;
+    scrollbar-width: thin;
 }
 
 ::selection {
@@ -57,6 +65,32 @@ h1, h2, h3 {
 
 .site-header h1 {
     font-size: 1.75rem;
+}
+
+.title-tail {
+    white-space: nowrap;
+}
+
+/* Lattice graphic growing out of the right of the title */
+.title-lattice {
+    height: 2.5rem;
+    width: auto;
+    margin-left: 0.6rem;
+    vertical-align: middle;
+}
+
+.title-lattice .edges line {
+    stroke: var(--text-muted);
+    stroke-opacity: 0.45;
+    stroke-width: 1;
+}
+
+.title-lattice .nodes circle {
+    fill: var(--accent);
+}
+
+.title-lattice .nodes .root {
+    fill: var(--gild-light);
 }
 
 .subtitle {
@@ -247,4 +281,5 @@ button:disabled {
     word-break: break-word;
     max-height: 14rem;
     overflow: auto;
+    scrollbar-width: thin;
 }
