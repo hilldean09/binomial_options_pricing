@@ -1,6 +1,6 @@
 # Binomial Options Pricing App
 import json
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 
 # For importing .env variables
 from dotenv import load_dotenv
