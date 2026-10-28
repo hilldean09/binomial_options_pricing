@@ -103,6 +103,7 @@ def _run_crr_european_call_pricing( spot, strike, \
         new_node_leverage = None
 
         if price_lattice.does_node_have_child( index ):
+            print( index )
             down_child_index = price_lattice.get_node_down_child( index )
             up_child_index = price_lattice.get_node_up_child( index )
 
@@ -116,6 +117,7 @@ def _run_crr_european_call_pricing( spot, strike, \
             
         else:
             # Assumes a rational exercise policy
+            print( index )
             print( f"virtual_spot : {virtual_spot}" )
             print( f"strike: {strike}" )
             new_node_price = max( 0, virtual_spot - strike )

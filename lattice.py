@@ -17,7 +17,7 @@ class Lattice:
         output = 1
 
         if layer_num > 0:
-            output = int( ( ( 1 + layer_num ) * layer_num ) / 2 )
+            output = int( ( ( 1 + ( layer_num + 1 ) ) * ( layer_num + 1 ) ) / 2 )
 
         return output
 
@@ -56,8 +56,6 @@ class Lattice:
 
         while index >= self.get_number_of_nodes_up_to_layer( output ) and ( output < self.num_layers ) :
             output += 1
-
-        print( f"Index, Number of Nodes, Output : {index}, {self.get_number_of_nodes_up_to_layer( output )}, {output}" )
 
         return output
 
