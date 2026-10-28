@@ -10,6 +10,10 @@
     --accent: #a78bfa;
     --accent-hover: #c4b5fd;
     --accent-text: #15121f;
+    --gild-light: #c4b5fd;
+    --gild-dark: #7c5bd6;
+    --gild-size: 14px;
+    --gild-width: 2px;
     --code-bg: #16151c;
     --error: #ef6f61;
     --radius: 10px;
@@ -104,6 +108,34 @@ h1, h2, h3 {
     border-radius: var(--radius);
     padding: 1.25rem;
     min-width: 0;
+    position: relative;
+}
+
+/* Corner gilding: an outline over the tile border, masked down to the
+   four corners. Lighter top/left and darker bottom/right edges give a
+   lit-metal look. */
+.tile::before {
+    --corner: linear-gradient(#000 0 0) no-repeat;
+    --corner-size: var(--gild-size) var(--gild-size);
+
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border: var(--gild-width) solid;
+    border-color: var(--gild-light) var(--gild-dark) var(--gild-dark) var(--gild-light);
+    border-radius: calc(var(--radius) + 1px);
+    pointer-events: none;
+
+    -webkit-mask:
+        var(--corner) top left / var(--corner-size),
+        var(--corner) top right / var(--corner-size),
+        var(--corner) bottom left / var(--corner-size),
+        var(--corner) bottom right / var(--corner-size);
+    mask:
+        var(--corner) top left / var(--corner-size),
+        var(--corner) top right / var(--corner-size),
+        var(--corner) bottom left / var(--corner-size),
+        var(--corner) bottom right / var(--corner-size);
 }
 
 .tile h2 {
