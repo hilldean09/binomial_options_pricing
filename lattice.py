@@ -72,9 +72,8 @@ class Lattice:
         output = None
 
         if self.does_node_have_child( index ):
-            output = 0
             node_layer_num = self.get_node_layer( index )
-            output += ( node_layer_num + 1 )
+            output = index + ( node_layer_num + 1 )
 
         return output
 
@@ -82,9 +81,8 @@ class Lattice:
         output = None
 
         if self.does_node_have_child( index ):
-            output = 0
             node_layer_num = self.get_node_layer( index )
-            output += ( node_layer_num + 1 ) + 1
+            output = index + ( node_layer_num + 1 ) + 1
 
         return output
 
