@@ -1,9 +1,10 @@
 # Binomial Options Pricing App
-
-from flask import Flask
+import json
+from flask import Flask, jsonify, request
 
 # For importing .env variables
 from dotenv import load_dotenv
+
 import os
 
 # Project libraries
@@ -27,8 +28,13 @@ class Environment_Variables:
         if auto_load:
             self.load_evironmdnt_variables()
 
+@app.route("/")
+def api_index():
+    return render_template( "index.html" )
 
-
+@app.route( "/api/price" )
+def api_price():
+    pass
 
 if __name__ == "__main__":
     env_variables = Environment_Variables()
