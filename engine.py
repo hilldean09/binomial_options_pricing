@@ -26,14 +26,14 @@ def adjust_annual_value_to_step( value, timestep ):
 
 def _calculate_crr_delta( spot, down_child_price, up_child_price, step_volatility ):
     # \Delta = ( C_u - C_d ) / (( u - d ) * S )
-    return delta = ( up_child_price - down_child_price ) / ( 2 * step_volatility * spot )
+    return ( up_child_price - down_child_price ) / ( 2 * step_volatility * spot )
 
 
 def _calculate_crr_leverage( down_child_price, up_child_price, step_volatility, step_risk_free_rate ):
     # B = ( u*C_u - d*C_d ) / (( u - d ) * r )
     u = 1 + step_volatility
     d = 1 - step_volatility
-    return delta = ( u * up_child_price - d * down_child_price ) / ( 2 * step_volatility * step_risk_free_rate )
+    return ( u * up_child_price - d * down_child_price ) / ( 2 * step_volatility * step_risk_free_rate )
 
 
 def _calculate_virtual_spot_in_lattice( spot, step_volatility, \

@@ -55,7 +55,7 @@ class Lattice:
         output = 0
 
         while index < self.get_number_of_nodes_up_to_layer( layer_num ) and layer_num < self.num_layers:
-            output++
+            output += 1
 
         return output
 
@@ -145,6 +145,6 @@ class Lattice:
         return index
 
     def get_array_view( self ):
-        return self.array.
+        return self.array.view()
 
 
