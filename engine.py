@@ -60,10 +60,10 @@ def _calculate_virtual_spot_in_lattice( spot, step_volatility, \
     median_index_in_layer = ( layer_num + 1 ) / 2 
 
     if index_in_layer > median_index_in_layer:
-        index_in_layer_diff = int( float( index_in_layer ) - np.floor( median_index_in_layer ) )
+        index_in_layer_diff = int( index_in_layer - np.floor( median_index_in_layer ) )
         virtual_spot = ( 1 + step_volatility )**( index_in_layer_diff ) * spot
     elif index_in_layer < median_index_in_layer:
-        index_in_layer_diff = int( np.ceil( median_index_in_layer ) - float( index_in_layer )  )
+        index_in_layer_diff = int( np.ceil( median_index_in_layer ) - index_in_layer  )
         virtual_spot = ( 1 - step_volatility )**( index_in_layer_diff ) * spot
     else: # index_in_layer == median_index_in_layer
         virtual_spot = spot
@@ -116,6 +116,8 @@ def _run_crr_european_call_pricing( spot, strike, \
             
         else:
             # Assumes a rational exercise policy
+            print( f"virtual_spot : {virtual_spot}" )
+            print( f"strike: {strike}" )
             new_node_price = max( 0, virtual_spot - strike )
             # TODO: Consider delta and leverage in this case
 
@@ -124,6 +126,7 @@ def _run_crr_european_call_pricing( spot, strike, \
         leverage_lattice.set_node_value( index, new_node_leverage )
 
     option_price = price_lattice.get_node_value( 0 )
+
 
     return option_price, price_lattice, delta_lattice, leverage_lattice
 

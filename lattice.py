@@ -14,7 +14,7 @@ class Lattice:
 
     def get_number_of_nodes_up_to_layer( self, layer_num : int ):
         # a = 1 to layer_num case of an incrementing series
-        output = 0
+        output = 1
 
         if layer_num > 0:
             output = int( ( ( 1 + layer_num ) * layer_num ) / 2 )
@@ -54,8 +54,10 @@ class Lattice:
     def get_node_layer( self, index : int ):
         output = 0
 
-        while index < self.get_number_of_nodes_up_to_layer( output ) and layer_num < self.num_layers:
+        while index >= self.get_number_of_nodes_up_to_layer( output ) and ( output < self.num_layers ) :
             output += 1
+
+        print( f"Index, Number of Nodes, Output : {index}, {self.get_number_of_nodes_up_to_layer( output )}, {output}" )
 
         return output
 
