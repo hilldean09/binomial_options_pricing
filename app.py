@@ -1,14 +1,16 @@
 # Binomial Options Pricing App
+
 import json
 from flask import Flask, jsonify, request, render_template
+from plotly import graph_objects as go
 
 # For importing .env variables
 from dotenv import load_dotenv
-
 import os
 
 # Project libraries
 from lattice import Lattice
+import engine
 
 app = Flask( __name__ )
 
@@ -32,9 +34,25 @@ class Environment_Variables:
 def api_index():
     return render_template( "index.html" )
 
-@app.route( "/api/price" )
+@app.route( "/api/price", methods=["Post"] )
 def api_price():
-    pass
+    """
+    Intended to take a request in the form of a
+    JSON object containing model variables and
+    return a JSON object containig outputs and 
+    figures.
+    """
+    data = request.get_json(force=True)
+    binomial_output = engine.run_engine( data )
+
+    return json.dumps( { 
+        "binomial_option_price": binomial_output.option_price,
+        "binomial_lattices": {
+            "price": binomial_output.price_lattice,
+            "delta": binomial_output.delta_lattice,
+            "leverage": binomial_output.leverage_lattice
+        }
+    } )
 
 if __name__ == "__main__":
     env_variables = Environment_Variables()
