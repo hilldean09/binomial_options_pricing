@@ -19,15 +19,16 @@ BOP_DEFAULT_MAX_DRAW_DEPTH = 50
 
 EDGE_WIDTH = 1
 
-##### Palette Start #####
+##### Front End Constants Start #####
 # Agent modification allowed within this ection
+
 COLOR_PALETTE = {
     "background" : "SOME COLOUR",
     "grid" : "SOME COLOUR",
     "muted" : "SOME COLOUR"
 }
 
-##### Palette End #####
+##### Front End Constants End #####
 
 class Environment_Variables:
     def load_evironmdnt_variables( self ):
@@ -47,6 +48,12 @@ class Environment_Variables:
 
 ##### Figures #####
 
+# Base Figure Layout Start #
+# Agents may make changes within subsection
+def _base_figure_layout( title ):
+    pass
+# Base Figure Layout End #
+
 def _calculate_node_lattice_figure_coordinate( index, lattice, spot, step_volatility, timestep ):
     layer_num = lattice.get_node_layer( index )
     index_in_layer = lattice.get_node_layer_index( index )
@@ -56,7 +63,7 @@ def _calculate_node_lattice_figure_coordinate( index, lattice, spot, step_volati
 
     return ( x_coord, y_coord )
 
-def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_depth=None, min_value=None, max_value=None ):
+def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_depth=None ):
     # Build coordinate lattice
     if max_draw_depth is None:
         max_draw_depth = BOP_DEFAULT_MAX_DRAW_DEPTH
@@ -122,17 +129,18 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
                              hoverinfo = 'skip',
                              showlegend = False
                             )
-    
+
     return nodes_trace, edges_trace
 
 
-def _build_price_lattice_figure( binomial_output, timestep, max_draw_depth=None ):
+def _build_price_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
+    nodes_trace, edges_trace = _build_general_lattice_figure( inputs, binomial_output, binomial_output.price_lattice, max_draw_depth=max_draw_depth )
+
+
+def _build_delta_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
     pass
 
-def _build_delta_lattice_figure( binomial_output, max_draw_depth=None ):
-    pass
-
-def _build_leverage_lattice_figure( binomial_output, max_draw_depth=None ):
+def _build_leverage_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
     pass
 
 
