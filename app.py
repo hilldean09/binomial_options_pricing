@@ -31,6 +31,33 @@ class Environment_Variables:
         if auto_load:
             self.load_evironmdnt_variables()
 
+##### Figures #####
+
+def _calculate_node_lattice_figure_coordinate( index, lattice, spot, step_volatility, timestep ):
+    layer_num = lattice.get_node_layer( index )
+    index_in_layer = lattice.get_node_layer_index( index )
+
+    x_coord = layer_num * timestep
+    y_coord = engine._calculate_virtual_spot_in_lattice( spot, layer_num, index_in_layer )
+
+    return ( x_coord, y_coord )
+
+def _build_general_lattice_figure( binomial_output, draw_depth=None, min_value=None, max_value=None ):
+    # Build coordinate lattice
+    pass
+
+def _build_price_lattice_figure( binomial_output, timestep, draw_depth=None ):
+    pass
+
+def _build_delta_lattice_figure( binomial_output, draw_depth=None ):
+    pass
+
+def _build_leverage_lattice_figure( binomial_output, draw_depth=None ):
+    pass
+
+
+##### Routes #####
+
 @app.route("/")
 def api_index():
     return render_template( "index.html" )
@@ -53,6 +80,8 @@ def api_price():
     print( f"\tDelta: {np.array2string( binomial_output.delta_lattice.get_array() )}" )
     print( f"\tLeverage: {np.array2string( binomial_output.leverage_lattice.get_array() )}" )
 
+    # NOTE: .tolist() used as np.ndarray objects
+    # are not JSON serialisable
     return json.dumps( { 
         "binomial_option_price": binomial_output.option_price,
         "binomial_lattices": {
