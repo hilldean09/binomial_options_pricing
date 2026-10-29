@@ -170,6 +170,7 @@ def run_crr_binomial_pricing( spot, strike, \
 
 
 def run_engine( data ):
+    # TODO: Migrate to app.py with an inputs struct
     try:
         spot = float( data[ "spot" ] )
         strike = float( data[ "strike" ] )
@@ -203,6 +204,8 @@ def run_engine( data ):
                                                            option_type, option_exercise )
         binomial_return = Binomial_Pricing_Return_Data( binomial_option_price, binomial_price_lattice, binomial_delta_lattice, binomial_leverage_lattice )
 
+    # TODO: Add inputs as an extra feature of the binomial
+    # pricing return
     # TODO: Closed-form CRR European pricing
     # TODO: Black-Scholes pricing
 
