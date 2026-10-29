@@ -15,6 +15,20 @@ import engine
 
 app = Flask( __name__ )
 
+BOP_DEFAULT_MAX_DRAW_DEPTH = 50
+
+EDGE_WIDTH = 1
+
+##### Palette Start #####
+# Agent modification allowed within this ection
+COLOR_PALETTE = {
+    "background" : "SOME COLOUR",
+    "grid" : "SOME COLOUR",
+    "muted" : "SOME COLOUR"
+}
+
+##### Palette End #####
+
 class Environment_Variables:
     def load_evironmdnt_variables( self ):
 
@@ -42,17 +56,83 @@ def _calculate_node_lattice_figure_coordinate( index, lattice, spot, step_volati
 
     return ( x_coord, y_coord )
 
-def _build_general_lattice_figure( binomial_output, draw_depth=None, min_value=None, max_value=None ):
+def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_depth=None, min_value=None, max_value=None ):
     # Build coordinate lattice
+    if max_draw_depth is None:
+        max_draw_depth = BOP_DEFAULT_MAX_DRAW_DEPTH
+
+    x_coord_lattice = Lattice( min( max_draw_depth, lattice.num_layers ) )
+    y_coord_lattice = Lattice( x_coord_lattice.num_layers )
+
+    edge_x_coord : list[ float | None ] = []
+    edge_y_coord : list[ float | None ] = []
+
+    coord_lattice_num_nodes = x_coord_lattice.get_num_nodes()
+    assert coord_lattice_num_nodes == y_coord_lattice.get_num_nodes()
+
+    timestep = engine.calculate_timestep( inputs.time_to_expiry, lattice.num_layers )
+    step_volatility = engine.adjust_annual_value_to_step( inputs.volatility, timestep )
+
+    for index in range( coord_lattice_num_nodes - 1, -1, -1 ):
+        node_coord = _calculate_node_lattice_figure_coordinate( index, lattice, inputs.stop, step_volatility, timestep )
+        x_coord_lattice.set_node_value( index, node_coord[ 0 ] )
+        y_coord_lattice.set_node_value( index, node_coord[ 1 ] )
+
+        if x_coord_lattice.does_node_have_child( index ):
+            down_child_index = x_coord_lattice.get_node_down_child( index )
+            up_child_index = x_coord_lattice.get_node_up_child( index )
+
+            down_child_x_coord = x_coord_lattice.get_index_value( down_child_index )
+            down_child_y_coord = y_coord_lattice.get_index_value( down_child_index )
+
+            up_child_x_coord = x_coord_lattice.get_index_value( up_child_index )
+            up_child_y_coord = y_coord_lattice.get_index_value( up_child_index )
+
+            edge_x_coord += [ node_coord[ 0 ], down_child_x_coord, None, node_coord[ 0 ], up_child_x_coord, None ]
+            edge_y_coord += [ node_coord[ 1 ], down_child_y_coord, None, node_coord[ 1 ], up_child_y_coord, None ]
+
+    marker_size = 7
+
+    nodes_trace = go.Scatter( name = 'nodes',
+                              x = x_coord_lattice.array,
+                              y = y_coord_lattice.array.
+                              mode = 'markers',
+                              marker = dict(
+                                size = marker_size,
+                                color = lattice.array,
+                                colorscale = 'Viridis',
+                                showscale = True,
+                                colorbar = dict(
+                                    outlinewidth = 0,
+                                    thickness = 0,
+                                )
+                                # Line?
+                              ),
+                              showlegend = False,
+                             )
+
+    edges_trace = go.Scatter( name='edges',
+                             x = edge_x_coord,
+                             y = edge_y_coord,
+                             mode = 'lines',
+                             line = dict(
+                                color = COLOR_PALETTE[ "grid" ],
+                                width = EDGE_WIDTH
+                             ),
+                             hoverinfo = 'skip',
+                             showlegend = False
+                            )
+    
+    return nodes_trace, edges_trace
+
+
+def _build_price_lattice_figure( binomial_output, timestep, max_draw_depth=None ):
     pass
 
-def _build_price_lattice_figure( binomial_output, timestep, draw_depth=None ):
+def _build_delta_lattice_figure( binomial_output, max_draw_depth=None ):
     pass
 
-def _build_delta_lattice_figure( binomial_output, draw_depth=None ):
-    pass
-
-def _build_leverage_lattice_figure( binomial_output, draw_depth=None ):
+def _build_leverage_lattice_figure( binomial_output, max_draw_depth=None ):
     pass
 
 
