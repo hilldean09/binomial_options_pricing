@@ -109,12 +109,9 @@ def _run_crr_european_call_pricing( spot, strike, \
             down_child_price = price_lattice.get_node_value( down_child_index )
             up_child_price = price_lattice.get_node_value( up_child_index )
 
-            print( f"down and up price : {down_child_price}, {up_child_price}" )
-
             # C = \Delta S + B
             new_node_delta = _calculate_crr_delta( spot, down_child_price, up_child_price, step_volatility )
             new_node_leverage = _calculate_crr_leverage( down_child_price, up_child_price, step_volatility, step_risk_free_rate )
-            print( f"delta, leverage : {new_node_delta}, {new_node_leverage}" )
             new_node_price = new_node_delta * spot + new_node_leverage
             
         else:
@@ -125,7 +122,6 @@ def _run_crr_european_call_pricing( spot, strike, \
             new_node_delta = 0
             new_node_leverage = 0
 
-        print( f"index, new_node_price : {index}, {new_node_price}" )
         price_lattice.set_node_value( index, new_node_price )
         delta_lattice.set_node_value( index, new_node_delta )
         leverage_lattice.set_node_value( index, new_node_leverage )

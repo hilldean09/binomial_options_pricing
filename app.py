@@ -74,11 +74,12 @@ def api_price():
     binomial_output = engine.run_engine( data )
 
     # Debugging
-    print( f"Binomial Option Price : {binomial_output.option_price}" )
-    print( f"Binomials Lattices : " )
-    print( f"\tPrice: {np.array2string( binomial_output.price_lattice.get_array() )}" )
-    print( f"\tDelta: {np.array2string( binomial_output.delta_lattice.get_array() )}" )
-    print( f"\tLeverage: {np.array2string( binomial_output.leverage_lattice.get_array() )}" )
+    # TODO: Add proper debugging flag
+    # print( f"Binomial Option Price : {binomial_output.option_price}" )
+    # print( f"Binomials Lattices : " )
+    # print( f"\tPrice: {np.array2string( binomial_output.price_lattice.get_array() )}" )
+    # print( f"\tDelta: {np.array2string( binomial_output.delta_lattice.get_array() )}" )
+    # print( f"\tLeverage: {np.array2string( binomial_output.leverage_lattice.get_array() )}" )
 
     # NOTE: .tolist() used as np.ndarray objects
     # are not JSON serialisable
