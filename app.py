@@ -32,6 +32,7 @@ BOP_COLOR_PALETTE = {
     "border" : "SOME COLOUR"
 }
 
+BOP_NODE_MARKER_SIZE = 7
 BOP_EDGE_WIDTH = 1
 BOP_FIGURE_LAYOUT_TITLE_FONT_SIZE = 16
 BOP_FIGURE_LAYOUT_FONT_FAMILY_STRING = "SOME FONTS ENDING WITH SANS-SERIF"
@@ -92,6 +93,28 @@ def _base_figure_layout( title : str ):
 
 # Base Figure Layout End #
 
+def _construct_lattice_title( inputs, binomial_output, lattice_type ):
+    option_type_string = ""
+    option_exercise_string = ""
+    binomial_pricing_model_string = ""
+
+    if inputs.option_type == "call":
+        option_type_string = "Call"
+
+    if inputs.option_exercise == "european":
+        option_exercise_string = "European"
+
+    if inputs.binomial_pricing_model == "crr":
+        binomial_pricing_model_string = "CRR Binomial Pricing"
+
+    if lattice_type == "price":
+        lattice_type_string = "Price"
+
+    title = binomial_pricing_modeL_string + " " + lattice_type_string + " Lattice for " + option_exercise_string + " " + option_type_string + f" for N={inputs.num_layers}"
+
+    return title
+
+
 def _calculate_node_lattice_figure_coordinate( index, lattice : Lattice, spot, step_volatility, timestep ):
     layer_num = lattice.get_node_layer( index )
     index_in_layer = lattice.get_node_layer_index( index )
@@ -136,14 +159,12 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
             edge_x_coord += [ node_coord[ 0 ], down_child_x_coord, None, node_coord[ 0 ], up_child_x_coord, None ]
             edge_y_coord += [ node_coord[ 1 ], down_child_y_coord, None, node_coord[ 1 ], up_child_y_coord, None ]
 
-    marker_size = 7
-
     nodes_trace = go.Scatter( name = 'nodes',
                               x = x_coord_lattice.array,
                               y = y_coord_lattice.array.
                               mode = 'markers',
                               marker = dict(
-                                size = marker_size,
+                                size = BOP_NODE_MARKER_SIZE,
                                 color = lattice.array,
                                 colorscale = 'Viridis',
                                 showscale = True,
@@ -168,11 +189,18 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
                              showlegend = False
                             )
 
-    return nodes_trace, edges_trace
+    traces = [ nodes_trace, edges_trace ]
+
+    return traces
 
 
 def _build_price_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
-    nodes_trace, edges_trace = _build_general_lattice_figure( inputs, binomial_output, binomial_output.price_lattice, max_draw_depth=max_draw_depth )
+    traces = _build_general_lattice_figure( inputs, binomial_output, binomial_output.price_lattice, max_draw_depth=max_draw_depth )
+    figure = go.Figure( data = traces )
+
+    title = _construct_lattice_title( inputs, binomial_output, "price" )
+    layout = _base_figure_layout( title )
+
 
 
 def _build_delta_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
