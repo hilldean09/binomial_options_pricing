@@ -320,6 +320,10 @@ def api_price():
     inputs = structs.Api_Price_Inputs( spot = spot, strike = strike, volatility = volatility, risk_free_rate = risk_free_rate, time_to_expiry = time_to_expiry, num_layers = num_layers, option_type = option_type, option_exercise = option_exercise, binomial_pricing_model = binomial_pricing_model )
     binomial_output = engine.run_engine( inputs)
 
+    price_lattice_figure = _build_price_lattice_figure( inputs, binomial_output, binomial_output.price_lattice )
+    delta_lattice_figure = _build_delta_lattice_figure( inputs, binomial_output, binomial_output.delta_lattice )
+    leverage_lattice_figure = _build_leverage_lattice_figure( inputs, binomial_output, binomial_output.leverage_lattice )
+
     # Debugging
     # TODO: Add proper debugging flag
     # print( f"Binomial Option Price : {binomial_output.option_price}" )
