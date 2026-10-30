@@ -11,6 +11,7 @@ import os
 
 # Project libraries
 from lattice import Lattice
+import structs
 import engine
 
 app = Flask( __name__ )
@@ -285,8 +286,39 @@ def api_price():
     return a JSON object containig outputs and 
     figures.
     """
+    spot = None
+    strike = None
+    volatility = None
+    risk_free_rate = None
+    time_to_expiry = None
+    num_layers = None
+    option_type = None
+    option_exercise = None
+    binomial_pricing_model = None
+
     data = request.get_json(force=True)
-    binomial_output = engine.run_engine( data )
+
+    try:
+        spot = float( data[ "spot" ] )
+        strike = float( data[ "strike" ] )
+        volatility = float( data[ "volatility" ] )
+        risk_free_rate = float( data[ "risk_free_rate" ] )
+
+        # Time-to-expiry in months to reduce
+        # possible floating point error
+        time_to_expiry = float( data[ "time_to_expiry" ] )
+
+        num_layers = float( data[ "num_layers" ] )
+
+        option_type = data.get( "option_type", "call" )
+        option_exercise = data.get( "option_exercise", "european" )
+        binomial_pricing_model = data.get( "pricing_model", "crr" )
+    except:
+        # TODO: Add some more significant response
+        pass
+
+    inputs = structs.Api_Price_Inputs( spot = spot, strike = strike, volatility = volatility, risk_free_rate = risk_free_rate, time_to_expiry = time_to_expiry, num_layers = num_layers, option_type = option_type, option_exercise = option_exercise, binomial_pricing_model = binomial_pricing_model )
+    binomial_output = engine.run_engine( inputs)
 
     # Debugging
     # TODO: Add proper debugging flag

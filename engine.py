@@ -165,39 +165,19 @@ def run_crr_binomial_pricing( spot, strike, \
     return option_price, price_lattice, delta_lattice, leverage_lattice
 
 
-def run_engine( data ):
-    # TODO: Migrate to app.py with an inputs struct
-    try:
-        spot = float( data[ "spot" ] )
-        strike = float( data[ "strike" ] )
-        volatility = float( data[ "volatility" ] )
-        risk_free_rate = float( data[ "risk_free_rate" ] )
-
-        # Time-to-expiry in months to reduce
-        # possible floating point error
-        time_to_expiry = float( data[ "time_to_expiry" ] )
-
-        num_layers = float( data[ "num_layers" ] )
-
-        option_type = data.get( "option_type", "call" )
-        option_exercise = data.get( "option_exercise", "european" )
-        binomial_pricing_model = data.get( "pricing_model", "crr" )
-    except:
-        # TODO: Add some more significant response
-        return None
-
+def run_engine( inputs ):
     binomial_option_price = None
     binomial_pricing_lattice = None
     binomial_delta_lattice = None
     binomial_leverage_lattice = None
 
-    if binomial_pricing_model == "crr":
+    if inputs.binomial_pricing_model == "crr":
         binomial_option_price, binomial_price_lattice, \
         binomial_delta_lattice, binomial_leverage_lattice = \
-                                 run_crr_binomial_pricing( spot, strike, \
-                                                           volatility, risk_free_rate, \
-                                                           time_to_expiry, num_layers, \
-                                                           option_type, option_exercise )
+                                 run_crr_binomial_pricing( inputs.spot, inputs.strike, \
+                                                           inputs.volatility, inputs.risk_free_rate, \
+                                                           inputs.time_to_expiry, inputs.num_layers, \
+                                                           inputs.option_type, inputs.option_exercise )
         binomial_return = Binomial_Pricing_Return_Data( binomial_option_price, binomial_price_lattice, binomial_delta_lattice, binomial_leverage_lattice )
 
     # TODO: Add inputs as an extra feature of the binomial

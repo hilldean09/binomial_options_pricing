@@ -2,11 +2,11 @@
 from lattice import Lattice
 
 class Api_Price_Inputs:
-    def __init__( self, spot, strike,
-                  volatility, risk_free_rate,
-                  time_to_expiry, num_layers,
-                  option_type, option_exercise,
-                  binomial_pricing_model ):
+    def __init__( self, spot=None, strike=None,
+                  volatility=None, risk_free_rate=None,
+                  time_to_expiry=None, num_layers=None,
+                  option_type=None, option_exercise=None,
+                  binomial_pricing_model=None ):
         self.spot = spot
         self.strike = strike
         self.volatility = volatility
