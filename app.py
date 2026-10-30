@@ -46,7 +46,7 @@ BOP_FIGURE_LAYOUT_MARGINS = {
 }
 
 BOP_FIGURE_LAYOUT_LEGEND_Y = 1.02
-BOP_FIGURE_LAYOUT_LEGEND_Y = 1.0
+BOP_FIGURE_LAYOUT_LEGEND_X = 1.0
 
 ##### Front End Constants End #####
 
@@ -88,7 +88,7 @@ def _base_figure_layout( title : str ):
             yanchor = "bottom",
             y = BOP_FIGURE_LAYOUT_LEGEND_Y,
             xanchor = "right",
-            x = BOP_FIGURE_LAYOUT_LEGEND_Y,
+            x = BOP_FIGURE_LAYOUT_LEGEND_X,
             font = dict( color = BOP_COLOR_PALETTE[ "muted" ] )
         )
     )
@@ -188,7 +188,7 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
                              y = edge_y_coord,
                              mode = 'lines',
                              line = dict(
-                                color = BOP_COLOR_PALETTE[ "grid" ],
+                                color = BOP_COLOR_PALETTE[ "edge" ],
                                 width = BOP_EDGE_WIDTH
                              ),
                              hoverinfo = 'skip',
