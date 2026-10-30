@@ -89,10 +89,13 @@ class Lattice:
     def get_node_layer_index( self, index : int ):
         output = None
 
-        layer_num = self.get_node_layer( index )
-        # Getting number of nodes in previous layer
-        # and subtracting from the index
-        output = index - self.get_number_of_nodes_up_to_layer( layer_num - 1 )
+        if index == 0:
+            output = 0
+        else:
+            layer_num = self.get_node_layer( index )
+            # Getting number of nodes in previous layer
+            # and subtracting from the index
+            output = index - self.get_number_of_nodes_up_to_layer( layer_num - 1 )
 
         return output
 

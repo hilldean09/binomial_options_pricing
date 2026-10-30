@@ -3,6 +3,8 @@
 import numpy as np
 import json
 from flask import Flask, jsonify, request, render_template
+
+import plotly
 from plotly import graph_objects as go
 
 # For importing .env variables
@@ -116,7 +118,7 @@ def _construct_lattice_title( inputs, binomial_output, lattice_type ):
     elif lattice_type == "leverage":
         lattice_type_string = "Leverage"
 
-    title = binomial_pricing_modeL_string + " " + lattice_type_string + " Lattice for " + option_exercise_string + " " + option_type_string + f" for N={inputs.num_layers}"
+    title = binomial_pricing_model_string + " " + lattice_type_string + " Lattice for " + option_exercise_string + " " + option_type_string + f" for N={inputs.num_layers}"
 
     return title
 
@@ -126,7 +128,7 @@ def _calculate_node_lattice_figure_coordinate( index, lattice : Lattice, spot, s
     index_in_layer = lattice.get_node_layer_index( index )
 
     x_coord = layer_num * timestep
-    y_coord = engine._calculate_virtual_spot_in_lattice( spot, layer_num, index_in_layer )
+    y_coord = engine._calculate_virtual_spot_in_lattice( spot, step_volatility, layer_num, index_in_layer )
 
     return ( x_coord, y_coord )
 
@@ -156,11 +158,11 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
             down_child_index = x_coord_lattice.get_node_down_child( index )
             up_child_index = x_coord_lattice.get_node_up_child( index )
 
-            down_child_x_coord = x_coord_lattice.get_index_value( down_child_index )
-            down_child_y_coord = y_coord_lattice.get_index_value( down_child_index )
+            down_child_x_coord = x_coord_lattice.get_node_value( down_child_index )
+            down_child_y_coord = y_coord_lattice.get_node_value( down_child_index )
 
-            up_child_x_coord = x_coord_lattice.get_index_value( up_child_index )
-            up_child_y_coord = y_coord_lattice.get_index_value( up_child_index )
+            up_child_x_coord = x_coord_lattice.get_node_value( up_child_index )
+            up_child_y_coord = y_coord_lattice.get_node_value( up_child_index )
 
             edge_x_coord += [ node_coord[ 0 ], down_child_x_coord, None, node_coord[ 0 ], up_child_x_coord, None ]
             edge_y_coord += [ node_coord[ 1 ], down_child_y_coord, None, node_coord[ 1 ], up_child_y_coord, None ]
