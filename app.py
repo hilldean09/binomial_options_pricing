@@ -22,26 +22,26 @@ BOP_DEFAULT_MAX_DRAW_DEPTH = 50
 # Agent modification allowed within this ection
 
 BOP_COLOR_PALETTE = {
-    "background" : "SOME COLOUR",
-    "grid" : "SOME COLOUR",
+    "background" : "#121117",
+    "grid" : "#3b3848",
     "paper_bgcolor" : "rgba(0,0,0,0)",
     "plot_bgcolor" : "rgba(0,0,0,0)",
-    "title" : "SOME COLOUR",
-    "text" : "SOME COLOUR",
-    "muted" : "SOME COLOUR",
-    "panel" : "SOME COLOUR",
-    "border" : "SOME COLOUR"
+    "title" : "#e8e6ef",
+    "text" : "#e8e6ef",
+    "muted" : "#9d99ab",
+    "panel" : "#1b1a22",
+    "border" : "#2c2a36"
 }
 
 BOP_NODE_MARKER_SIZE = 7
 BOP_EDGE_WIDTH = 1
 BOP_FIGURE_LAYOUT_TITLE_FONT_SIZE = 16
-BOP_FIGURE_LAYOUT_FONT_FAMILY_STRING = "SOME FONTS ENDING WITH SANS-SERIF"
+BOP_FIGURE_LAYOUT_FONT_FAMILY_STRING = "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
 BOP_FIGURE_LAYOUT_MARGINS = {
-    l = 60,
-    r = 30,
-    t = 50,
-    b = 50
+    "l" : 60,
+    "r" : 30,
+    "t" : 50,
+    "b" : 50
 }
 
 BOP_FIGURE_LAYOUT_LEGEND_Y = 1.02
