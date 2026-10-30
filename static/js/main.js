@@ -1,5 +1,5 @@
 // Dashboard: collects model parameters, posts them to /api/price,
-// and renders the returned option price and lattices.
+// and renders the returned option price, lattices and lattice figures.
 
 (function () {
     "use strict";
@@ -16,6 +16,18 @@
         delta: document.getElementById("lattice-delta"),
         leverage: document.getElementById("lattice-leverage"),
     };
+
+    const figureOutputs = {
+        price: document.getElementById("figure-price"),
+        delta: document.getElementById("figure-delta"),
+        leverage: document.getElementById("figure-leverage"),
+    };
+
+    const FIGURE_CONFIG = { responsive: true, displayModeBar: false };
+
+    // Below this width (px) figure titles no longer fit on one line.
+    const NARROW_FIGURE_WIDTH = 520;
+    const TITLE_LINE_HEIGHT = 20;
 
     // Field name -> parser. Names match the keys the engine reads.
     const FIELDS = {
@@ -91,7 +103,35 @@
             }
         }
 
+        const figures = (result.figures && result.figures.lattices) || {};
+        for (const [key, element] of Object.entries(figureOutputs)) {
+            if (figures[key]) {
+                renderFigure(element, figures[key]);
+            } else {
+                Plotly.purge(element);
+                empty.push("figures.lattices." + key);
+            }
+        }
+
         return empty;
+    }
+
+    // Plotly doesn't wrap titles, so split long ones at the middle word.
+    function wrapTitle(layout) {
+        const text = layout.title.text;
+        const middle = text.indexOf(" ", Math.floor(text.length / 2));
+
+        if (middle !== -1) {
+            layout.title.text = `${text.slice(0, middle)}<br>${text.slice(middle + 1)}`;
+            layout.margin.t += TITLE_LINE_HEIGHT;
+        }
+    }
+
+    function renderFigure(element, figure) {
+        if (element.clientWidth < NARROW_FIGURE_WIDTH) {
+            wrapTitle(figure.layout);
+        }
+        Plotly.react(element, figure.data, figure.layout, FIGURE_CONFIG);
     }
 
     async function submit(event) {

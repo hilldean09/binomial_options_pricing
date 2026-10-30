@@ -101,6 +101,22 @@
             <output id="option-price" class="price-value" for="pricing-form">—</output>
         </section>
 
+        <!-- Lattice figures -->
+        <section class="tile tile-figure-price" aria-labelledby="figure-price-heading">
+            <h2 id="figure-price-heading">Price Lattice</h2>
+            <div id="figure-price" class="figure"></div>
+        </section>
+
+        <section class="tile tile-figure-delta" aria-labelledby="figure-delta-heading">
+            <h2 id="figure-delta-heading">Delta Lattice</h2>
+            <div id="figure-delta" class="figure"></div>
+        </section>
+
+        <section class="tile tile-figure-leverage" aria-labelledby="figure-leverage-heading">
+            <h2 id="figure-leverage-heading">Leverage Lattice</h2>
+            <div id="figure-leverage" class="figure"></div>
+        </section>
+
         <!-- Lattices -->
         <section class="tile tile-lattices" aria-labelledby="lattices-heading">
             <h2 id="lattices-heading">Lattices</h2>
@@ -125,6 +141,7 @@
         <p>Excepteur sint occaecat cupidatat non proident.</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/plotly.js-dist-min@4.1.1/plotly.min.js"></script>
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

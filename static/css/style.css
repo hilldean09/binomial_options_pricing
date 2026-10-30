@@ -113,23 +113,41 @@ h1, h2, h3 {
     display: grid;
     gap: var(--gap);
     grid-template-columns: minmax(260px, 1fr) 2fr;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto auto auto auto 1fr;
     grid-template-areas:
         "inputs price"
+        "inputs figure-price"
+        "inputs figure-delta"
+        "inputs figure-leverage"
         "inputs lattices";
     align-items: start;
 }
 
-.tile-inputs   { grid-area: inputs; }
-.tile-price    { grid-area: price; }
-.tile-lattices { grid-area: lattices; }
+.tile-inputs           { grid-area: inputs; }
+.tile-price            { grid-area: price; }
+.tile-figure-price     { grid-area: figure-price; }
+.tile-figure-delta     { grid-area: figure-delta; }
+.tile-figure-leverage  { grid-area: figure-leverage; }
+.tile-lattices         { grid-area: lattices; }
+
+@media (min-width: 761px) {
+    /* Keeps the parameters in view while scrolling through the figures */
+    .tile.tile-inputs {
+        position: sticky;
+        top: 1rem;
+    }
+}
 
 @media (max-width: 760px) {
     .dashboard {
         grid-template-columns: 1fr;
+        grid-template-rows: none;
         grid-template-areas:
             "inputs"
             "price"
+            "figure-price"
+            "figure-delta"
+            "figure-leverage"
             "lattices";
     }
 }
@@ -216,7 +234,7 @@ h1, h2, h3 {
     border-color: var(--error);
 }
 
-button {
+#submit-button {
     font: inherit;
     font-weight: 600;
     width: 100%;
@@ -228,11 +246,11 @@ button {
     cursor: pointer;
 }
 
-button:hover {
+#submit-button:hover {
     background: var(--accent-hover);
 }
 
-button:disabled {
+#submit-button:disabled {
     opacity: 0.6;
     cursor: progress;
 }
@@ -256,6 +274,19 @@ button:disabled {
     font-size: 2.5rem;
     font-weight: 700;
     font-variant-numeric: tabular-nums;
+}
+
+/* Figures */
+
+.figure {
+    height: 26rem;
+    margin-top: 0.75rem;
+}
+
+/* Placeholder until the first figure is drawn */
+.figure:empty::before {
+    content: "—";
+    color: var(--text-muted);
 }
 
 /* Lattices */
