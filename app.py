@@ -340,6 +340,13 @@ def api_price():
             "price": binomial_output.price_lattice.array.tolist(),
             "delta": binomial_output.delta_lattice.array.tolist(),
             "leverage": binomial_output.leverage_lattice.array.tolist()
+        },
+        "figures": {
+            "lattices" : {
+                "price" : price_lattice_figure,
+                "delta" : delta_lattice_figure,
+                "leverage" : leverage_lattice_figure
+            }
         }
     } )
 
