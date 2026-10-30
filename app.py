@@ -334,7 +334,7 @@ def api_price():
 
     # NOTE: .tolist() used as np.ndarray objects
     # are not JSON serialisable
-    return json.dumps( { 
+    output = { 
         "binomial_option_price": binomial_output.option_price,
         "binomial_lattices": {
             "price": binomial_output.price_lattice.array.tolist(),
@@ -343,12 +343,14 @@ def api_price():
         },
         "figures": {
             "lattices" : {
-                "price" : price_lattice_figure,
-                "delta" : delta_lattice_figure,
-                "leverage" : leverage_lattice_figure
+                "price" : json.loads( json.dumps( price_lattice_figure, cls=plotly.utils.PlotlyJSONEncoder ) ),
+                "delta" : json.loads( json.dumps( delta_lattice_figure, cls=plotly.utils.PlotlyJSONEncoder ) ),
+                "leverage" : json.loads( json.dumps( leverage_lattice_figure, cls=plotly.utils.PlotlyJSONEncoder ) )
             }
         }
-    } )
+    }
+
+    return jsonify( output )
 
 if __name__ == "__main__":
     env_variables = Environment_Variables()
