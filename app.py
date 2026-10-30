@@ -11,7 +11,7 @@ import os
 
 # Project libraries
 from lattice import Lattice
-import structs
+from structs import Api_Price_Inputs
 import engine
 
 app = Flask( __name__ )
@@ -141,14 +141,14 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
     edge_x_coord : list[ float | None ] = []
     edge_y_coord : list[ float | None ] = []
 
-    coord_lattice_num_nodes = x_coord_lattice.get_num_nodes()
-    assert coord_lattice_num_nodes == y_coord_lattice.get_num_nodes()
+    coord_lattice_num_nodes = x_coord_lattice.get_number_of_nodes()
+    assert coord_lattice_num_nodes == y_coord_lattice.get_number_of_nodes()
 
     timestep = engine.calculate_timestep( inputs.time_to_expiry, lattice.num_layers )
     step_volatility = engine.adjust_annual_value_to_step( inputs.volatility, timestep )
 
     for index in range( coord_lattice_num_nodes - 1, -1, -1 ):
-        node_coord = _calculate_node_lattice_figure_coordinate( index, lattice, inputs.stop, step_volatility, timestep )
+        node_coord = _calculate_node_lattice_figure_coordinate( index, lattice, inputs.spot, step_volatility, timestep )
         x_coord_lattice.set_node_value( index, node_coord[ 0 ] )
         y_coord_lattice.set_node_value( index, node_coord[ 1 ] )
 
@@ -167,7 +167,7 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
 
     nodes_trace = go.Scatter( name = 'nodes',
                               x = x_coord_lattice.array,
-                              y = y_coord_lattice.array.
+                              y = y_coord_lattice.array,
                               mode = 'markers',
                               marker = dict(
                                 size = BOP_NODE_MARKER_SIZE,
@@ -318,12 +318,12 @@ def api_price():
         # TODO: Add some more significant response
         pass
 
-    inputs = structs.Api_Price_Inputs( spot = spot, strike = strike, volatility = volatility, risk_free_rate = risk_free_rate, time_to_expiry = time_to_expiry, num_layers = num_layers, option_type = option_type, option_exercise = option_exercise, binomial_pricing_model = binomial_pricing_model )
+    inputs = Api_Price_Inputs( spot = spot, strike = strike, volatility = volatility, risk_free_rate = risk_free_rate, time_to_expiry = time_to_expiry, num_layers = num_layers, option_type = option_type, option_exercise = option_exercise, binomial_pricing_model = binomial_pricing_model )
     binomial_output = engine.run_engine( inputs)
 
-    price_lattice_figure = _build_price_lattice_figure( inputs, binomial_output, binomial_output.price_lattice )
-    delta_lattice_figure = _build_delta_lattice_figure( inputs, binomial_output, binomial_output.delta_lattice )
-    leverage_lattice_figure = _build_leverage_lattice_figure( inputs, binomial_output, binomial_output.leverage_lattice )
+    price_lattice_figure = _build_price_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH )
+    delta_lattice_figure = _build_delta_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH )
+    leverage_lattice_figure = _build_leverage_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH )
 
     # Debugging
     # TODO: Add proper debugging flag
