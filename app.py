@@ -109,6 +109,10 @@ def _construct_lattice_title( inputs, binomial_output, lattice_type ):
 
     if lattice_type == "price":
         lattice_type_string = "Price"
+    elif lattice_type == "delta":
+        lattice_type_string = "Delta"
+    elif lattice_type == "leverage":
+        lattice_type_string = "Leverage"
 
     title = binomial_pricing_modeL_string + " " + lattice_type_string + " Lattice for " + option_exercise_string + " " + option_type_string + f" for N={inputs.num_layers}"
 
@@ -191,23 +195,80 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
 
     traces = [ nodes_trace, edges_trace ]
 
-    return traces
+    figure = go.Figure( data = traces )
 
+    return figure
 
 def _build_price_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
-    traces = _build_general_lattice_figure( inputs, binomial_output, binomial_output.price_lattice, max_draw_depth=max_draw_depth )
-    figure = go.Figure( data = traces )
+    figure = _build_general_lattice_figure( inputs, binomial_output, binomial_output.price_lattice, max_draw_depth=max_draw_depth )
 
     title = _construct_lattice_title( inputs, binomial_output, "price" )
     layout = _base_figure_layout( title )
+    layout.update(
+        xaxis = dict( 
+            title = "Time (months)",
+            gridcolor = BOP_COLOR_PALETTE[ "grid" ],
+            zeroline = False,
+            color = BOP_COLOR_PALETTE[ "muted" ]
+        ),
+        yaxis = dict( 
+            title = "Option Price (dollars)",
+            gridcolor = BOP_COLOR_PALETTE[ "grid" ],
+            zeroline = False,
+            color = BOP_COLOR_PALETTE[ "muted" ]
+        )
+    )
 
+    figure.update_layout( layout )
+    return figure
 
 
 def _build_delta_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
-    pass
+    figure = _build_general_lattice_figure( inputs, binomial_output, binomial_output.delta_lattice, max_draw_depth=max_draw_depth )
+
+    title = _construct_lattice_title( inputs, binomial_output, "delta" )
+    layout = _base_figure_layout( title )
+    layout.update(
+        xaxis = dict( 
+            title = "Time (months)",
+            gridcolor = BOP_COLOR_PALETTE[ "grid" ],
+            zeroline = False,
+            color = BOP_COLOR_PALETTE[ "muted" ]
+        ),
+        yaxis = dict( 
+            title = "Delta (shares)",
+            gridcolor = BOP_COLOR_PALETTE[ "grid" ],
+            zeroline = False,
+            color = BOP_COLOR_PALETTE[ "muted" ]
+        )
+    )
+
+    figure.update_layout( layout )
+    return figure
+
 
 def _build_leverage_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
-    pass
+    figure = _build_general_lattice_figure( inputs, binomial_output, binomial_output.leverage_lattice, max_draw_depth=max_draw_depth )
+
+    title = _construct_lattice_title( inputs, binomial_output, "leverage" )
+    layout = _base_figure_layout( title )
+    layout.update(
+        xaxis = dict( 
+            title = "Time (months)",
+            gridcolor = BOP_COLOR_PALETTE[ "grid" ],
+            zeroline = False,
+            color = BOP_COLOR_PALETTE[ "muted" ]
+        ),
+        yaxis = dict( 
+            title = "Leverage (dollars)",
+            gridcolor = BOP_COLOR_PALETTE[ "grid" ],
+            zeroline = False,
+            color = BOP_COLOR_PALETTE[ "muted" ]
+        )
+    )
+
+    figure.update_layout( layout )
+    return figure
 
 
 ##### Routes #####
