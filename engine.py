@@ -56,6 +56,7 @@ def _calculate_virtual_spot_in_lattice( spot, step_volatility, \
     -1.5 -> -2)
     """
     virtual_spot = None
+    index_in_layer_diff = None
 
     median_index_in_layer = ( layer_num + 2 ) / 2 - 1
 
@@ -63,12 +64,16 @@ def _calculate_virtual_spot_in_lattice( spot, step_volatility, \
         virtual_spot = spot
     elif index_in_layer > median_index_in_layer:
         index_in_layer_diff = int( index_in_layer - np.floor( median_index_in_layer ) )
+        if layer_num % 2 == 0:
+            index_in_layer_diff += 1
         virtual_spot = ( 1 + step_volatility )**( index_in_layer_diff ) * spot
     elif index_in_layer < median_index_in_layer:
         index_in_layer_diff = int( np.ceil( median_index_in_layer ) - index_in_layer  )
+        if layer_num % 2 == 0:
+            index_in_layer_diff += 1
         virtual_spot = ( 1 - step_volatility )**( index_in_layer_diff ) * spot
 
-    print( f"layer_num, index_in_layer, virtual spot : {layer_num}, {index_in_layer}, {virtual_spot}" )
+    print( f"layer_num, index_in_layer, median_index_in_layer, index_in_layer_diff, virtual spot : {layer_num}, {index_in_layer}, {median_index_in_layer}, {index_in_layer_diff}, {virtual_spot}" )
     return virtual_spot
 
 
