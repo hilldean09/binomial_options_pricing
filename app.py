@@ -24,6 +24,7 @@ BOP_DEFAULT_MAX_DRAW_DEPTH = 50
 BOP_COLOR_PALETTE = {
     "background" : "#121117",
     "grid" : "#3b3848",
+    "edge" : "#7c5bd6",
     "paper_bgcolor" : "rgba(0,0,0,0)",
     "plot_bgcolor" : "rgba(0,0,0,0)",
     "title" : "#e8e6ef",
