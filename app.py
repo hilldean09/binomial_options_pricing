@@ -33,7 +33,8 @@ BOP_COLOR_PALETTE = {
     "text" : "#e8e6ef",
     "muted" : "#9d99ab",
     "panel" : "#1b1a22",
-    "border" : "#2c2a36"
+    "border" : "#2c2a36",
+    "strike_hline" : "#f2a7a7"
 }
 
 BOP_NODE_MARKER_SIZE = 16
@@ -51,6 +52,8 @@ BOP_COLOUR_BAR_THICKNESS = 5
 
 BOP_FIGURE_LAYOUT_LEGEND_Y = 1.02
 BOP_FIGURE_LAYOUT_LEGEND_X = 1.0
+
+BOP_STRIKE_HLINE_WIDTH = 3
 
 ##### Front End Constants End #####
 
@@ -134,7 +137,7 @@ def _calculate_node_lattice_figure_coordinate( index, lattice : Lattice, spot, s
 
     return ( x_coord, y_coord )
 
-def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_depth=None, draw_last_layer=True ):
+def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_depth=None, draw_last_layer=True, draw_strike_line=True ):
     # Build coordinate lattice
     if max_draw_depth is None:
         max_draw_depth = BOP_DEFAULT_MAX_DRAW_DEPTH
@@ -211,6 +214,9 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
     traces = [ nodes_trace, edges_trace ]
 
     figure = go.Figure( data = traces )
+
+    # TODO: Add hline name annotation
+    figure.add_hline( y = inputs.strike, name = "Strike Price", line = dict( width = BOP_STRIKE_HLINE_WIDTH, dash = "dash", color = BOP_COLOR_PALETTE[ "strike_hline" ] ) )
 
     return figure
 
