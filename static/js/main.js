@@ -10,6 +10,9 @@
     const drawerPanel = document.getElementById("parameters-panel");
     const drawerToggle = document.getElementById("drawer-toggle");
 
+    // Pause (ms) before the drawer slides out on page load.
+    const DRAWER_OPEN_DELAY = 200;
+
     const form = document.getElementById("pricing-form");
     const submitButton = document.getElementById("submit-button");
     const status = document.getElementById("form-status");
@@ -185,4 +188,7 @@
             setDrawerOpen(false);
         }
     });
+
+    // The closed state has to paint first for the slide to be seen.
+    setTimeout(() => setDrawerOpen(true), DRAWER_OPEN_DELAY);
 })();
