@@ -51,6 +51,12 @@
         drawerPanel.inert = !open;
     }
 
+    function hideDrawer() {
+        // Focus must leave the panel before it becomes inert.
+        drawerToggle.focus();
+        setDrawerOpen(false);
+    }
+
     function setStatus(message, isError) {
         status.textContent = message;
         status.classList.toggle("is-error", Boolean(isError));
@@ -169,6 +175,9 @@
                 setStatus(`Updated ${time}, but the response had no value for: ${empty.join(", ")}`, true);
             } else {
                 setStatus("Updated " + time, false);
+                if (isDrawerOpen()) {
+                    hideDrawer();
+                }
             }
         } catch (error) {
             setStatus(error.message, true);
@@ -183,9 +192,7 @@
 
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && isDrawerOpen()) {
-            // Focus must leave the panel before it becomes inert.
-            drawerToggle.focus();
-            setDrawerOpen(false);
+            hideDrawer();
         }
     });
 
