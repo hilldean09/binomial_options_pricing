@@ -173,7 +173,7 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
     y_coord_array = y_coord_lattice.array
 
     if not draw_last_layer:
-        number_of_nodes_up_to_last_layer = x_coord_lattice.get_number_of_nodes_up_to_layer( num_layers - 2 )
+        number_of_nodes_up_to_last_layer = x_coord_lattice.get_number_of_nodes_up_to_layer( x_coord_lattice.num_layers - 2 )
         x_coord_array = x_coord_array[ 0 : number_of_nodes_up_to_last_layer : 1 ]
         y_coord_array = y_coord_array[ 0 : number_of_nodes_up_to_last_layer : 1 ]
 
