@@ -57,45 +57,52 @@
         <p class="subtitle">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
     </header>
 
-    <main class="dashboard">
-        <!-- Model parameters -->
-        <section class="tile" aria-labelledby="inputs-heading">
-            <h2 id="inputs-heading">Model Parameters</h2>
-            <p class="tile-text">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    <!-- Model parameters: slides out from the left, over the page -->
+    <div id="parameters-drawer" class="drawer">
+        <button type="button" id="drawer-toggle" class="drawer-toggle" aria-label="Model parameters" aria-expanded="false" aria-controls="parameters-panel">
+            <span class="drawer-toggle-icon" aria-hidden="true">›</span>
+            <span aria-hidden="true">Parameters</span>
+        </button>
 
-            <form id="pricing-form" novalidate>
-                <div class="field">
-                    <label for="spot">Spot price</label>
-                    <input id="spot" name="spot" type="number" step="any" min="0" value="100" required>
-                </div>
-                <div class="field">
-                    <label for="strike">Strike price</label>
-                    <input id="strike" name="strike" type="number" step="any" min="0" value="100" required>
-                </div>
-                <div class="field">
-                    <label for="volatility">Volatility</label>
-                    <input id="volatility" name="volatility" type="number" step="0.01" min="0" value="0.2" required>
-                </div>
-                <div class="field">
-                    <label for="risk_free_rate">Risk-free rate</label>
-                    <input id="risk_free_rate" name="risk_free_rate" type="number" step="0.01" value="0.05" required>
-                </div>
-                <div class="field">
-                    <label for="time_to_expiry">Time to expiry (months)</label>
-                    <input id="time_to_expiry" name="time_to_expiry" type="number" step="any" min="0" value="12" required>
-                </div>
-                <div class="field">
-                    <label for="num_layers">Number of steps</label>
-                    <input id="num_layers" name="num_layers" type="number" step="1" min="1" value="3" required>
-                </div>
+        <section id="parameters-panel" class="tile drawer-panel" aria-labelledby="inputs-heading" inert>
+            <div class="drawer-body">
+                <h2 id="inputs-heading">Model Parameters</h2>
+                <p class="tile-text">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 
-                <div class="form-actions">
+                <form id="pricing-form" novalidate>
+                    <div class="field">
+                        <label for="spot">Spot price</label>
+                        <input id="spot" name="spot" type="number" step="any" min="0" value="100" required>
+                    </div>
+                    <div class="field">
+                        <label for="strike">Strike price</label>
+                        <input id="strike" name="strike" type="number" step="any" min="0" value="100" required>
+                    </div>
+                    <div class="field">
+                        <label for="volatility">Volatility</label>
+                        <input id="volatility" name="volatility" type="number" step="0.01" min="0" value="0.2" required>
+                    </div>
+                    <div class="field">
+                        <label for="risk_free_rate">Risk-free rate</label>
+                        <input id="risk_free_rate" name="risk_free_rate" type="number" step="0.01" value="0.05" required>
+                    </div>
+                    <div class="field">
+                        <label for="time_to_expiry">Time to expiry (months)</label>
+                        <input id="time_to_expiry" name="time_to_expiry" type="number" step="any" min="0" value="12" required>
+                    </div>
+                    <div class="field">
+                        <label for="num_layers">Number of steps</label>
+                        <input id="num_layers" name="num_layers" type="number" step="1" min="1" value="3" required>
+                    </div>
+
                     <button type="submit" id="submit-button">Price option</button>
                     <p id="form-status" class="status" role="status" aria-live="polite"></p>
-                </div>
-            </form>
+                </form>
+            </div>
         </section>
+    </div>
 
+    <main class="dashboard">
         <!-- Option price -->
         <section class="tile" aria-labelledby="price-heading">
             <h2 id="price-heading">Option Price</h2>

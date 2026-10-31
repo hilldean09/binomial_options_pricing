@@ -6,6 +6,10 @@
 
     const API_URL = "/api/price";
 
+    const drawer = document.getElementById("parameters-drawer");
+    const drawerPanel = document.getElementById("parameters-panel");
+    const drawerToggle = document.getElementById("drawer-toggle");
+
     const form = document.getElementById("pricing-form");
     const submitButton = document.getElementById("submit-button");
     const status = document.getElementById("form-status");
@@ -32,6 +36,17 @@
         time_to_expiry: parseFloat,
         num_layers: (value) => parseInt(value, 10),
     };
+
+    function isDrawerOpen() {
+        return drawer.classList.contains("is-open");
+    }
+
+    function setDrawerOpen(open) {
+        drawer.classList.toggle("is-open", open);
+        drawerToggle.setAttribute("aria-expanded", String(open));
+        // Keeps the hidden form out of the tab order and from screen readers.
+        drawerPanel.inert = !open;
+    }
 
     function setStatus(message, isError) {
         status.textContent = message;
@@ -160,4 +175,14 @@
     }
 
     form.addEventListener("submit", submit);
+
+    drawerToggle.addEventListener("click", () => setDrawerOpen(!isDrawerOpen()));
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && isDrawerOpen()) {
+            // Focus must leave the panel before it becomes inert.
+            drawerToggle.focus();
+            setDrawerOpen(false);
+        }
+    });
 })();
