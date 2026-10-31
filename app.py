@@ -36,7 +36,7 @@ BOP_COLOR_PALETTE = {
     "border" : "#2c2a36"
 }
 
-BOP_NODE_MARKER_SIZE = 7
+BOP_NODE_MARKER_SIZE = 16
 BOP_EDGE_WIDTH = 1
 BOP_FIGURE_LAYOUT_TITLE_FONT_SIZE = 16
 BOP_FIGURE_LAYOUT_FONT_FAMILY_STRING = "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
