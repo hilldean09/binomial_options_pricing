@@ -215,7 +215,8 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
 
     figure = go.Figure( data = traces )
 
-    figure.add_hline( y = inputs.strike, line = dict( width = BOP_STRIKE_HLINE_WIDTH, dash = "dash", color = BOP_COLOR_PALETTE[ "strike_hline" ] ) )
+    # TODO: Add hline name annotation
+    figure.add_hline( y = inputs.strike, name = "Strike Price", line = dict( width = BOP_STRIKE_HLINE_WIDTH, dash = "dash", color = BOP_COLOR_PALETTE[ "strike_hline" ] ) )
 
     return figure
 
