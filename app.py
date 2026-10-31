@@ -177,7 +177,7 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
         x_coord_array = x_coord_array[ 0 : number_of_nodes_up_to_last_layer : 1 ]
         y_coord_array = y_coord_array[ 0 : number_of_nodes_up_to_last_layer : 1 ]
 
-    # TODO: Add option to disable displaying last layer nodes
+    # TODO: Add marker scaling for N > 20
     nodes_trace = go.Scatter( name = 'nodes',
                               x = x_coord_array,
                               y = y_coord_array,
@@ -216,6 +216,8 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
 
 def _build_price_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
     figure = _build_general_lattice_figure( inputs, binomial_output, binomial_output.price_lattice, max_draw_depth=max_draw_depth )
+
+    # TODO: Add colour bar title update
 
     title = _construct_lattice_title( inputs, binomial_output, "price" )
     layout = _base_figure_layout( title )
