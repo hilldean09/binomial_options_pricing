@@ -374,6 +374,6 @@ if __name__ == "__main__":
     print( f"app_host : {env_variables.app_host}" )
     print( f"app_port : {env_variables.app_port}" )
 
-    app.run()
+    app.run( host = env_variables.app_host, port = env_variables.app_port )
 
 
