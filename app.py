@@ -47,6 +47,8 @@ BOP_FIGURE_LAYOUT_MARGINS = {
     "b" : 50
 }
 
+BOP_COLOUR_BAR_THICKNESS = 5
+
 BOP_FIGURE_LAYOUT_LEGEND_Y = 1.02
 BOP_FIGURE_LAYOUT_LEGEND_X = 1.0
 
@@ -167,6 +169,7 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
             edge_x_coord += [ node_coord[ 0 ], down_child_x_coord, None, node_coord[ 0 ], up_child_x_coord, None ]
             edge_y_coord += [ node_coord[ 1 ], down_child_y_coord, None, node_coord[ 1 ], up_child_y_coord, None ]
 
+    # TODO: Add option to disable displaying last layer nodes
     nodes_trace = go.Scatter( name = 'nodes',
                               x = x_coord_lattice.array,
                               y = y_coord_lattice.array,
@@ -178,7 +181,7 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
                                 showscale = True,
                                 colorbar = dict(
                                     outlinewidth = 0,
-                                    thickness = 0,
+                                    thickness = BOP_COLOUR_BAR_THICKNESS,
                                 )
                                 # Line?
                               ),
@@ -216,7 +219,7 @@ def _build_price_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
             color = BOP_COLOR_PALETTE[ "muted" ]
         ),
         yaxis = dict( 
-            title = "Option Price (dollars)",
+            title = "Asset Value (dollars)",
             gridcolor = BOP_COLOR_PALETTE[ "grid" ],
             zeroline = False,
             color = BOP_COLOR_PALETTE[ "muted" ]
@@ -240,7 +243,7 @@ def _build_delta_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
             color = BOP_COLOR_PALETTE[ "muted" ]
         ),
         yaxis = dict( 
-            title = "Delta (shares)",
+            title = "Asset Value (dollars)",
             gridcolor = BOP_COLOR_PALETTE[ "grid" ],
             zeroline = False,
             color = BOP_COLOR_PALETTE[ "muted" ]
@@ -264,7 +267,7 @@ def _build_leverage_lattice_figure( inputs, binomial_output, max_draw_depth=None
             color = BOP_COLOR_PALETTE[ "muted" ]
         ),
         yaxis = dict( 
-            title = "Leverage (dollars)",
+            title = "Asset Value (dollars)",
             gridcolor = BOP_COLOR_PALETTE[ "grid" ],
             zeroline = False,
             color = BOP_COLOR_PALETTE[ "muted" ]
