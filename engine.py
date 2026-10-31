@@ -1,5 +1,6 @@
 # Core pricing logic
 import numpy as np
+import scipy.stats
 
 import math
 
@@ -22,6 +23,9 @@ def adjust_annual_value_to_step( value, timestep ):
     timestep : Measured in months
     """
     return np.pow( ( 1 + value ), timestep / 12 ) - 1
+
+def _adjust_time_to_expiry_to_annual( time_to_expiry ):
+    return float( time_to_expiry ) / 12
 
 
 def _calculate_crr_delta( spot, down_child_price, up_child_price, step_volatility ):
@@ -165,6 +169,55 @@ def run_crr_binomial_pricing( spot, strike, \
 
     return option_price, price_lattice, delta_lattice, leverage_lattice
 
+##### Black Scholes Pricing #####
+def _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry ):
+    """
+    Pre-Merton Black-Scholes model (non-dividend 
+    paying asset)
+    """
+    annual_time_to_expiry = _adjust_time_to_expiry_to_annual( time_to_expiry )
+
+    d1 = ( np.log( spot / strike ) + annual_time_to_expiry * ( risk_free_rate - dividend_yield + ( ( volatility ** 2 ) / 2 ) ) ) / ( volatility * np.sqrt( annual_time_to_expiry ) )
+    d2 = d1 - volatility * np.sqrt( annual_time_to_expiry )
+
+    return d1, d2
+
+def _run_black_scholes_european_pricing( spot, strike,
+                                        volatility, risk_free_rate,
+                                        time_to_expiry, option_type ):
+    assert option_type == "call" or option_type == "put"
+
+    d1, d2 = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+
+    if option_type == "put":
+        d1 *= -1.0
+        d2 *= -1.0
+
+    annual_time_to_expiry = _adjust_time_to_expiry_to_annual( time_to_expiry )
+
+    # Standard normal
+    normal_distribution = scipy.stats.norm( 0, 1 )
+
+    option_price = spot * normal_distribution.cdf( d1 ) - strike * np.exp( -1.0 * risk_free_rate * annual_time_to_expiry ) * normal_distribution.cdf( d2 )
+
+    if option_type == "put":
+        option_price *= -1
+
+    return option_price
+
+
+def run_black_scholes_pricing( spot, strike,
+                               volatility, risk_free_rate,
+                               time_to_expiry, num_layers,
+                               option_type, option_exercise ):
+    option_price = None
+
+    if option_exercise == "european":
+        option_price = _run_black_scholes_european_pricing( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+
+
+
+##### Engine #####
 
 def run_engine( inputs ):
     binomial_option_price = None
