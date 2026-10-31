@@ -1,5 +1,5 @@
 // Dashboard: collects model parameters, posts them to /api/price,
-// and renders the returned option price, lattices and lattice figures.
+// and renders the returned option price and lattice figures.
 
 (function () {
     "use strict";
@@ -10,12 +10,6 @@
     const submitButton = document.getElementById("submit-button");
     const status = document.getElementById("form-status");
     const priceOutput = document.getElementById("option-price");
-
-    const latticeOutputs = {
-        price: document.getElementById("lattice-price"),
-        delta: document.getElementById("lattice-delta"),
-        leverage: document.getElementById("lattice-leverage"),
-    };
 
     const figureOutputs = {
         price: document.getElementById("figure-price"),
@@ -78,13 +72,6 @@
         return String(value);
     }
 
-    function formatLattice(value) {
-        if (value === undefined) {
-            return MISSING_TEXT;
-        }
-        return typeof value === "string" ? value : JSON.stringify(value);
-    }
-
     // Returns the names of any outputs that came back null or missing.
     function render(result) {
         const empty = [];
@@ -93,14 +80,6 @@
         priceOutput.textContent = formatPrice(price);
         if (price === null || price === undefined) {
             empty.push("binomial_option_price");
-        }
-
-        const lattices = result.binomial_lattices || {};
-        for (const [key, element] of Object.entries(latticeOutputs)) {
-            element.textContent = formatLattice(lattices[key]);
-            if (lattices[key] === null || lattices[key] === undefined) {
-                empty.push("binomial_lattices." + key);
-            }
         }
 
         const figures = (result.figures && result.figures.lattices) || {};

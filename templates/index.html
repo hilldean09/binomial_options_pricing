@@ -59,7 +59,7 @@
 
     <main class="dashboard">
         <!-- Model parameters -->
-        <section class="tile tile-inputs" aria-labelledby="inputs-heading">
+        <section class="tile" aria-labelledby="inputs-heading">
             <h2 id="inputs-heading">Model Parameters</h2>
             <p class="tile-text">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 
@@ -74,11 +74,11 @@
                 </div>
                 <div class="field">
                     <label for="volatility">Volatility</label>
-                    <input id="volatility" name="volatility" type="number" step="any" min="0" value="0.2" required>
+                    <input id="volatility" name="volatility" type="number" step="0.01" min="0" value="0.2" required>
                 </div>
                 <div class="field">
                     <label for="risk_free_rate">Risk-free rate</label>
-                    <input id="risk_free_rate" name="risk_free_rate" type="number" step="any" value="0.05" required>
+                    <input id="risk_free_rate" name="risk_free_rate" type="number" step="0.01" value="0.05" required>
                 </div>
                 <div class="field">
                     <label for="time_to_expiry">Time to expiry (months)</label>
@@ -89,51 +89,34 @@
                     <input id="num_layers" name="num_layers" type="number" step="1" min="1" value="3" required>
                 </div>
 
-                <button type="submit" id="submit-button">Price option</button>
-                <p id="form-status" class="status" role="status" aria-live="polite"></p>
+                <div class="form-actions">
+                    <button type="submit" id="submit-button">Price option</button>
+                    <p id="form-status" class="status" role="status" aria-live="polite"></p>
+                </div>
             </form>
         </section>
 
         <!-- Option price -->
-        <section class="tile tile-price" aria-labelledby="price-heading">
+        <section class="tile" aria-labelledby="price-heading">
             <h2 id="price-heading">Option Price</h2>
             <p class="tile-text">Ut enim ad minim veniam, quis nostrud exercitation.</p>
             <output id="option-price" class="price-value" for="pricing-form">—</output>
         </section>
 
         <!-- Lattice figures -->
-        <section class="tile tile-figure-price" aria-labelledby="figure-price-heading">
+        <section class="tile" aria-labelledby="figure-price-heading">
             <h2 id="figure-price-heading">Price Lattice</h2>
             <div id="figure-price" class="figure"></div>
         </section>
 
-        <section class="tile tile-figure-delta" aria-labelledby="figure-delta-heading">
+        <section class="tile" aria-labelledby="figure-delta-heading">
             <h2 id="figure-delta-heading">Delta Lattice</h2>
             <div id="figure-delta" class="figure"></div>
         </section>
 
-        <section class="tile tile-figure-leverage" aria-labelledby="figure-leverage-heading">
+        <section class="tile" aria-labelledby="figure-leverage-heading">
             <h2 id="figure-leverage-heading">Leverage Lattice</h2>
             <div id="figure-leverage" class="figure"></div>
-        </section>
-
-        <!-- Lattices -->
-        <section class="tile tile-lattices" aria-labelledby="lattices-heading">
-            <h2 id="lattices-heading">Lattices</h2>
-            <p class="tile-text">Duis aute irure dolor in reprehenderit in voluptate velit esse.</p>
-
-            <div class="lattice">
-                <h3>Price</h3>
-                <pre id="lattice-price" class="lattice-text">—</pre>
-            </div>
-            <div class="lattice">
-                <h3>Delta</h3>
-                <pre id="lattice-delta" class="lattice-text">—</pre>
-            </div>
-            <div class="lattice">
-                <h3>Leverage</h3>
-                <pre id="lattice-leverage" class="lattice-text">—</pre>
-            </div>
         </section>
     </main>
 
