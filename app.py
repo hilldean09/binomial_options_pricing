@@ -134,7 +134,7 @@ def _calculate_node_lattice_figure_coordinate( index, lattice : Lattice, spot, s
 
     return ( x_coord, y_coord )
 
-def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_depth=None ):
+def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_depth=None, draw_last_layer=True ):
     # Build coordinate lattice
     if max_draw_depth is None:
         max_draw_depth = BOP_DEFAULT_MAX_DRAW_DEPTH
@@ -169,10 +169,18 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
             edge_x_coord += [ node_coord[ 0 ], down_child_x_coord, None, node_coord[ 0 ], up_child_x_coord, None ]
             edge_y_coord += [ node_coord[ 1 ], down_child_y_coord, None, node_coord[ 1 ], up_child_y_coord, None ]
 
+    x_coord_array = x_coord_lattice.array
+    y_coord_array = y_coord_lattice.array
+
+    if not draw_last_layer:
+        number_of_nodes_up_to_last_layer = x_coord_lattice.get_number_of_nodes_up_to_layer( num_layers - 2 )
+        x_coord_array = x_coord_array[ 0 : number_of_nodes_up_to_last_layer : 1 ]
+        y_coord_array = y_coord_array[ 0 : number_of_nodes_up_to_last_layer : 1 ]
+
     # TODO: Add option to disable displaying last layer nodes
     nodes_trace = go.Scatter( name = 'nodes',
-                              x = x_coord_lattice.array,
-                              y = y_coord_lattice.array,
+                              x = x_coord_array,
+                              y = y_coord_array,
                               mode = 'markers',
                               marker = dict(
                                 size = BOP_NODE_MARKER_SIZE,
@@ -231,7 +239,7 @@ def _build_price_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
 
 
 def _build_delta_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
-    figure = _build_general_lattice_figure( inputs, binomial_output, binomial_output.delta_lattice, max_draw_depth=max_draw_depth )
+    figure = _build_general_lattice_figure( inputs, binomial_output, binomial_output.delta_lattice, max_draw_depth=max_draw_depth, draw_last_layer=False )
 
     title = _construct_lattice_title( inputs, binomial_output, "delta" )
     layout = _base_figure_layout( title )
@@ -255,7 +263,7 @@ def _build_delta_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
 
 
 def _build_leverage_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
-    figure = _build_general_lattice_figure( inputs, binomial_output, binomial_output.leverage_lattice, max_draw_depth=max_draw_depth )
+    figure = _build_general_lattice_figure( inputs, binomial_output, binomial_output.leverage_lattice, max_draw_depth=max_draw_depth, draw_last_layer = False )
 
     title = _construct_lattice_title( inputs, binomial_output, "leverage" )
     layout = _base_figure_layout( title )
