@@ -120,7 +120,7 @@ def _construct_lattice_title( inputs, binomial_output, lattice_type ):
     elif lattice_type == "leverage":
         lattice_type_string = "Leverage"
 
-    title = binomial_pricing_model_string + " " + lattice_type_string + " Lattice for " + option_exercise_string + " " + option_type_string + f" for N={inputs.num_layers}"
+    title = binomial_pricing_model_string + " " + lattice_type_string + " Lattice for " + option_exercise_string + " " + option_type_string + f" Options with N={inputs.num_layers}"
 
     return title
 
