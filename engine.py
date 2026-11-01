@@ -185,6 +185,10 @@ def _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, ti
 def _calculate_black_scholes_delta( spot, strike,
                                     volatility, risk_free_rate,
                                     time_to_expiry, option_type ):
+    """
+    Pre-Merton Black-Scholes model (non-dividend 
+    paying asset)
+    """
     assert option_type == "call" or option_type == "put"
 
     d1, _ = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
@@ -193,7 +197,7 @@ def _calculate_black_scholes_delta( spot, strike,
     if option_type == "put":
         d1 *= -1.0
 
-    delta = normal_distribution( d1 )
+    delta = normal_distribution.cdf( d1 )
 
     if option_type == "put":
         delta *= -1.0
