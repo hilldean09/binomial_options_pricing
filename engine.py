@@ -221,6 +221,33 @@ def _calculate_black_scholes_gamma( spot, strike,
 
     return gamma
 
+def _calculate_black_scholes_theta( spot, strike, 
+                                    volatility, risk_free_rate,
+                                    time_to_expiry, option_type,
+                                    rate_periods_per_year = 252 ):
+    """
+    Pre-Merton Black-Scholes model (non-dividend 
+    paying asset)
+
+    rate_periods_per_year : scales the length of 
+    period that theta (as a rate) represents, i.e.
+    252 for trading days, 365 for calendar days,
+    52 for weeks, 12 for months, 1 for years.
+    """
+    assert option_type == "call" or option_type == "put"
+
+    annual_time_to_expiry = _adjust_time_to_expiry_to_annual( time_to_expiry )
+    d1, d2 = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+    normal_distribution = scipy.stats.norm( 0, 1 )
+    
+    type_multiplier = 1.0
+    if option_type == "put":
+        type_multiplier = -1.0
+
+    theta = ( 1 / rate_periods_per_year ) * ( -1.0 * ( ( spot * volatility ) / ( 2 * np.sqrt( a7 ) ) ) * normal_distribution.pdf( d1 ) - type_multiplier * ( risk_free_rate * strike * np.exp( -1.0 * risk_free_rate * annual_time_to_expiry ) * normal_distribution.pdf( type_multiplier * d2 ) ) )
+
+    return theta
+
 
 def _run_black_scholes_european_pricing( spot, strike,
                                          volatility, risk_free_rate,
