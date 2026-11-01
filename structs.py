@@ -25,11 +25,12 @@ class Binomial_Pricing_Return_Data:
         self.leverage_lattice = leverage_lattice
 
 class Black_Scholes_Return_Data:
-    def __init__( self, option_price, delta, gamma, theta, vega ):
+    def __init__( self, option_price=None, delta=None, gamma=None, theta=None, vega=None, rho=None ):
         self.option_price = option_price
         self.delta = delta
         self.gamma = gamma
         self.theta = theta
         self.vega = vega
+        self.rho = rho
 
 
