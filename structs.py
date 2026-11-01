@@ -26,7 +26,10 @@ class Binomial_Pricing_Return_Data:
 
 class Black_Scholes_Return_Data:
     def __init__( self, option_price, delta, gamma, theta, vega ):
-        pass
-
+        self.option_price = option_price
+        self.delta = delta
+        self.gamma = gamma
+        self.theta = theta
+        self.vega = vega
 
 
