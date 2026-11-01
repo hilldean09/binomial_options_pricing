@@ -340,7 +340,7 @@ def api_price():
         pass
 
     inputs = Api_Price_Inputs( spot = spot, strike = strike, volatility = volatility, risk_free_rate = risk_free_rate, time_to_expiry = time_to_expiry, num_layers = num_layers, option_type = option_type, option_exercise = option_exercise, binomial_pricing_model = binomial_pricing_model )
-    binomial_output = engine.run_engine( inputs)
+    binomial_output, black_scholes_output = engine.run_engine( inputs )
 
     price_lattice_figure = _build_price_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH )
     delta_lattice_figure = _build_delta_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH )
@@ -362,6 +362,16 @@ def api_price():
             "price": binomial_output.price_lattice.array.tolist(),
             "delta": binomial_output.delta_lattice.array.tolist(),
             "leverage": binomial_output.leverage_lattice.array.tolist()
+        },
+        "black_scholes": {
+            "price": black_scholes_output.option_price,
+            "greeks": {
+                "delta": black_scholes_output.delta,
+                "gamma": black_scholes_output.gamma,
+                "theta": black_scholes_output.theta,
+                "vega": black_scholes_output.vega,
+                "rho": black_scholes_output.rho
+            }
         },
         "figures": {
             "lattices" : {

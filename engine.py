@@ -314,11 +314,12 @@ def run_black_scholes_pricing( spot, strike,
                                volatility, risk_free_rate,
                                time_to_expiry, num_layers,
                                option_type, option_exercise ):
-    option_price = None
+    return_data = None
 
     if option_exercise == "european":
-        option_price = _run_black_scholes_european_pricing( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+        return_data = _run_black_scholes_european_pricing( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
 
+    return return_data
 
 
 ##### Engine #####
@@ -338,11 +339,15 @@ def run_engine( inputs ):
                                                            inputs.option_type, inputs.option_exercise )
         binomial_return = Binomial_Pricing_Return_Data( binomial_option_price, binomial_price_lattice, binomial_delta_lattice, binomial_leverage_lattice )
 
+    black_scholes_return_data = run_black_scholes_pricing( inputs.spot, inputs.strike, 
+                                                           inputs.volatility, inputs.risk_free_rate,
+                                                           inputs.time_to_expiry, inputs.num_layers,
+                                                           inputs.option_type, inputs.option_exerecise )
+
     # TODO: Add inputs as an extra feature of the binomial
     # pricing return
     # TODO: Closed-form CRR European pricing
-    # TODO: Black-Scholes pricing
 
-    return binomial_return
+    return binomial_return, black_scholes_return_data
 
 
