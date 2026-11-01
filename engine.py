@@ -182,9 +182,29 @@ def _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, ti
 
     return d1, d2
 
+def _calculate_black_scholes_delta( spot, strike,
+                                    volatility, risk_free_rate,
+                                    time_to_expiry, option_type ):
+    assert option_type == "call" or option_type == "put"
+
+    d1, _ = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+    normal_distribution = scipy.stats.norm( 0, 1 )
+
+    if option_type == "put":
+        d1 *= -1.0
+
+    delta = normal_distribution( d1 )
+
+    if option_type == "put":
+        delta *= -1.0
+
+    return delta
+
+
 def _run_black_scholes_european_pricing( spot, strike,
-                                        volatility, risk_free_rate,
-                                        time_to_expiry, option_type ):
+                                         volatility, risk_free_rate,
+                                         time_to_expiry, option_type,
+                                         do_greeks = True ):
     assert option_type == "call" or option_type == "put"
 
     d1, d2 = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
@@ -199,6 +219,9 @@ def _run_black_scholes_european_pricing( spot, strike,
     normal_distribution = scipy.stats.norm( 0, 1 )
 
     option_price = spot * normal_distribution.cdf( d1 ) - strike * np.exp( -1.0 * risk_free_rate * annual_time_to_expiry ) * normal_distribution.cdf( d2 )
+
+    if do_greeks:
+        pass
 
     if option_type == "put":
         option_price *= -1
