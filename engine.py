@@ -248,6 +248,25 @@ def _calculate_black_scholes_theta( spot, strike,
 
     return theta
 
+def _calculate_black_scholes_vega( spot, strike,
+                                   volatility, risk_free_rate,
+                                   time_to_expiry, option_type ):
+    """
+    Pre-Merton Black-Scholes model (non-dividend 
+    paying asset)
+
+    Returns vega per percent change in volatility
+    """
+    assert option_type == "call" or option_type == "put"
+
+    annual_time_to_expiry = _adjust_time_to_expiry_to_annual( time_to_expiry )
+    d1, _ = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+    normal_distribution = scipy.stats.norm( 0, 1 )
+
+    vega = ( S * np.sqrt( annual_time_to_expiry ) * normal_distribution.pdf( d1 ) ) / 100.0
+
+    return vega
+
 
 def _run_black_scholes_european_pricing( spot, strike,
                                          volatility, risk_free_rate,
