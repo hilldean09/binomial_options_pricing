@@ -5,7 +5,7 @@ import scipy.stats
 import math
 
 from lattice import Lattice
-from structs import Binomial_Pricing_Return_Data
+from structs import Binomial_Pricing_Return_Data, Black_Scholes_Return_Data
 
 
 def calculate_timestep( time_to_expiry, num_layers : int ):
@@ -290,13 +290,24 @@ def _run_black_scholes_european_pricing( spot, strike,
 
     option_price = spot * normal_distribution.cdf( d1 ) - strike * np.exp( -1.0 * risk_free_rate * annual_time_to_expiry ) * normal_distribution.cdf( d2 )
 
-    if do_greeks:
-        pass
-
     if option_type == "put":
         option_price *= -1
 
-    return option_price
+    delta = None
+    gamma = None
+    theta = None
+    vega = None
+    rho = None
+
+    if do_greeks:
+        delta = _calculate_black_scholes_delta( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+        gamma = _calculate_black_scholes_gamma( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+        theta = _calculate_black_scholes_theta( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+        vega = _calculate_black_scholes_vega( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+
+    return_data = Black_Scholes_Return_Data( option_price = option_price, delta = delta, gamma = gamma, theta = theta, vega = vega, rho = rho )
+
+    return return_data
 
 
 def run_black_scholes_pricing( spot, strike,
