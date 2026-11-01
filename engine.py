@@ -170,14 +170,16 @@ def run_crr_binomial_pricing( spot, strike, \
     return option_price, price_lattice, delta_lattice, leverage_lattice
 
 ##### Black Scholes Pricing #####
-def _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry ):
+def _calculate_black_scholes_d1_d2( spot, strike, 
+                                    volatility, risk_free_rate, 
+                                    time_to_expiry ):
     """
     Pre-Merton Black-Scholes model (non-dividend 
     paying asset)
     """
     annual_time_to_expiry = _adjust_time_to_expiry_to_annual( time_to_expiry )
 
-    d1 = ( np.log( spot / strike ) + annual_time_to_expiry * ( risk_free_rate - dividend_yield + ( ( volatility ** 2 ) / 2 ) ) ) / ( volatility * np.sqrt( annual_time_to_expiry ) )
+    d1 = ( np.log( spot / strike ) + annual_time_to_expiry * ( risk_free_rate + ( ( volatility ** 2 ) / 2 ) ) ) / ( volatility * np.sqrt( annual_time_to_expiry ) )
     d2 = d1 - volatility * np.sqrt( annual_time_to_expiry )
 
     return d1, d2
@@ -191,7 +193,7 @@ def _calculate_black_scholes_delta( spot, strike,
     """
     assert option_type == "call" or option_type == "put"
 
-    d1, _ = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+    d1, _ = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry )
     normal_distribution = scipy.stats.norm( 0, 1 )
 
     if option_type == "put":
@@ -214,7 +216,7 @@ def _calculate_black_scholes_gamma( spot, strike,
     assert option_type == "call" or option_type == "put"
 
     annual_time_to_expiry = _adjust_time_to_expiry_to_annual( time_to_expiry )
-    d1, _ = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+    d1, _ = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry )
     normal_distribution = scipy.stats.norm( 0, 1 )
 
     gamma = ( 1 / ( spot * volatility * np.sqrt( annual_time_to_expiry ) ) ) * normal_distribution.pdf( d1 )
@@ -237,14 +239,14 @@ def _calculate_black_scholes_theta( spot, strike,
     assert option_type == "call" or option_type == "put"
 
     annual_time_to_expiry = _adjust_time_to_expiry_to_annual( time_to_expiry )
-    d1, d2 = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+    d1, d2 = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry )
     normal_distribution = scipy.stats.norm( 0, 1 )
     
     type_multiplier = 1.0
     if option_type == "put":
         type_multiplier = -1.0
 
-    theta = ( 1 / rate_periods_per_year ) * ( -1.0 * ( ( spot * volatility ) / ( 2 * np.sqrt( a7 ) ) ) * normal_distribution.pdf( d1 ) - type_multiplier * ( risk_free_rate * strike * np.exp( -1.0 * risk_free_rate * annual_time_to_expiry ) * normal_distribution.pdf( type_multiplier * d2 ) ) )
+    theta = ( 1 / rate_periods_per_year ) * ( -1.0 * ( ( spot * volatility ) / ( 2 * np.sqrt( annual_time_to_expiry ) ) ) * normal_distribution.pdf( d1 ) - type_multiplier * ( risk_free_rate * strike * np.exp( -1.0 * risk_free_rate * annual_time_to_expiry ) * normal_distribution.pdf( type_multiplier * d2 ) ) )
 
     return theta
 
@@ -260,10 +262,10 @@ def _calculate_black_scholes_vega( spot, strike,
     assert option_type == "call" or option_type == "put"
 
     annual_time_to_expiry = _adjust_time_to_expiry_to_annual( time_to_expiry )
-    d1, _ = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+    d1, _ = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry )
     normal_distribution = scipy.stats.norm( 0, 1 )
 
-    vega = ( S * np.sqrt( annual_time_to_expiry ) * normal_distribution.pdf( d1 ) ) / 100.0
+    vega = ( spot * np.sqrt( annual_time_to_expiry ) * normal_distribution.pdf( d1 ) ) / 100.0
 
     return vega
 
@@ -277,7 +279,7 @@ def _run_black_scholes_european_pricing( spot, strike,
                                          do_greeks = True ):
     assert option_type == "call" or option_type == "put"
 
-    d1, d2 = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+    d1, d2 = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry )
 
     if option_type == "put":
         d1 *= -1.0
@@ -342,7 +344,7 @@ def run_engine( inputs ):
     black_scholes_return_data = run_black_scholes_pricing( inputs.spot, inputs.strike, 
                                                            inputs.volatility, inputs.risk_free_rate,
                                                            inputs.time_to_expiry, inputs.num_layers,
-                                                           inputs.option_type, inputs.option_exerecise )
+                                                           inputs.option_type, inputs.option_exercise )
 
     # TODO: Add inputs as an extra feature of the binomial
     # pricing return
