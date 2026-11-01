@@ -268,6 +268,9 @@ def _calculate_black_scholes_vega( spot, strike,
     return vega
 
 
+# TODO: Add rho calculation function
+
+
 def _run_black_scholes_european_pricing( spot, strike,
                                          volatility, risk_free_rate,
                                          time_to_expiry, option_type,
