@@ -103,12 +103,44 @@
     </div>
 
     <main class="dashboard">
-        <!-- Option price -->
-        <section class="tile" aria-labelledby="price-heading">
-            <h2 id="price-heading">Option Price</h2>
-            <p class="tile-text">Ut enim ad minim veniam, quis nostrud exercitation.</p>
-            <output id="option-price" class="price-value" for="pricing-form">—</output>
-        </section>
+        <div class="price-row">
+            <!-- CRR option price -->
+            <section class="tile" aria-labelledby="price-heading">
+                <h2 id="price-heading">CRR Option Price</h2>
+                <p class="tile-text">Ut enim ad minim veniam, quis nostrud exercitation.</p>
+                <output id="option-price" class="price-value" for="pricing-form">—</output>
+            </section>
+
+            <!-- Black-Scholes price and greeks -->
+            <section class="tile" aria-labelledby="black-scholes-heading">
+                <h2 id="black-scholes-heading">Black-Scholes Price</h2>
+                <p class="tile-text">Nemo enim ipsam voluptatem quia voluptas sit.</p>
+                <output id="black-scholes-price" class="price-value" for="pricing-form">—</output>
+
+                <dl class="greeks">
+                    <div class="greek">
+                        <dt>Delta</dt>
+                        <dd id="greek-delta">—</dd>
+                    </div>
+                    <div class="greek">
+                        <dt>Gamma</dt>
+                        <dd id="greek-gamma">—</dd>
+                    </div>
+                    <div class="greek">
+                        <dt>Theta</dt>
+                        <dd id="greek-theta">—</dd>
+                    </div>
+                    <div class="greek">
+                        <dt>Vega</dt>
+                        <dd id="greek-vega">—</dd>
+                    </div>
+                    <div class="greek">
+                        <dt>Rho</dt>
+                        <dd id="greek-rho">—</dd>
+                    </div>
+                </dl>
+            </section>
+        </div>
 
         <!-- Lattice figures -->
         <section class="tile" aria-labelledby="figure-price-heading">

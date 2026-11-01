@@ -1,5 +1,5 @@
 // Dashboard: collects model parameters, posts them to /api/price,
-// and renders the returned option price and lattice figures.
+// and renders the returned prices, greeks and lattice figures.
 
 (function () {
     "use strict";
@@ -17,6 +17,15 @@
     const submitButton = document.getElementById("submit-button");
     const status = document.getElementById("form-status");
     const priceOutput = document.getElementById("option-price");
+    const blackScholesPriceOutput = document.getElementById("black-scholes-price");
+
+    const greekOutputs = {
+        delta: document.getElementById("greek-delta"),
+        gamma: document.getElementById("greek-gamma"),
+        theta: document.getElementById("greek-theta"),
+        vega: document.getElementById("greek-vega"),
+        rho: document.getElementById("greek-rho"),
+    };
 
     const figureOutputs = {
         price: document.getElementById("figure-price"),
@@ -86,7 +95,7 @@
     // the server are shown explicitly rather than looking like no update.
     const MISSING_TEXT = "(not in response)";
 
-    function formatPrice(value) {
+    function formatValue(value) {
         if (value === undefined) {
             return MISSING_TEXT;
         }
@@ -101,9 +110,21 @@
         const empty = [];
         const price = result.binomial_option_price;
 
-        priceOutput.textContent = formatPrice(price);
+        priceOutput.textContent = formatValue(price);
         if (price === null || price === undefined) {
             empty.push("binomial_option_price");
+        }
+
+        const blackScholes = result.black_scholes || {};
+        blackScholesPriceOutput.textContent = formatValue(blackScholes.price);
+        if (blackScholes.price === null || blackScholes.price === undefined) {
+            empty.push("black_scholes.price");
+        }
+
+        // Greeks show their own value in place, so an empty one isn't flagged.
+        const greeks = blackScholes.greeks || {};
+        for (const [key, element] of Object.entries(greekOutputs)) {
+            element.textContent = formatValue(greeks[key]);
         }
 
         const figures = (result.figures && result.figures.lattices) || {};
