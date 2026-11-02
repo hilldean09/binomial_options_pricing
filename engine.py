@@ -8,14 +8,14 @@ from lattice import Lattice
 from structs import Binomial_Pricing_Return_Data, Black_Scholes_Return_Data
 
 
-def calculate_timestep( time_to_expiry, num_layers : int ):
+def calculate_timestep( time_to_expiry, num_layers: int ):
     """
     Returns timestep length measured in months
     """
-    return time_to_expiry / num_layers
+    return time_to_expiry / ( num_layers - 1 )
 
 
-def adjust_annual_value_to_step( value, timestep ):
+def adjust_annual_rate_to_step( value, timestep ):
     """
     Uses a rearrangement of the compounding
     interest formula. 
@@ -24,8 +24,23 @@ def adjust_annual_value_to_step( value, timestep ):
     """
     return np.pow( ( 1 + value ), timestep / 12 ) - 1
 
+
 def _adjust_time_to_expiry_to_annual( time_to_expiry ):
     return float( time_to_expiry ) / 12
+
+
+def _calculate_crr_down( volatility, time_to_expiry, num_layers ):
+    timestep = calculate_timestep( time_to_expiry, num_layers )
+    return np.exp( -1.0 * volatility * np.sqrt( timestep ) )
+
+
+def _calculate_crr_up( volatility, time_to_expiry, num_layers ):
+    timestep = calculate_timestep( time_to_expiry, num_layers )
+    return np.exp( volatility * np.sqrt( timestep ) )
+
+
+def _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers ):
+    return _calculate_crr_down( volatility, time_to_expiry, num_layers ), _calculate_crr_up( volatility, time_to_expiry, num_layers )
 
 
 def _calculate_crr_delta( spot, down_child_price, up_child_price, step_volatility ):
@@ -64,21 +79,23 @@ def _calculate_virtual_spot_in_lattice( spot, step_volatility, \
 
     median_index_in_layer = ( layer_num + 2 ) / 2 - 1
 
+    u, d = _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers )
+
     if index_in_layer == median_index_in_layer:
         virtual_spot = spot
     elif index_in_layer > median_index_in_layer:
         index_in_layer_diff = 2 * ( index_in_layer - median_index_in_layer )
-        virtual_spot = ( 1 + step_volatility )**( index_in_layer_diff ) * spot
+        virtual_spot = ( u )**( index_in_layer_diff ) * spot
     elif index_in_layer < median_index_in_layer:
         index_in_layer_diff = 2 * ( median_index_in_layer - index_in_layer )
-        virtual_spot = ( 1 - step_volatility )**( index_in_layer_diff ) * spot
+        virtual_spot = ( d )**( index_in_layer_diff ) * spot
 
     return virtual_spot
 
 
 def _run_crr_european_call_pricing( spot, strike, \
                                     step_volatility, step_risk_free_rate, \
-                                    time_to_expiry, num_layers ):
+                                    time_to_expiry, num_steps ):
     """
     Uses an iterative method as opposed
     to a recursive method to leverage 
@@ -87,9 +104,9 @@ def _run_crr_european_call_pricing( spot, strike, \
     of node prices)
     """
     option_price = None
-    price_lattice = Lattice( num_layers )
-    delta_lattice = Lattice( num_layers )
-    leverage_lattice = Lattice( num_layers )
+    price_lattice = Lattice( num_steps + 1 )
+    delta_lattice = Lattice( num_steps + 1 )
+    leverage_lattice = Lattice( num_steps + 1 )
 
     number_of_nodes = price_lattice.get_number_of_nodes()
 
@@ -139,7 +156,7 @@ def _run_crr_european_call_pricing( spot, strike, \
 
 def run_crr_binomial_pricing( spot, strike, \
                               volatility, risk_free_rate, \
-                              time_to_expiry, num_layers, \
+                              time_to_expiry, num_steps, \
                               option_type, option_exercise ):
     """
     CRR Binomial Pricing Model
@@ -165,7 +182,7 @@ def run_crr_binomial_pricing( spot, strike, \
     if option_type == "call":
         if option_exercise == "european":
             # Running CRR for European Call Options
-            option_price, price_lattice, delta_lattice, leverage_lattice = _run_crr_european_call_pricing( spot, strike, step_volatility, step_risk_free_rate, time_to_expiry, num_layers )
+            option_price, price_lattice, delta_lattice, leverage_lattice = _run_crr_european_call_pricing( spot, strike, step_volatility, step_risk_free_rate, time_to_expiry, num_steps )
 
     return option_price, price_lattice, delta_lattice, leverage_lattice
 
