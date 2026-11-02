@@ -138,9 +138,9 @@ def _run_crr_european_call_pricing( spot, strike, \
             up_child_price = price_lattice.get_node_value( up_child_index )
 
             # C = \Delta S + B
-            new_node_delta = _calculate_crr_delta( spot, down_child_price, up_child_price, volatility, time_to_expiry, num_layers )
+            new_node_delta = _calculate_crr_delta( virtual_spot, down_child_price, up_child_price, volatility, time_to_expiry, num_layers )
             new_node_leverage = _calculate_crr_leverage( down_child_price, up_child_price, volatility, time_to_expiry, step_risk_free_rate, num_layers )
-            new_node_price = new_node_delta * spot + new_node_leverage
+            new_node_price = new_node_delta * virtual_spot + new_node_leverage
             
         else:
             # Assumes a rational exercise policy
