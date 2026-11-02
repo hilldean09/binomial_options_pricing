@@ -211,8 +211,11 @@ def run_crr_binomial_pricing( spot, strike, \
 def _calculate_crr_p_and_p_prime( volatility, risk_free_rate, 
                                   time_to_expiry, num_layers ):
     u, d = _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers )
-    p = ( ( 1 + risk_free_rate ) - d ) / ( u - d )
-    p_prime = ( u / ( 1 + risk_free_rate ) ) * p
+    timestep = calculate_timestep( time_to_expiry, num_layers - 1 )
+    r = _adjust_risk_free_rate_to_step( risk_free_rate, timestep )
+
+    p = ( ( 1 + r ) - d ) / ( u - d )
+    p_prime = ( u / ( 1 + r ) ) * p
 
     return p, p_prime
 
@@ -230,17 +233,22 @@ def run_closed_crr_binomial_european_pricing( spot, strike,
     option_price = None
 
     u, d = _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers )
+    timestep = calculate_timestep( time_to_expiry, num_layers - 1 )
+    r = _adjust_risk_free_rate_to_step( risk_free_rate, timestep )
 
     p, p_prime =  _calculate_crr_p_and_p_prime( volatility, risk_free_rate, time_to_expiry, num_layers )
     print( p )
     print( p_prime )
 
     a = np.ceil( np.log( strike / ( spot * ( d ** ( num_layers - 1 ) ) ) ) / np.log( u / d ) )
+
+    print( a )
+
     a = max( a, 0 )
     if a > ( num_layers - 1 ):
         option_price = 0
     else:
-        option_price = spot * scipy.stats.binom.sf( a, num_layers - 1, p_prime ) - strike * ( ( 1 + risk_free_rate ) ** ( num_layers - 1 ) ) * scipy.stats.binom.sf( a, num_layers - 1, p )
+        option_price = spot * scipy.stats.binom.sf( a, num_layers - 1, p_prime ) - strike * ( ( 1 + r ) ** ( -1.0 * ( num_layers - 1 ) ) ) * scipy.stats.binom.sf( a, num_layers - 1, p )
 
     return option_price
 
