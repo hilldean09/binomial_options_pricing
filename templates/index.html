@@ -70,6 +70,21 @@
                 <p class="tile-text">Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 
                 <form id="pricing-form" novalidate>
+                    <div class="field-row">
+                        <div class="field">
+                            <label for="option_type">Option type</label>
+                            <select id="option_type" name="option_type">
+                                <option value="call" selected>Call</option>
+                                <option value="put">Put</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label for="option_exercise">Exercise type</label>
+                            <select id="option_exercise" name="option_exercise">
+                                <option value="european" selected>European</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="field">
                         <label for="spot">Spot price</label>
                         <input id="spot" name="spot" type="number" step="any" min="0" value="100" required>

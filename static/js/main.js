@@ -49,6 +49,9 @@
         num_steps: (value) => parseInt(value, 10),
     };
 
+    // Dropdowns, whose values are sent as they are.
+    const SELECT_FIELDS = ["option_type", "option_exercise"];
+
     function isDrawerOpen() {
         return drawer.classList.contains("is-open");
     }
@@ -86,6 +89,10 @@
             } else {
                 invalid.push(input.labels[0].textContent);
             }
+        }
+
+        for (const name of SELECT_FIELDS) {
+            params[name] = form.elements[name].value;
         }
 
         return { params, invalid };
