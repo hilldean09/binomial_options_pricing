@@ -18,6 +18,8 @@
     const status = document.getElementById("form-status");
     const priceOutput = document.getElementById("option-price");
     const closedPriceOutput = document.getElementById("closed-option-price");
+    const pruneNotice = document.getElementById("prune-notice");
+    const pruneNoticeText = document.getElementById("prune-notice-text");
     const blackScholesPriceOutput = document.getElementById("black-scholes-price");
 
     const greekOutputs = {
@@ -39,6 +41,10 @@
     // Below this width (px) figure titles no longer fit on one line.
     const NARROW_FIGURE_WIDTH = 520;
     const TITLE_LINE_HEIGHT = 20;
+
+    // Most lattice layers the figures draw. Mirrors BOP_DEFAULT_MAX_DRAW_DEPTH
+    // in app.py, so keep the two in step.
+    const MAX_DRAW_DEPTH = 50;
 
     // Field name -> parser. Names match the keys the engine reads.
     const FIELDS = {
@@ -154,6 +160,18 @@
         return empty;
     }
 
+    function updatePruneNotice(numSteps) {
+        // A lattice has one more layer than it has steps.
+        const layers = numSteps + 1;
+        const pruned = layers > MAX_DRAW_DEPTH;
+
+        pruneNotice.hidden = !pruned;
+        if (pruned) {
+            pruneNoticeText.textContent =
+                `Only the first ${MAX_DRAW_DEPTH} of ${layers} layers (${numSteps} steps) are drawn.`;
+        }
+    }
+
     // Plotly doesn't wrap titles, so split long ones at the middle word.
     function wrapTitle(layout) {
         const text = layout.title.text;
@@ -205,6 +223,7 @@
             }
 
             const empty = render(result);
+            updatePruneNotice(params.num_steps);
             const time = new Date().toLocaleTimeString();
             if (empty.length > 0) {
                 setStatus(`Updated ${time}, but the response had no value for: ${empty.join(", ")}`, true);

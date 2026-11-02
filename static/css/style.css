@@ -16,6 +16,8 @@
     --gild-width: 2px;
     --scrollbar-thumb: #3b3848;
     --error: #ef6f61;
+    --warning: #e9b65c;
+    --warning-dark: #a87a2a;
     --radius: 10px;
     --drawer-width: min(20rem, calc(100vw - 3.5rem));
     --drawer-toggle-width: 2.25rem;
@@ -373,6 +375,63 @@ h1, h2, h3 {
     font-family: var(--mono);
     font-size: 0.875rem;
     font-variant-numeric: tabular-nums;
+}
+
+/* Notice: a small warning tile, gilded in amber rather than purple */
+
+.notice {
+    --gild-light: var(--warning);
+    --gild-dark: var(--warning-dark);
+
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem 1.25rem;
+    border-color: color-mix(in srgb, var(--warning) 35%, var(--border));
+    background: color-mix(in srgb, var(--warning) 6%, var(--surface));
+    animation: notice-in 0.25s ease;
+}
+
+.notice[hidden] {
+    display: none;
+}
+
+.notice h2 {
+    font-size: 0.95rem;
+    color: var(--warning);
+}
+
+.notice-text {
+    margin: 0.2rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.notice-icon {
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    border-radius: 50%;
+    background: var(--warning);
+    color: var(--accent-text);
+    font-size: 0.85rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+@keyframes notice-in {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .notice {
+        animation: none;
+    }
 }
 
 /* Figures */
