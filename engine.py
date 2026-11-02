@@ -40,22 +40,22 @@ def _calculate_crr_up( volatility, time_to_expiry, num_layers ):
 
 
 def _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers ):
-    return _calculate_crr_down( volatility, time_to_expiry, num_layers ), _calculate_crr_up( volatility, time_to_expiry, num_layers )
+    return _calculate_crr_up( volatility, time_to_expiry, num_layers ), _calculate_crr_down( volatility, time_to_expiry, num_layers )
 
 
-def _calculate_crr_delta( spot, down_child_price, up_child_price, step_volatility ):
+def _calculate_crr_delta( spot, down_child_price, up_child_price, step_volatility, num_layers ):
     # \Delta = ( C_u - C_d ) / (( u - d ) * S )
-    return ( up_child_price - down_child_price ) / ( 2 * step_volatility * spot )
+    u,d = _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers )
+    return ( up_child_price - down_child_price ) / ( ( u - d ) * spot )
 
 
-def _calculate_crr_leverage( down_child_price, up_child_price, step_volatility, step_risk_free_rate ):
+def _calculate_crr_leverage( down_child_price, up_child_price, step_volatility, step_risk_free_rate, num_layers ):
     # B = ( u*C_u - d*C_d ) / (( u - d ) * r )
-    u = 1 + step_volatility
-    d = 1 - step_volatility
-    return ( u * down_child_price - d * up_child_price ) / ( 2 * step_volatility * ( 1 + step_risk_free_rate ) )
+    u,d = _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers )
+    return ( u * down_child_price - d * up_child_price ) / ( ( u - d ) * ( 1 + step_risk_free_rate ) )
 
 
-def _calculate_virtual_spot_in_lattice( spot, step_volatility, \
+def _calculate_virtual_spot_in_lattice( spot, volatility, num_layers
                                         layer_num : int, index_in_layer : int ):
     """
       uS : diff = 1
@@ -94,7 +94,7 @@ def _calculate_virtual_spot_in_lattice( spot, step_volatility, \
 
 
 def _run_crr_european_call_pricing( spot, strike, \
-                                    step_volatility, step_risk_free_rate, \
+                                    volatility, step_risk_free_rate, \
                                     time_to_expiry, num_steps ):
     """
     Uses an iterative method as opposed
@@ -103,10 +103,12 @@ def _run_crr_european_call_pricing( spot, strike, \
     reduce numerical errors (recalculation
     of node prices)
     """
+    num_layers = num_layers + 1
+
     option_price = None
-    price_lattice = Lattice( num_steps + 1 )
-    delta_lattice = Lattice( num_steps + 1 )
-    leverage_lattice = Lattice( num_steps + 1 )
+    price_lattice = Lattice( num_layers )
+    delta_lattice = Lattice( num_layers )
+    leverage_lattice = Lattice( num_layers )
 
     number_of_nodes = price_lattice.get_number_of_nodes()
 
@@ -118,7 +120,7 @@ def _run_crr_european_call_pricing( spot, strike, \
         layer_num = price_lattice.get_node_layer( index )
         index_in_layer = price_lattice.get_node_layer_index( index )
 
-        virtual_spot = _calculate_virtual_spot_in_lattice( spot, step_volatility, layer_num, index_in_layer )
+        virtual_spot = _calculate_virtual_spot_in_lattice( spot, volatility, num_layers, layer_num, index_in_layer )
 
         new_node_price = None
         new_node_delta = None
@@ -132,8 +134,8 @@ def _run_crr_european_call_pricing( spot, strike, \
             up_child_price = price_lattice.get_node_value( up_child_index )
 
             # C = \Delta S + B
-            new_node_delta = _calculate_crr_delta( spot, down_child_price, up_child_price, step_volatility )
-            new_node_leverage = _calculate_crr_leverage( down_child_price, up_child_price, step_volatility, step_risk_free_rate )
+            new_node_delta = _calculate_crr_delta( spot, down_child_price, up_child_price, volatility, num_layers )
+            new_node_leverage = _calculate_crr_leverage( down_child_price, up_child_price, volatility, step_risk_free_rate, num_layers )
             new_node_price = new_node_delta * spot + new_node_leverage
             
         else:
@@ -176,13 +178,12 @@ def run_crr_binomial_pricing( spot, strike, \
     leverage_lattice = None
 
     timestep = calculate_timestep( time_to_expiry, num_layers )
-    step_volatility = adjust_annual_value_to_step( volatility, timestep )
     step_risk_free_rate = adjust_annual_value_to_step( risk_free_rate, timestep )
 
     if option_type == "call":
         if option_exercise == "european":
             # Running CRR for European Call Options
-            option_price, price_lattice, delta_lattice, leverage_lattice = _run_crr_european_call_pricing( spot, strike, step_volatility, step_risk_free_rate, time_to_expiry, num_steps )
+            option_price, price_lattice, delta_lattice, leverage_lattice = _run_crr_european_call_pricing( spot, strike, volatility, step_risk_free_rate, time_to_expiry, num_steps )
 
     return option_price, price_lattice, delta_lattice, leverage_lattice
 
