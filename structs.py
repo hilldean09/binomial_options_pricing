@@ -4,7 +4,7 @@ from lattice import Lattice
 class Api_Price_Inputs:
     def __init__( self, spot=None, strike=None,
                   volatility=None, risk_free_rate=None,
-                  time_to_expiry=None, num_layers=None,
+                  time_to_expiry=None, num_steps=None,
                   option_type=None, option_exercise=None,
                   binomial_pricing_model=None ):
         self.spot = spot
@@ -12,7 +12,7 @@ class Api_Price_Inputs:
         self.volatility = volatility
         self.risk_free_rate = risk_free_rate
         self.time_to_expiry = time_to_expiry
-        self.num_layers = num_layers
+        self.num_steps = num_steps
         self.option_type = option_type
         self.option_exercise = option_exercise
         self.binomial_pricing_model = binomial_pricing_model
