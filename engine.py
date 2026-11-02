@@ -25,6 +25,10 @@ def adjust_annual_rate_to_step( value, timestep ):
     return np.pow( ( 1 + value ), timestep / 12 ) - 1
 
 
+def _adjust_risk_free_rate_to_step( risk_free_rate, timestep ):
+    def np.exp( risk_free_rate * ( timestep / 12 ) ) - 1
+
+
 def _adjust_time_to_expiry_to_annual( time_to_expiry ):
     return float( time_to_expiry ) / 12
 
@@ -178,7 +182,7 @@ def run_crr_binomial_pricing( spot, strike, \
     leverage_lattice = None
 
     timestep = calculate_timestep( time_to_expiry, num_steps )
-    step_risk_free_rate = adjust_annual_rate_to_step( risk_free_rate, timestep )
+    step_risk_free_rate = _adjust_risk_free_rate_to_step( risk_free_rate, timestep )
 
     if option_type == "call":
         if option_exercise == "european":
