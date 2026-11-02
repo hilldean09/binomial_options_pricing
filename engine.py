@@ -208,6 +208,40 @@ def run_crr_binomial_pricing( spot, strike, \
 # function).
 
 
+def _calculate_crr_p_and_p_prime( volatility, risk_free_rate, 
+                                  time_to_expiry, num_layers ):
+    u, d = _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers )
+    p = ( risk_free_rate - d ) / ( u - d )
+    p_prime = ( u / risk_free_rate ) * p
+
+    return p, p_prime
+
+
+def run_closed_crr_binomial_pricing( spot, strike,
+                                     volatility, risk_free_rate,
+                                     time_to_expiry, num_layers,
+                                     option_type ):
+    """
+    Using $C = S \phi[ a ; n, p' ] - Kr^{-n}\phi[a;n,p]$
+    form.
+    """
+    assert option_type == "call" or option_type == "put"
+
+    option_price = None
+
+    u, d = _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers )
+
+    p, p_prime =  _calculate_crr_p_and_p_prime( volatility, risk_free_rate, time_to_expiry, num_layers )
+
+    a = np.ceil( np.log( K / ( S / ( d ** n ) ) ) / np.log( u / d ) )
+    a = max( a, 0 )
+    if a > ( num_layers - 1 ):
+        option_price = 0
+    else:
+        option_price = spot * scipy.stats.binom.sf( a, num_layers - 1, p_prime ) - K * ( r ** ( num_layers - 1 ) ) * scipy.stats.binom.sf( a, num_layers - 1, p )
+
+    return option_price
+
 
 ##### Black Scholes Pricing #####
 
