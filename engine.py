@@ -8,11 +8,11 @@ from lattice import Lattice
 from structs import Binomial_Pricing_Return_Data, Black_Scholes_Return_Data
 
 
-def calculate_timestep( time_to_expiry, num_layers: int ):
+def calculate_timestep( time_to_expiry, num_steps: int ):
     """
     Returns timestep length measured in months
     """
-    return time_to_expiry / ( num_layers - 1 )
+    return time_to_expiry / ( num_steps )
 
 
 def adjust_annual_rate_to_step( value, timestep ):
@@ -30,12 +30,12 @@ def _adjust_time_to_expiry_to_annual( time_to_expiry ):
 
 
 def _calculate_crr_down( volatility, time_to_expiry, num_layers ):
-    timestep = calculate_timestep( time_to_expiry, num_layers )
+    timestep = calculate_timestep( time_to_expiry, num_layers - 1 )
     return np.exp( -1.0 * volatility * np.sqrt( timestep / 12 ) )
 
 
 def _calculate_crr_up( volatility, time_to_expiry, num_layers ):
-    timestep = calculate_timestep( time_to_expiry, num_layers )
+    timestep = calculate_timestep( time_to_expiry, num_layers - 1 )
     return np.exp( volatility * np.sqrt( timestep / 12 ) )
 
 
@@ -177,7 +177,7 @@ def run_crr_binomial_pricing( spot, strike, \
     delta_lattice = None
     leverage_lattice = None
 
-    timestep = calculate_timestep( time_to_expiry, num_layers )
+    timestep = calculate_timestep( time_to_expiry, num_steps )
     step_risk_free_rate = adjust_annual_value_to_step( risk_free_rate, timestep )
 
     if option_type == "call":

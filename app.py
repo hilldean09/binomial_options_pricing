@@ -151,7 +151,7 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
     coord_lattice_num_nodes = x_coord_lattice.get_number_of_nodes()
     assert coord_lattice_num_nodes == y_coord_lattice.get_number_of_nodes()
 
-    timestep = engine.calculate_timestep( inputs.time_to_expiry, lattice.num_layers )
+    timestep = engine.calculate_timestep( inputs.time_to_expiry, lattice.num_layers - 1 )
 
     for index in range( coord_lattice_num_nodes - 1, -1, -1 ):
         node_coord = _calculate_node_lattice_figure_coordinate( index, lattice, inputs.spot, inputs.volatility, inputs.time_to_expiry, timestep )
