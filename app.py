@@ -38,6 +38,8 @@ BOP_COLOR_PALETTE = {
 }
 
 BOP_NODE_MARKER_SIZE = 16
+BOP_NODE_MIN_MARKER_SIZE = 8
+BOP_NODE_MARKER_SCALING_START_N = 20
 BOP_EDGE_WIDTH = 1
 BOP_FIGURE_LAYOUT_TITLE_FONT_SIZE = 16
 BOP_FIGURE_LAYOUT_FONT_FAMILY_STRING = "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
@@ -183,13 +185,17 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
 
         colour_array_scan_size = number_of_nodes_up_to_last_layer
 
+    marker_size = BOP_NODE_MARKER_SIZE
     # TODO: Add marker scaling for N > 20
+    if x_coord_lattice.num_layers > BOP_NODE_MARKER_SCALING_START_N:
+        marker_size = ( ( x_coord_lattice.num_layers  - BOP_NODE_MARKER_SCALING_START_N ) / ( BOP_DEFAULT_MAX_DRAW_DEPTH - BOP_NODE_MARKER_SCALING_START_N ) ) * BOP_NODE_MIN_MARKER_SIZE + ( 1 - ( ( x_coord_lattice.num_layers - BOP_NODE_MARKER_SCALING_START_N ) / ( BOP_DEFAULT_MAX_DRAW_DEPTH - BOP_NODE_MARKER_SCALING_START_N ) ) ) * BOP_NODE_MARKER_SIZE 
+    
     nodes_trace = go.Scatter( name = 'nodes',
                               x = x_coord_array,
                               y = y_coord_array,
                               mode = 'markers',
                               marker = dict(
-                                size = BOP_NODE_MARKER_SIZE,
+                                size = marker_size,
                                 color = lattice.array[ 0 : colour_array_scan_size : 1],
                                 colorscale = 'sunset',
                                 showscale = True,
