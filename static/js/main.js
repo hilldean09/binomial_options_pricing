@@ -17,6 +17,7 @@
     const submitButton = document.getElementById("submit-button");
     const status = document.getElementById("form-status");
     const priceOutput = document.getElementById("option-price");
+    const closedPriceOutput = document.getElementById("closed-option-price");
     const blackScholesPriceOutput = document.getElementById("black-scholes-price");
 
     const greekOutputs = {
@@ -120,6 +121,12 @@
         priceOutput.textContent = formatValue(price);
         if (price === null || price === undefined) {
             empty.push("binomial_option_price");
+        }
+
+        const closedPrice = result.binomial_closed_option_price;
+        closedPriceOutput.textContent = formatValue(closedPrice);
+        if (closedPrice === null || closedPrice === undefined) {
+            empty.push("binomial_closed_option_price");
         }
 
         const blackScholes = result.black_scholes || {};

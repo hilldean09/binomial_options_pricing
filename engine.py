@@ -253,7 +253,7 @@ def run_closed_crr_binomial_pricing( spot, strike,
                                                                   time_to_expiry, num_layers,
                                                                   option_type )
 
-    return option_type
+    return option_price
 
 
 ##### Black Scholes Pricing #####

@@ -350,9 +350,10 @@ h1, h2, h3 {
     font-variant-numeric: tabular-nums;
 }
 
-/* Greeks: deliberately quieter than the price above them */
+/* Secondary values (closed form, greeks): deliberately quieter than the
+   price above them */
 
-.greeks {
+.details {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(4.5rem, 1fr));
     gap: 0.5rem 1rem;
@@ -361,12 +362,12 @@ h1, h2, h3 {
     border-top: 1px solid var(--border);
 }
 
-.greek dt {
+.detail dt {
     color: var(--text-muted);
     font-size: 0.75rem;
 }
 
-.greek dd {
+.detail dd {
     margin: 0;
     color: var(--text-muted);
     font-family: var(--mono);
