@@ -55,7 +55,7 @@ def _calculate_crr_leverage( down_child_price, up_child_price, step_volatility, 
     return ( u * down_child_price - d * up_child_price ) / ( ( u - d ) * ( 1 + step_risk_free_rate ) )
 
 
-def _calculate_virtual_spot_in_lattice( spot, volatility, num_layers
+def _calculate_virtual_spot_in_lattice( spot, volatility, num_layers,
                                         layer_num : int, index_in_layer : int ):
     """
       uS : diff = 1
