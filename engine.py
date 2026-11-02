@@ -217,12 +217,12 @@ def _calculate_crr_p_and_p_prime( volatility, risk_free_rate,
     return p, p_prime
 
 
-def run_closed_crr_binomial_pricing( spot, strike,
+def run_closed_crr_binomial_european_pricing( spot, strike,
                                      volatility, risk_free_rate,
                                      time_to_expiry, num_layers,
                                      option_type ):
     """
-    Using $C = S \phi[ a ; n, p' ] - Kr^{-n}\phi[a;n,p]$
+    Using $C = S phi[ a ; n, p' ] - Kr^{-n}phi[ a ; n , p ]$
     form.
     """
     assert option_type == "call" or option_type == "put"
@@ -233,14 +233,27 @@ def run_closed_crr_binomial_pricing( spot, strike,
 
     p, p_prime =  _calculate_crr_p_and_p_prime( volatility, risk_free_rate, time_to_expiry, num_layers )
 
-    a = np.ceil( np.log( K / ( S / ( d ** n ) ) ) / np.log( u / d ) )
+    a = np.ceil( np.log( strike / ( spot / ( d ** ( num_layers - 1 ) ) ) ) / np.log( u / d ) )
     a = max( a, 0 )
     if a > ( num_layers - 1 ):
         option_price = 0
     else:
-        option_price = spot * scipy.stats.binom.sf( a, num_layers - 1, p_prime ) - K * ( r ** ( num_layers - 1 ) ) * scipy.stats.binom.sf( a, num_layers - 1, p )
+        option_price = spot * scipy.stats.binom.sf( a, num_layers - 1, p_prime ) - strike * ( risk_free_rate ** ( num_layers - 1 ) ) * scipy.stats.binom.sf( a, num_layers - 1, p )
 
     return option_price
+
+def run_closed_crr_binomial_pricing( spot, strike,
+                                     volatility, risk_free_rate,
+                                     time_to_expiry, num_layers,
+                                     option_type, option_exercise ):
+
+    if option_exercise == "european":
+        opttion_price = run_closed_crr_binomial_european_pricing( spot, strike,
+                                                                  volatility, risk_free_rate,
+                                                                  time_to_expiry, num_layers,
+                                                                  option_type )
+
+    return option_type
 
 
 ##### Black Scholes Pricing #####
@@ -430,14 +443,20 @@ def run_engine( inputs ):
     binomial_delta_lattice = None
     binomial_leverage_lattice = None
 
+    binomiaL_closed_return_price = None
+
     if inputs.binomial_pricing_model == "crr":
         binomial_option_price, binomial_price_lattice, \
         binomial_delta_lattice, binomial_leverage_lattice = \
-                                 run_crr_binomial_pricing( inputs.spot, inputs.strike, \
-                                                           inputs.volatility, inputs.risk_free_rate, \
-                                                           inputs.time_to_expiry, inputs.num_steps, \
+                                                          run_crr_binomial_pricing( inputs.spot, inputs.strike,
+                                                           inputs.volatility, inputs.risk_free_rate,
+                                                           inputs.time_to_expiry, inputs.num_steps,
                                                            inputs.option_type, inputs.option_exercise )
         binomial_return = Binomial_Pricing_Return_Data( binomial_option_price, binomial_price_lattice, binomial_delta_lattice, binomial_leverage_lattice )
+        binomiaL_closed_return_price = run_closed_crr_binomial_pricing( inputs.spot, inputs.strike,
+                                                           inputs.volatility, inputs.risk_free_rate,
+                                                           inputs.time_to_expiry, inputs.num_steps,
+                                                           inputs.option_type, inputs.option_exercise )
 
     black_scholes_return_data = run_black_scholes_pricing( inputs.spot, inputs.strike, 
                                                            inputs.volatility, inputs.risk_free_rate,
@@ -446,6 +465,6 @@ def run_engine( inputs ):
 
     # TODO: Closed-form CRR European pricing
 
-    return binomial_return, black_scholes_return_data
+    return binomial_return, binomiaL_closed_return_price, black_scholes_return_data
 
 

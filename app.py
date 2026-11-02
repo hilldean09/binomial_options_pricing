@@ -349,7 +349,7 @@ def api_price():
         pass
 
     inputs = Api_Price_Inputs( spot = spot, strike = strike, volatility = volatility, risk_free_rate = risk_free_rate, time_to_expiry = time_to_expiry, num_steps = num_steps, option_type = option_type, option_exercise = option_exercise, binomial_pricing_model = binomial_pricing_model )
-    binomial_output, black_scholes_output = engine.run_engine( inputs )
+    binomial_output, binomial_closed_price_output, black_scholes_output = engine.run_engine( inputs )
 
     price_lattice_figure = _build_price_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH )
     delta_lattice_figure = _build_delta_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH )
@@ -372,6 +372,7 @@ def api_price():
             "delta": binomial_output.delta_lattice.array.tolist(),
             "leverage": binomial_output.leverage_lattice.array.tolist()
         },
+        "binomial_closed_option_price": binomial_closed_price_output,
         "black_scholes": {
             "price": black_scholes_output.option_price,
             "greeks": {
