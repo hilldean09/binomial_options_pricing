@@ -46,7 +46,7 @@
         volatility: parseFloat,
         risk_free_rate: parseFloat,
         time_to_expiry: parseFloat,
-        num_layers: (value) => parseInt(value, 10),
+        num_steps: (value) => parseInt(value, 10),
     };
 
     function isDrawerOpen() {
