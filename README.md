@@ -41,7 +41,7 @@ BOP_APP_PORT=[SOME_PORT]
 
 # Features
 
-The project in still in early stages but currently features (for non-dividend paying European call options):
+The project in still in early stages but currently features (for non-dividend paying European options):
 - A recursively computed Cox, Ross, Rubinstein (CRR) binomial options pricing model (with associated figures for price, delta, and leverage).
 - Closed-form Black-Scholes pricing model and computation of the greeks.
 
