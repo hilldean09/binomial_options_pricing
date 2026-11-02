@@ -123,17 +123,17 @@ def _construct_lattice_title( inputs, binomial_output, lattice_type ):
     elif lattice_type == "leverage":
         lattice_type_string = "Leverage"
 
-    title = binomial_pricing_model_string + " " + lattice_type_string + " Lattice for " + option_exercise_string + " " + option_type_string + f" Options with N={inputs.num_layers}"
+    title = binomial_pricing_model_string + " " + lattice_type_string + " Lattice for " + option_exercise_string + " " + option_type_string + f" Options with N={inputs.num_steps}"
 
     return title
 
 
-def _calculate_node_lattice_figure_coordinate( index, lattice : Lattice, spot, step_volatility, timestep ):
+def _calculate_node_lattice_figure_coordinate( index, lattice : Lattice, spot, volatility, time_to_expiry, timestep ):
     layer_num = lattice.get_node_layer( index )
     index_in_layer = lattice.get_node_layer_index( index )
 
     x_coord = layer_num * timestep
-    y_coord = engine._calculate_virtual_spot_in_lattice( spot, step_volatility, layer_num, index_in_layer )
+    y_coord = engine._calculate_virtual_spot_in_lattice( spot = spot, volatility = volatility, time_to_expiry = time_to_expiry, num_layers = lattice.num_layers, layer_num = layer_num, index_in_layer = index_in_layer )
 
     return ( x_coord, y_coord )
 
@@ -152,10 +152,9 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
     assert coord_lattice_num_nodes == y_coord_lattice.get_number_of_nodes()
 
     timestep = engine.calculate_timestep( inputs.time_to_expiry, lattice.num_layers )
-    step_volatility = engine.adjust_annual_value_to_step( inputs.volatility, timestep )
 
     for index in range( coord_lattice_num_nodes - 1, -1, -1 ):
-        node_coord = _calculate_node_lattice_figure_coordinate( index, lattice, inputs.spot, step_volatility, timestep )
+        node_coord = _calculate_node_lattice_figure_coordinate( index, lattice, inputs.spot, inputs.volatility, inputs.time_to_expiry, timestep )
         x_coord_lattice.set_node_value( index, node_coord[ 0 ] )
         y_coord_lattice.set_node_value( index, node_coord[ 1 ] )
 

@@ -31,31 +31,31 @@ def _adjust_time_to_expiry_to_annual( time_to_expiry ):
 
 def _calculate_crr_down( volatility, time_to_expiry, num_layers ):
     timestep = calculate_timestep( time_to_expiry, num_layers )
-    return np.exp( -1.0 * volatility * np.sqrt( timestep ) )
+    return np.exp( -1.0 * volatility * np.sqrt( timestep / 12 ) )
 
 
 def _calculate_crr_up( volatility, time_to_expiry, num_layers ):
     timestep = calculate_timestep( time_to_expiry, num_layers )
-    return np.exp( volatility * np.sqrt( timestep ) )
+    return np.exp( volatility * np.sqrt( timestep / 12 ) )
 
 
 def _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers ):
     return _calculate_crr_up( volatility, time_to_expiry, num_layers ), _calculate_crr_down( volatility, time_to_expiry, num_layers )
 
 
-def _calculate_crr_delta( spot, down_child_price, up_child_price, step_volatility, num_layers ):
+def _calculate_crr_delta( spot, down_child_price, up_child_price, volatility, time_to_expiry, num_layers ):
     # \Delta = ( C_u - C_d ) / (( u - d ) * S )
     u,d = _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers )
     return ( up_child_price - down_child_price ) / ( ( u - d ) * spot )
 
 
-def _calculate_crr_leverage( down_child_price, up_child_price, step_volatility, step_risk_free_rate, num_layers ):
+def _calculate_crr_leverage( down_child_price, up_child_price, volatility, time_to_expiry, step_risk_free_rate, num_layers ):
     # B = ( u*C_u - d*C_d ) / (( u - d ) * r )
     u,d = _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers )
     return ( u * down_child_price - d * up_child_price ) / ( ( u - d ) * ( 1 + step_risk_free_rate ) )
 
 
-def _calculate_virtual_spot_in_lattice( spot, volatility, num_layers,
+def _calculate_virtual_spot_in_lattice( spot, volatility, time_to_expiry, num_layers,
                                         layer_num : int, index_in_layer : int ):
     """
       uS : diff = 1
@@ -120,7 +120,7 @@ def _run_crr_european_call_pricing( spot, strike, \
         layer_num = price_lattice.get_node_layer( index )
         index_in_layer = price_lattice.get_node_layer_index( index )
 
-        virtual_spot = _calculate_virtual_spot_in_lattice( spot, volatility, num_layers, layer_num, index_in_layer )
+        virtual_spot = _calculate_virtual_spot_in_lattice( spot, volatility, time_to_expiry, num_layers, layer_num, index_in_layer )
 
         new_node_price = None
         new_node_delta = None
