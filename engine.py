@@ -97,9 +97,10 @@ def _calculate_virtual_spot_in_lattice( spot, volatility, time_to_expiry, num_la
     return virtual_spot
 
 
-def _run_crr_european_call_pricing( spot, strike, \
-                                    volatility, step_risk_free_rate, \
-                                    time_to_expiry, num_steps ):
+def _run_crr_european_pricing( spot, strike,
+                               volatility, step_risk_free_rate,
+                               time_to_expiry, num_steps,
+                               option_type):
     """
     Uses an iterative method as opposed
     to a recursive method to leverage 
@@ -107,6 +108,8 @@ def _run_crr_european_call_pricing( spot, strike, \
     reduce numerical errors (recalculation
     of node prices)
     """
+    assert option_type == "call" or option_type == "put"
+
     num_layers = num_steps + 1
 
     option_price = None
@@ -144,9 +147,13 @@ def _run_crr_european_call_pricing( spot, strike, \
             
         else:
             # Assumes a rational exercise policy
-            new_node_price = max( 0, virtual_spot - strike )
+            if option_type == "call":
+                new_node_price = max( 0, virtual_spot - strike )
+            elif option_type == "put":
+                new_node_price = max( 0, strike - virtual_spot )
 
-            # TODO: Consider delta and leverage in this case
+            # Delta and leverage is not defined
+            # by CRR in this case
             new_node_delta = 0
             new_node_leverage = 0
 
@@ -184,10 +191,9 @@ def run_crr_binomial_pricing( spot, strike, \
     timestep = calculate_timestep( time_to_expiry, num_steps )
     step_risk_free_rate = _adjust_risk_free_rate_to_step( risk_free_rate, timestep )
 
-    if option_type == "call":
-        if option_exercise == "european":
-            # Running CRR for European Call Options
-            option_price, price_lattice, delta_lattice, leverage_lattice = _run_crr_european_call_pricing( spot, strike, volatility, step_risk_free_rate, time_to_expiry, num_steps )
+    if option_exercise == "european":
+        # Running CRR for European Options
+        option_price, price_lattice, delta_lattice, leverage_lattice = _run_crr_european_pricing( spot, strike, volatility, step_risk_free_rate, time_to_expiry, num_steps, option_type )
 
     return option_price, price_lattice, delta_lattice, leverage_lattice
 
@@ -272,6 +278,7 @@ def _calculate_black_scholes_theta( spot, strike,
 
     return theta
 
+
 def _calculate_black_scholes_vega( spot, strike,
                                    volatility, risk_free_rate,
                                    time_to_expiry, option_type ):
@@ -292,7 +299,28 @@ def _calculate_black_scholes_vega( spot, strike,
     return vega
 
 
-# TODO: Add rho calculation function
+def _calculate_black_scholes_rho( spot, strike,
+                                  volatility, risk_free_rate,
+                                  time_to_expiry, option_type ):
+    """
+    Pre-Merton Black-Scholes model (non-dividend 
+    paying asset)
+
+    Returns rho per percent change in the risk free rate
+    """
+    assert option_type == "call" or option_type == "put"
+
+    annual_time_to_expiry = _adjust_time_to_expiry_to_annual( time_to_expiry )
+    _, d2 = _calculate_black_scholes_d1_d2( spot, strike, volatility, risk_free_rate, time_to_expiry )
+    normal_distribution = scipy.stats.norm( 0, 1 )
+
+    type_multiplier = 1.0
+    if option_type == "put":
+        type_multiplier = -1.0
+
+    rho = type_multiplier * ( 1 / 100 ) * strike  * annual_time_to_expiry * np.exp( -1.0 * risk_free_rate * annual_time_to_expiry ) * normal_distribution.cdf( type_multiplier * d2 )
+
+    return rho
 
 
 def _run_black_scholes_european_pricing( spot, strike,
@@ -328,6 +356,7 @@ def _run_black_scholes_european_pricing( spot, strike,
         gamma = _calculate_black_scholes_gamma( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
         theta = _calculate_black_scholes_theta( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
         vega = _calculate_black_scholes_vega( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+        rho = _calculate_black_scholes_rho( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
 
     return_data = Black_Scholes_Return_Data( option_price = option_price, delta = delta, gamma = gamma, theta = theta, vega = vega, rho = rho )
 
