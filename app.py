@@ -174,10 +174,14 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
     x_coord_array = x_coord_lattice.array
     y_coord_array = y_coord_lattice.array
 
+    colour_array_scan_size = coord_lattice_num_nodes
+
     if not draw_last_layer:
         number_of_nodes_up_to_last_layer = x_coord_lattice.get_number_of_nodes_up_to_layer( x_coord_lattice.num_layers - 2 )
         x_coord_array = x_coord_array[ 0 : number_of_nodes_up_to_last_layer : 1 ]
         y_coord_array = y_coord_array[ 0 : number_of_nodes_up_to_last_layer : 1 ]
+
+        colour_array_scan_size = number_of_nodes_up_to_last_layer
 
     # TODO: Add marker scaling for N > 20
     nodes_trace = go.Scatter( name = 'nodes',
@@ -186,9 +190,10 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
                               mode = 'markers',
                               marker = dict(
                                 size = BOP_NODE_MARKER_SIZE,
-                                color = lattice.array,
-                                colorscale = 'Viridis',
+                                color = lattice.array[ 0 : colour_array_scan_size : 1],
+                                colorscale = 'sunset',
                                 showscale = True,
+                                reversescale = True,
                                 colorbar = dict(
                                     outlinewidth = 0,
                                     thickness = BOP_COLOUR_BAR_THICKNESS,
@@ -210,7 +215,7 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
                              showlegend = False
                             )
 
-    traces = [ nodes_trace, edges_trace ]
+    traces = [ edges_trace, nodes_trace ]
 
     figure = go.Figure( data = traces )
 
