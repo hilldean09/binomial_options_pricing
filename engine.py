@@ -350,6 +350,7 @@ def _run_black_scholes_european_pricing( spot, strike,
         gamma = _calculate_black_scholes_gamma( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
         theta = _calculate_black_scholes_theta( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
         vega = _calculate_black_scholes_vega( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+        rho = _calculate_black_scholes_rho( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
 
     return_data = Black_Scholes_Return_Data( option_price = option_price, delta = delta, gamma = gamma, theta = theta, vega = vega, rho = rho )
 
