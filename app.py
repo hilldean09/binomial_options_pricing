@@ -186,7 +186,6 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
         colour_array_scan_size = number_of_nodes_up_to_last_layer
 
     marker_size = BOP_NODE_MARKER_SIZE
-    # TODO: Add marker scaling for N > 20
     if x_coord_lattice.num_layers > BOP_NODE_MARKER_SCALING_START_N:
         marker_size = ( ( x_coord_lattice.num_layers  - BOP_NODE_MARKER_SCALING_START_N ) / ( BOP_DEFAULT_MAX_DRAW_DEPTH - BOP_NODE_MARKER_SCALING_START_N ) ) * BOP_NODE_MIN_MARKER_SIZE + ( 1 - ( ( x_coord_lattice.num_layers - BOP_NODE_MARKER_SCALING_START_N ) / ( BOP_DEFAULT_MAX_DRAW_DEPTH - BOP_NODE_MARKER_SCALING_START_N ) ) ) * BOP_NODE_MARKER_SIZE 
     

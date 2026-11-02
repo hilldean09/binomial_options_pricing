@@ -397,8 +397,6 @@ def run_engine( inputs ):
                                                            inputs.time_to_expiry, inputs.num_steps,
                                                            inputs.option_type, inputs.option_exercise )
 
-    # TODO: Add inputs as an extra feature of the binomial
-    # pricing return
     # TODO: Closed-form CRR European pricing
 
     return binomial_return, black_scholes_return_data
