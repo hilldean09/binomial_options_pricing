@@ -332,7 +332,7 @@ def _run_black_scholes_european_pricing( spot, strike,
 
 def run_black_scholes_pricing( spot, strike,
                                volatility, risk_free_rate,
-                               time_to_expiry, num_layers,
+                               time_to_expiry, num_steps,
                                option_type, option_exercise ):
     return_data = None
 
@@ -355,13 +355,13 @@ def run_engine( inputs ):
         binomial_delta_lattice, binomial_leverage_lattice = \
                                  run_crr_binomial_pricing( inputs.spot, inputs.strike, \
                                                            inputs.volatility, inputs.risk_free_rate, \
-                                                           inputs.time_to_expiry, inputs.num_layers, \
+                                                           inputs.time_to_expiry, inputs.num_steps, \
                                                            inputs.option_type, inputs.option_exercise )
         binomial_return = Binomial_Pricing_Return_Data( binomial_option_price, binomial_price_lattice, binomial_delta_lattice, binomial_leverage_lattice )
 
     black_scholes_return_data = run_black_scholes_pricing( inputs.spot, inputs.strike, 
                                                            inputs.volatility, inputs.risk_free_rate,
-                                                           inputs.time_to_expiry, inputs.num_layers,
+                                                           inputs.time_to_expiry, inputs.num_steps,
                                                            inputs.option_type, inputs.option_exercise )
 
     # TODO: Add inputs as an extra feature of the binomial
