@@ -313,7 +313,7 @@ def api_price():
     volatility = None
     risk_free_rate = None
     time_to_expiry = None
-    num_layers = None
+    num_steps = None
     option_type = None
     option_exercise = None
     binomial_pricing_model = None
@@ -330,7 +330,7 @@ def api_price():
         # possible floating point error
         time_to_expiry = float( data[ "time_to_expiry" ] )
 
-        num_layers = float( data[ "num_layers" ] )
+        num_steps = float( data[ "num_steps" ] )
 
         option_type = data.get( "option_type", "call" )
         option_exercise = data.get( "option_exercise", "european" )
@@ -339,7 +339,7 @@ def api_price():
         # TODO: Add some more significant response
         pass
 
-    inputs = Api_Price_Inputs( spot = spot, strike = strike, volatility = volatility, risk_free_rate = risk_free_rate, time_to_expiry = time_to_expiry, num_layers = num_layers, option_type = option_type, option_exercise = option_exercise, binomial_pricing_model = binomial_pricing_model )
+    inputs = Api_Price_Inputs( spot = spot, strike = strike, volatility = volatility, risk_free_rate = risk_free_rate, time_to_expiry = time_to_expiry, num_steps = num_steps, option_type = option_type, option_exercise = option_exercise, binomial_pricing_model = binomial_pricing_model )
     binomial_output, black_scholes_output = engine.run_engine( inputs )
 
     price_lattice_figure = _build_price_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH )
