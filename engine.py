@@ -197,7 +197,20 @@ def run_crr_binomial_pricing( spot, strike, \
 
     return option_price, price_lattice, delta_lattice, leverage_lattice
 
+
+##### Closed CRR Pricing #####
+
+# Note to self : The complementary binomial
+# distribution function referenced in the
+# CRR paper can be instead worded more 
+# transparently as the complement of the
+# cumulative binomial distribution (as a
+# function).
+
+
+
 ##### Black Scholes Pricing #####
+
 def _calculate_black_scholes_d1_d2( spot, strike, 
                                     volatility, risk_free_rate, 
                                     time_to_expiry ):
