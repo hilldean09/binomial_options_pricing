@@ -26,7 +26,7 @@ def adjust_annual_rate_to_step( value, timestep ):
 
 
 def _adjust_risk_free_rate_to_step( risk_free_rate, timestep ):
-    def np.exp( risk_free_rate * ( timestep / 12 ) ) - 1
+    return np.exp( risk_free_rate * ( timestep / 12 ) ) - 1
 
 
 def _adjust_time_to_expiry_to_annual( time_to_expiry ):
