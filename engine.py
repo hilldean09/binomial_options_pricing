@@ -237,13 +237,8 @@ def run_closed_crr_binomial_european_pricing( spot, strike,
     r = _adjust_risk_free_rate_to_step( risk_free_rate, timestep )
 
     p, p_prime =  _calculate_crr_p_and_p_prime( volatility, risk_free_rate, time_to_expiry, num_layers )
-    print( p )
-    print( p_prime )
 
     a = np.ceil( np.log( strike / ( spot * ( d ** ( num_layers - 1 ) ) ) ) / np.log( u / d ) )
-
-    print( a )
-
     a = max( a, 0 )
     if a > ( num_layers - 1 ):
         option_price = 0
