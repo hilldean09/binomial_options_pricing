@@ -1,0 +1,3 @@
+
+Delta ($\Delta$) represents the first-order partial derivative of the option's price with respect to the underlying asset's price, i.e. $\Delta = \frac{\partial V}{\partial S}$ where $V$ is the option price and $S$ is the underlying asset's price. $\Delta$ may also be seen as the number of shares to which an option is equivalent to owning (divided by 100). For example, a stock's price rises \$1, and a derived option's price rises by \$0.8, a $\Delta$ of 0.8, thus the option (which represents the trade of 100 shares) is equivalent to owning 80 shares ($Δ \times 100 = 0.8 \times 100 = 80$) of the underlying stock. For (vanilla) call options $0 \leq \Delta \leq 1$, and for (vanilla) put options $-1 \leq \Delta \leq 0$.
+
