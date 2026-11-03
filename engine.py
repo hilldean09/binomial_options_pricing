@@ -249,7 +249,7 @@ def run_closed_crr_binomial_european_pricing( spot, strike,
     if a > ( num_layers - 1 ):
         option_price = 0
     else:
-        option_price = spot * scipy.stats.binom.sf( a, num_layers - 1, p_prime ) - strike * ( ( 1 + r ) ** ( -1.0 * ( num_layers - 1 ) ) ) * scipy.stats.binom.sf( a, num_layers - 1, p )
+        option_price = spot * scipy.stats.binom.sf( a - 1, num_layers - 1, p_prime ) - strike * ( ( 1 + r ) ** ( -1.0 * ( num_layers - 1 ) ) ) * scipy.stats.binom.sf( a - 1, num_layers - 1, p )
 
     return option_price
 
