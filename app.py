@@ -313,7 +313,7 @@ def _build_convergence_figure( inputs, convergence_output ):
         binomial_model_name_string = "CRR"
 
     prices_trace = go.Scatter( name = "Closed " + binomial_model_name_string + " Prices",
-                                x = convergence_output.nums_teps_array,
+                                x = convergence_output.num_steps_array,
                                 y = convergence_output.binomial_price_array,
                                 mode = 'markers',
                                 marker = dict(

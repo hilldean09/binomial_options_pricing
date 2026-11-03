@@ -460,7 +460,7 @@ def run_binomial_black_scholes_convergence( spot, strike,
     num_steps_array = np.zeros( max_num_steps - 1 )
 
     for index, num_steps in enumerate( range( 1, max_num_steps, step_size ) ):
-        price_array[ index ] = run_closed_crr_binomial_pricing( spot, strike, volatility, risk_free_rate, time_to_expiry, num_steps, option_type, option_exercise )
+        price_array[ index ] = run_closed_crr_binomial_pricing( spot, strike, volatility, risk_free_rate, time_to_expiry, num_steps + 1, option_type, option_exercise )
         num_steps_array[ index ] = num_steps
 
     black_scholes_return_data = run_black_scholes_pricing( spot, strike, volatility, risk_free_rate, time_to_expiry, None, option_type, option_exercise )
@@ -499,7 +499,7 @@ def run_engine( inputs ):
 
     convergence_output = run_binomial_black_scholes_convergence( inputs.spot, inputs.strike, 
                                                                  inputs.volatility, inputs.risk_free_rate,
-                                                                 inputs.time_to_expiry, inputs.num_steps,
+                                                                 inputs.time_to_expiry,
                                                                  inputs.option_type, inputs.option_exercise )
 
     return binomial_return, binomiaL_closed_return_price, black_scholes_return_data, convergence_output
