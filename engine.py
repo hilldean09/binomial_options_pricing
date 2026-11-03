@@ -10,7 +10,7 @@ from structs import Binomial_Pricing_Return_Data, Black_Scholes_Return_Data, Con
 ##### Constants #####
 
 BOP_CONVERGENCE_DEFAULT_MAX_NUM_STEPS = 200
-BOP_CONVERGENCE_DEFAULT_STEP_SIZE = 5
+BOP_CONVERGENCE_DEFAULT_STEP_SIZE = 1
 
 ##### General ######
 
