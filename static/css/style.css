@@ -434,6 +434,60 @@ h1, h2, h3 {
     }
 }
 
+/* Disclosure: a tile-styled bar that expands to show more tiles */
+
+.disclosure {
+    min-width: 0;
+}
+
+.disclosure-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.85rem 1.25rem;
+    font-weight: 600;
+    list-style: none;
+    cursor: pointer;
+}
+
+/* Safari still draws its own marker */
+.disclosure-bar::-webkit-details-marker {
+    display: none;
+}
+
+.disclosure-bar:hover,
+.disclosure-bar:focus-visible {
+    color: var(--accent);
+}
+
+.disclosure-bar:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+
+.disclosure-icon {
+    color: var(--accent);
+    font-size: 1.1rem;
+    line-height: 1;
+    transition: transform 0.25s ease;
+}
+
+.disclosure[open] .disclosure-icon {
+    transform: rotate(90deg);
+}
+
+.disclosure-body {
+    display: grid;
+    gap: var(--gap);
+    margin-top: var(--gap);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .disclosure-icon {
+        transition: none;
+    }
+}
+
 /* Figures */
 
 .figure {

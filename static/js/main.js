@@ -36,6 +36,11 @@
         leverage: document.getElementById("figure-leverage"),
     };
     const convergenceFigureOutput = document.getElementById("figure-convergence");
+    const latticeDisclosure = document.getElementById("lattice-disclosure");
+
+    // Plotly can't size a plot that isn't displayed, so figures for a
+    // collapsed section wait here until it opens. Keyed by figure element.
+    const deferredFigures = new Map();
 
     const FIGURE_CONFIG = { responsive: true, displayModeBar: false };
 
@@ -198,9 +203,14 @@
 
     // Draws the figure, or clears the panel and returns false if there isn't one.
     function renderFigure(element, figure) {
+        deferredFigures.delete(element);
         if (!figure) {
             Plotly.purge(element);
             return false;
+        }
+        if (element.closest("details:not([open])")) {
+            deferredFigures.set(element, figure);
+            return true;
         }
         if (element.clientWidth < NARROW_FIGURE_WIDTH) {
             wrapTitle(figure.layout);
@@ -263,6 +273,20 @@
     form.addEventListener("submit", submit);
 
     drawerToggle.addEventListener("click", () => setDrawerOpen(!isDrawerOpen()));
+
+    latticeDisclosure.addEventListener("toggle", () => {
+        if (!latticeDisclosure.open) {
+            return;
+        }
+        for (const element of latticeDisclosure.querySelectorAll(".figure")) {
+            if (deferredFigures.has(element)) {
+                renderFigure(element, deferredFigures.get(element));
+            } else if (element.classList.contains("js-plotly-plot")) {
+                // The window may have been resized while these were hidden.
+                Plotly.Plots.resize(element);
+            }
+        }
+    });
 
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape" && isDrawerOpen()) {

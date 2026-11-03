@@ -179,15 +179,25 @@
             <div id="figure-price" class="figure"></div>
         </section>
 
-        <section class="tile" aria-labelledby="figure-delta-heading">
-            <h2 id="figure-delta-heading">Delta Lattice</h2>
-            <div id="figure-delta" class="figure"></div>
-        </section>
+        <!-- Delta and leverage lattices, collapsed until the bar is clicked -->
+        <details id="lattice-disclosure" class="disclosure">
+            <summary class="tile disclosure-bar">
+                <span class="disclosure-icon" aria-hidden="true">›</span>
+                Delta and Leverage Lattice Figures
+            </summary>
 
-        <section class="tile" aria-labelledby="figure-leverage-heading">
-            <h2 id="figure-leverage-heading">Leverage Lattice</h2>
-            <div id="figure-leverage" class="figure"></div>
-        </section>
+            <div class="disclosure-body">
+                <section class="tile" aria-labelledby="figure-delta-heading">
+                    <h2 id="figure-delta-heading">Delta Lattice</h2>
+                    <div id="figure-delta" class="figure"></div>
+                </section>
+
+                <section class="tile" aria-labelledby="figure-leverage-heading">
+                    <h2 id="figure-leverage-heading">Leverage Lattice</h2>
+                    <div id="figure-leverage" class="figure"></div>
+                </section>
+            </div>
+        </details>
 
         <!-- Closed-form CRR price converging to Black-Scholes -->
         <section class="tile" aria-labelledby="figure-convergence-heading">
