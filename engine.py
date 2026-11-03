@@ -5,7 +5,7 @@ import scipy.stats
 import math
 
 from lattice import Lattice
-from structs import Binomial_Pricing_Return_Data, Black_Scholes_Return_Data
+from structs import Binomial_Pricing_Return_Data, Black_Scholes_Return_Data, Convergence_Return_Data
 
 ##### Constants #####
 
@@ -457,9 +457,11 @@ def run_binomial_black_scholes_convergence( spot, strike,
                                             step_size = BOP_CONVERGENCE_DEFAULT_STEP_SIZE ):
 
     price_array = np.zeros( max_num_steps - 1 )
+    num_steps_array = np.zeros( max_num_steps - 1 )
 
-    for num_steps in range( 1, max_num_steps, step_size ):
-        price_array[ num_steps - 1 ] = run_closed_crr_binomial_pricing( spot, strike, volatility, risk_free_rate, time_to_expiry, num_steps, option_type, option_exercise )
+    for index, num_steps in enumerate( range( 1, max_num_steps, step_size ) ):
+        price_array[ index ] = run_closed_crr_binomial_pricing( spot, strike, volatility, risk_free_rate, time_to_expiry, num_steps, option_type, option_exercise )
+        num_steps_array[ index ] = num_steps
 
     black_scholes_return_data = run_black_scholes_pricing( spot, strike, volatility, risk_free_rate, time_to_expiry, None, option_type, option_exercise )
     output = Convergence_Return_Data( price_array, black_scholes_return_data.option_price )
@@ -495,6 +497,11 @@ def run_engine( inputs ):
                                                            inputs.time_to_expiry, inputs.num_steps,
                                                            inputs.option_type, inputs.option_exercise )
 
-    return binomial_return, binomiaL_closed_return_price, black_scholes_return_data
+    convergence_output = run_binomial_black_scholes_convergence( inputs.spot, inputs.strike, 
+                                                                 inputs.volatility, inputs.risk_free_rate,
+                                                                 inputs.time_to_expiry, inputs.num_steps,
+                                                                 inputs.option_type, inputs.option_exercise )
+
+    return binomial_return, binomiaL_closed_return_price, black_scholes_return_data, convergence_output
 
 

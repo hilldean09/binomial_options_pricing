@@ -34,7 +34,8 @@ BOP_COLOR_PALETTE = {
     "muted" : "#9d99ab",
     "panel" : "#1b1a22",
     "border" : "#2c2a36",
-    "strike_hline" : "#f2a7a7"
+    "strike_hline" : "#f2a7a7",
+    "marker_1" : "SOME COLOUR"
 }
 
 BOP_NODE_MARKER_SIZE = 16
@@ -56,6 +57,8 @@ BOP_FIGURE_LAYOUT_LEGEND_Y = 1.02
 BOP_FIGURE_LAYOUT_LEGEND_X = 1.0
 
 BOP_STRIKE_HLINE_WIDTH = 3
+
+BOP_CONVERGENCE_DEFAULT_MARKER_SIZE = 10
 
 ##### Front End Constants End #####
 
@@ -303,6 +306,50 @@ def _build_leverage_lattice_figure( inputs, binomial_output, max_draw_depth=None
     return figure
 
 
+def _build_convergence_figure( inputs, convergence_output ):
+    marker_size = BOP_CONVERGENCE_DEFAULT_MARKER_SIZE
+
+    if inputs.binomial_pricing_model == "crr":
+        binomial_model_name_string = "CRR"
+
+    prices_trace = go.Scatter( name = "Closed " + binomial_model_name_string + " Prices",
+                                x = convergence_output.nums_teps_array,
+                                y = convergence_output.binomial_price_array,
+                                mode = 'markers',
+                                marker = dict(
+                                    size = marker_size,
+                                    color = BOP_COLOR_PALETTE[ "marker_1" ]
+                                ),
+                                showlegend = True,
+                                )
+
+    traces = [ prices_traces ]
+
+    figure = go.Figure( data = traces )
+    figure.add_hline( y = convergence_output.black_scholes_price, name = "Black-Scholes Price", line = dict( width = BOP_STRIKE_HLINE_WIDTH, dash = "dash", color = BOP_COLOR_PALETTE[ "strike_hline" ] ) )
+
+    title = "Closed " + binomial_model_name_string + " Option Price to Black-Scholes Convergence"
+
+    layout = _base_figure_layout( title )
+    layout.update(
+            xaxis = dict( 
+                title = "Number of Steps",
+                gridcolor = BOP_COLOR_PALETTE[ "grid" ],
+                zeroline = False,
+                color = BOP_COLOR_PALETTE[ "muted" ]
+            ),
+            yaxis = dict( 
+                title = "Option Price (dollars)",
+                gridcolor = BOP_COLOR_PALETTE[ "grid" ],
+                zeroline = False,
+                color = BOP_COLOR_PALETTE[ "muted" ]
+            )
+        )
+
+    figure.update_layout( layout )
+    return figure
+
+
 ##### Routes #####
 
 @app.route("/")
@@ -349,11 +396,13 @@ def api_price():
         pass
 
     inputs = Api_Price_Inputs( spot = spot, strike = strike, volatility = volatility, risk_free_rate = risk_free_rate, time_to_expiry = time_to_expiry, num_steps = num_steps, option_type = option_type, option_exercise = option_exercise, binomial_pricing_model = binomial_pricing_model )
-    binomial_output, binomial_closed_price_output, black_scholes_output = engine.run_engine( inputs )
+    binomial_output, binomial_closed_price_output, black_scholes_output, convergence_output = engine.run_engine( inputs )
 
     price_lattice_figure = _build_price_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH )
     delta_lattice_figure = _build_delta_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH )
     leverage_lattice_figure = _build_leverage_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH )
+
+    convergence_figure = _build_convergence_figure( inputs, convergence_output )
 
     # Debugging
     # TODO: Add proper debugging flag

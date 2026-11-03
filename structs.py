@@ -34,7 +34,8 @@ class Black_Scholes_Return_Data:
         self.rho = rho
 
 class Convergence_Return_Data:
-    def __init__( self, binomial_price_array = None, black_scholes_price = None ):
+    def __init__( self, num_steps_array = None, binomial_price_array = None, black_scholes_price = None ):
+        self.num_steps_array = num_steps_array
         self.binomial_price_array = binomial_price_array
         self.black_scholes_price = black_scholes_price
 
