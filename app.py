@@ -323,7 +323,7 @@ def _build_convergence_figure( inputs, convergence_output ):
                                 showlegend = True,
                                 )
 
-    traces = [ prices_traces ]
+    traces = [ prices_trace ]
 
     figure = go.Figure( data = traces )
     figure.add_hline( y = convergence_output.black_scholes_price, name = "Black-Scholes Price", line = dict( width = BOP_STRIKE_HLINE_WIDTH, dash = "dash", color = BOP_COLOR_PALETTE[ "strike_hline" ] ) )
@@ -437,7 +437,8 @@ def api_price():
                 "price" : json.loads( json.dumps( price_lattice_figure, cls=plotly.utils.PlotlyJSONEncoder ) ),
                 "delta" : json.loads( json.dumps( delta_lattice_figure, cls=plotly.utils.PlotlyJSONEncoder ) ),
                 "leverage" : json.loads( json.dumps( leverage_lattice_figure, cls=plotly.utils.PlotlyJSONEncoder ) )
-            }
+            },
+            "convergence" : json.loads( json.dumps( convergence_figure, cls=plotly.utils.PlotlyJSONEncoder ) )
         }
     }
 

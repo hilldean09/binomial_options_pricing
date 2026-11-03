@@ -464,7 +464,7 @@ def run_binomial_black_scholes_convergence( spot, strike,
         num_steps_array[ index ] = num_steps
 
     black_scholes_return_data = run_black_scholes_pricing( spot, strike, volatility, risk_free_rate, time_to_expiry, None, option_type, option_exercise )
-    output = Convergence_Return_Data( price_array, black_scholes_return_data.option_price )
+    output = Convergence_Return_Data( num_steps_array, price_array, black_scholes_return_data.option_price )
 
     return output
 
