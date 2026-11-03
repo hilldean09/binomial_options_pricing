@@ -1,5 +1,5 @@
 // Dashboard: collects model parameters, posts them to /api/price,
-// and renders the returned prices, greeks and lattice figures.
+// and renders the returned prices, greeks and figures.
 
 (function () {
     "use strict";
@@ -30,11 +30,12 @@
         rho: document.getElementById("greek-rho"),
     };
 
-    const figureOutputs = {
+    const latticeFigureOutputs = {
         price: document.getElementById("figure-price"),
         delta: document.getElementById("figure-delta"),
         leverage: document.getElementById("figure-leverage"),
     };
+    const convergenceFigureOutput = document.getElementById("figure-convergence");
 
     const FIGURE_CONFIG = { responsive: true, displayModeBar: false };
 
@@ -147,14 +148,16 @@
             element.textContent = formatValue(greeks[key]);
         }
 
-        const figures = (result.figures && result.figures.lattices) || {};
-        for (const [key, element] of Object.entries(figureOutputs)) {
-            if (figures[key]) {
-                renderFigure(element, figures[key]);
-            } else {
-                Plotly.purge(element);
+        const figures = result.figures || {};
+        const lattices = figures.lattices || {};
+        for (const [key, element] of Object.entries(latticeFigureOutputs)) {
+            if (!renderFigure(element, lattices[key])) {
                 empty.push("figures.lattices." + key);
             }
+        }
+
+        if (!renderFigure(convergenceFigureOutput, figures.convergence)) {
+            empty.push("figures.convergence");
         }
 
         return empty;
@@ -172,6 +175,16 @@
         }
     }
 
+    // A legend sits just above the plot, where a wrapped title's second line
+    // would land, so give it its own line and pin the title to the top.
+    function makeRoomForLegend(figure) {
+        if (!figure.data.some((trace) => trace.showlegend)) {
+            return;
+        }
+        figure.layout.margin.t += TITLE_LINE_HEIGHT;
+        Object.assign(figure.layout.title, { yref: "container", y: 1, yanchor: "top", pad: { t: 12 } });
+    }
+
     // Plotly doesn't wrap titles, so split long ones at the middle word.
     function wrapTitle(layout) {
         const text = layout.title.text;
@@ -183,11 +196,18 @@
         }
     }
 
+    // Draws the figure, or clears the panel and returns false if there isn't one.
     function renderFigure(element, figure) {
+        if (!figure) {
+            Plotly.purge(element);
+            return false;
+        }
         if (element.clientWidth < NARROW_FIGURE_WIDTH) {
             wrapTitle(figure.layout);
+            makeRoomForLegend(figure);
         }
         Plotly.react(element, figure.data, figure.layout, FIGURE_CONFIG);
+        return true;
     }
 
     async function submit(event) {

@@ -35,7 +35,7 @@ BOP_COLOR_PALETTE = {
     "panel" : "#1b1a22",
     "border" : "#2c2a36",
     "strike_hline" : "#f2a7a7",
-    "marker_1" : "SOME COLOUR"
+    "marker_1" : "#a78bfa"
 }
 
 BOP_NODE_MARKER_SIZE = 16
