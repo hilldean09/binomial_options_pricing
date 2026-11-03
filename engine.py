@@ -489,7 +489,7 @@ def run_engine( inputs ):
         binomial_return = Binomial_Pricing_Return_Data( binomial_option_price, binomial_price_lattice, binomial_delta_lattice, binomial_leverage_lattice )
         binomiaL_closed_return_price = run_closed_crr_binomial_pricing( inputs.spot, inputs.strike,
                                                            inputs.volatility, inputs.risk_free_rate,
-                                                           inputs.time_to_expiry, inputs.num_steps,
+                                                           inputs.time_to_expiry, inputs.num_steps + 1,
                                                            inputs.option_type, inputs.option_exercise )
 
     black_scholes_return_data = run_black_scholes_pricing( inputs.spot, inputs.strike, 
