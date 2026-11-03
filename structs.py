@@ -33,4 +33,9 @@ class Black_Scholes_Return_Data:
         self.vega = vega
         self.rho = rho
 
+class Convergence_Return_Data:
+    def __init__( self, binomial_price_array = None, black_scholes_price = None ):
+        self.binomial_price_array = binomial_price_array
+        self.black_scholes_price = black_scholes_price
+
 
