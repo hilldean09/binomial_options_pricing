@@ -15,5 +15,10 @@ Gamma ($\Gamma$) represents the second-order partial derivative of the option's 
 $\Gamma$ is an important consideration in delta-hedging as changes in $\Delta$ necessitate the buying or selling of the underlying asset to remain properly hedged.
 
 
+# Theta 
+
+Theta ($\Theta$) is the negative first-order derivative of the value of an option with respect to time to expiry, i.e. $\Theta = - \frac{\partial V}{\partial \tau} where $V$ is the value of the option and $\tau$ is the time to expiry. $\Theta$ is often referred to as time-decay, regarding options conventionally losing value as they approach expiry (assuming other factors remain unchanged), however this is not always the case. 
+
+$\Theta$ is often reported as the rate per day decrease as opposed to years which is considered unwieldy (we present theta here as the rate per trading day, 252 of such making up a trading year). 
 
 
