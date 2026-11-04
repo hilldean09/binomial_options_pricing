@@ -1,7 +1,7 @@
 
 # Delta
 
-Delta ($\Delta$) represents the first-order partial derivative of the option's price with respect to the underlying asset's price, i.e. $\Delta = \frac{\partial V}{\partial S}$ where $V$ is the option price and $S$ is the underlying asset's price. $\Delta$ may also be seen as the number of shares to which an option is equivalent to owning (divided by 100). For example, a stock's price rises \$1, and a derived option's price rises by \$0.8, a $\Delta$ of 0.8, thus the option (which represents the trade of 100 shares) is equivalent to owning 80 shares ($Δ \times 100 = 0.8 \times 100 = 80$) of the underlying stock. For (vanilla) call options $0 \leq \Delta \leq 1$, and for (vanilla) put options $-1 \leq \Delta \leq 0$.
+Delta ($\Delta$) represents the first-order partial derivative of the option's price with respect to the underlying asset's price, i.e. $\Delta = \frac{\partial V}{\partial S}$ where $V$ is the option price and $S$ is the underlying asset's price. $\Delta$ may also be seen as the number of shares which an option is equivalent to owning (divided by 100). For example, if a stock's price rises \$1 and a derived option's price rises by \$0.8, a $\Delta$ of 0.8, then the option (which represents the trade of 100 shares) is equivalent to owning 80 shares ($\Delta \times 100 = 0.8 \times 100 = 80$) of the underlying stock. For (vanilla) call options $0 \leq \Delta \leq 1$, and for (vanilla) put options $-1 \leq \Delta \leq 0$.
 
 A common use of $\Delta$ is calculating the appropriate hedge for a portfolio or position (delta-hedging), a concept which is crucial to the construction of the CRR model.
 
@@ -10,15 +10,15 @@ A related Greek exists called lambda ($\lambda$) or omega ($\Omega$) which repre
 
 # Gamma
 
-Gamma ($\Gamma$) represents the second-order partial derivative of the option's price with respect to the underlying asset's price, i.e. $\Gamma = \frac{\partial^2 V}{\partial S^2}$ where $V$ is the option's price and $S$ is the underlying asset's value. $\Gamma$ may also be seen as the change in delta ($\Delta$) per dollar change in the underlying asset's value, i.e. $\Gamma = \frac{\partial \Delta}{\partial S}$. $\Gamma$ is typically at it's maximum for at-the-money options, and diminishes as the option tends to deep in-the-money or out-of-the-money.
+Gamma ($\Gamma$) represents the second-order partial derivative of the option's price with respect to the underlying asset's price, i.e. $\Gamma = \frac{\partial^2 V}{\partial S^2}$ where $V$ is the option's price and $S$ is the underlying asset's value. $\Gamma$ may also be seen as the change in delta ($\Delta$) per dollar change in the underlying asset's value, i.e. $\Gamma = \frac{\partial \Delta}{\partial S}$. $\Gamma$ is typically at its maximum for at-the-money options, and diminishes as the option tends to deep in-the-money or out-of-the-money.
 
 $\Gamma$ is an important consideration in delta-hedging as changes in $\Delta$ necessitate the buying or selling of the underlying asset to remain properly hedged.
 
 
-# Theta 
+# Theta
 
-Theta ($\Theta$) is the negative first-order derivative of the value of an option with respect to time to expiry, i.e. $\Theta = - \frac{\partial V}{\partial \tau} where $V$ is the value of the option and $\tau$ is the time to expiry. $\Theta$ is often referred to as time-decay, regarding options conventionally losing value as they approach expiry (assuming other factors remain unchanged), however this is not always the case. 
+Theta ($\Theta$) is the negative first-order derivative of the value of an option with respect to time to expiry, i.e. $\Theta = - \frac{\partial V}{\partial \tau}$ where $V$ is the value of the option and $\tau$ is the time to expiry. $\Theta$ is often referred to as time-decay, regarding options conventionally losing value as they approach expiry (assuming other factors remain unchanged); however, this is not always the case. 
 
-$\Theta$ is often reported as the rate per day decrease as opposed to years which is considered unwieldy (we present theta here as the rate per trading day, 252 of such making up a trading year). 
+$\Theta$ is often reported as the rate per day decrease as opposed to years, which is considered unwieldy (we present theta here as the rate per trading day, 252 of such making up a trading year). 
 
 
