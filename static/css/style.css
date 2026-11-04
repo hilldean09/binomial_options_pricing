@@ -101,6 +101,8 @@ h1, h2, h3 {
 
 .subtitle {
     margin: 0.5rem 0 0;
+    /* Holds its line while the text loads */
+    min-height: 1.5em;
     color: var(--text-muted);
 }
 
@@ -499,4 +501,75 @@ h1, h2, h3 {
 .figure:empty::before {
     content: "—";
     color: var(--text-muted);
+}
+
+/* Info buttons and the popovers they open */
+
+.info-button {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 0.95rem;
+    height: 0.95rem;
+    margin-left: 0.3rem;
+    padding: 0;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    background: none;
+    color: var(--text-muted);
+    font: italic 700 0.6rem/1 Georgia, "Times New Roman", serif;
+    vertical-align: 0.05em;
+    cursor: pointer;
+}
+
+/* Larger hit area than the icon itself */
+.info-button::after {
+    content: "";
+    position: absolute;
+    inset: -0.4rem;
+}
+
+.info-button:hover,
+.info-button:focus-visible,
+.info-button.is-active {
+    color: var(--accent);
+}
+
+.info-button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+
+.info-popover {
+    position: fixed;
+    inset: auto;
+    margin: 0;
+    padding: 0;
+    width: min(26rem, calc(100vw - 2rem));
+    overflow: visible;
+    color: var(--text);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.info-popover-body {
+    max-height: min(60vh, 26rem);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    padding: 1rem 1.15rem;
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+.info-popover h3 {
+    margin-bottom: 0.5rem;
+    color: var(--accent);
+    font-size: 0.95rem;
+}
+
+.info-popover p {
+    margin: 0 0 0.65rem;
+}
+
+.info-popover p:last-child {
+    margin-bottom: 0;
 }
