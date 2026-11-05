@@ -5,7 +5,7 @@ import scipy.stats
 import math
 
 from lattice import Lattice
-from structs import Binomial_Pricing_Return_Data, Black_Scholes_Return_Data, Convergence_Return_Data
+from structs import Binomial_Pricing_Return_Data, Black_Scholes_Return_Data, Convergence_Return_Data, Dividend_Inputs
 
 ##### Constants #####
 
@@ -37,6 +37,18 @@ def _adjust_risk_free_rate_to_step( risk_free_rate, timestep ):
 
 def _adjust_time_to_expiry_to_annual( time_to_expiry ):
     return float( time_to_expiry ) / 12
+
+
+##### Dividends #####
+
+def _does_step_contain_ex_dividend_date( step_num, time_to_expiry, num_layers, dividend_inputs ):
+    assert step_num >= 0
+    timestep = calculate_timestep( time_to_expiry, num_layers - 1 )
+
+    
+
+
+##### Binomial CRR #####
 
 
 def _calculate_crr_down( volatility, time_to_expiry, num_layers ):

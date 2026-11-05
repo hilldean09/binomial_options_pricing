@@ -18,7 +18,8 @@ class Api_Price_Inputs:
         self.binomial_pricing_model = binomial_pricing_model
 
 class Dividend_Inputs:
-    def __init__( self, dividend_yield, ex_dividend_date_array ):
+    def __init__( self, do_dividends=None, dividend_yield=None, ex_dividend_date_array=None ):
+        self.do_dividends = do_dividends
         self.dividend_yield = dividend_yield
         self.ex_dividend_date_array = ex_dividend_date_array
 
