@@ -17,6 +17,11 @@ class Api_Price_Inputs:
         self.option_exercise = option_exercise
         self.binomial_pricing_model = binomial_pricing_model
 
+class Dividend_Inputs:
+    def __init__( self, dividend_yield, ex_dividend_date_array ):
+        self.dividend_yield = dividend_yield
+        self.ex_dividend_date_array = ex_dividend_date_array
+
 class Binomial_Pricing_Return_Data:
     def __init__( self, option_price, price_lattice, delta_lattice, leverage_lattice ):
         self.option_price = option_price
