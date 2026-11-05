@@ -18,10 +18,10 @@ class Api_Price_Inputs:
         self.binomial_pricing_model = binomial_pricing_model
 
 class Dividend_Inputs:
-    def __init__( self, do_dividends=None, dividend_yield=None, ex_dividend_date_array=None ):
+    def __init__( self, do_dividends=None, dividend_yield=None, ex_dividend_date_list=None ):
         self.do_dividends = do_dividends
         self.dividend_yield = dividend_yield
-        self.ex_dividend_date_array = ex_dividend_date_array
+        self.ex_dividend_date_list = ex_dividend_date_list
 
 class Binomial_Pricing_Return_Data:
     def __init__( self, option_price, price_lattice, delta_lattice, leverage_lattice ):
