@@ -41,11 +41,18 @@ def _adjust_time_to_expiry_to_annual( time_to_expiry ):
 
 ##### Dividends #####
 
-def _does_step_contain_ex_dividend_date( step_num, time_to_expiry, num_layers, dividend_inputs ):
+def _calculate_number_of_ex_dividend_dates_up_to_layer( layer_num, time_to_expiry, num_layers, dividend_inputs ):
     assert step_num >= 0
     timestep = calculate_timestep( time_to_expiry, num_layers - 1 )
+    output = 0
 
-    
+    layer_time = layer_num * timestep
+
+    for ex_dividend_date in dividend_inputs.ex_dividend_date_list:
+        if ex_dividend_date <= layer_time:
+            output += 1
+
+    return output
 
 
 ##### Binomial CRR #####
@@ -362,7 +369,7 @@ def _calculate_black_scholes_theta( spot, strike,
     if option_type == "put":
         type_multiplier = -1.0
 
-    theta = ( 1 / rate_periods_per_year ) * ( -1.0 * ( ( spot * volatility ) / ( 2 * np.sqrt( annual_time_to_expiry ) ) ) * normal_distribution.pdf( d1 ) - type_multiplier * ( risk_free_rate * strike * np.exp( -1.0 * risk_free_rate * annual_time_to_expiry ) * normal_distribution.pdf( type_multiplier * d2 ) ) )
+    theta = ( 1 / rate_periods_per_year ) * ( -1.0 * ( ( spot * volatility ) / ( 2 * np.sqrt( annual_time_to_expiry ) ) ) * normal_distribution.pdf( d1 ) - type_multiplier * ( risk_free_rate * strike * np.exp( -1.0 * risk_free_rate * annual_time_to_expiry ) * normal_distribution.cdf( type_multiplier * d2 ) ) )
 
     return theta
 
