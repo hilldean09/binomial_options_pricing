@@ -158,7 +158,7 @@
 
                 <dl class="details">
                     <div class="detail">
-                        <dt>Closed form</dt>
+                        <dt>Closed form <span class="tag dividend-tag" hidden>Excludes dividends</span></dt>
                         <dd id="closed-option-price">—</dd>
                     </div>
                 </dl>
@@ -166,7 +166,8 @@
 
             <!-- Black-Scholes price and greeks -->
             <section class="tile" aria-labelledby="black-scholes-heading">
-                <h2 id="black-scholes-heading">Black-Scholes Price</h2>
+                <!-- Dividend tags are shown when the last priced request had dividends on -->
+                <h2 id="black-scholes-heading">Black-Scholes Price <span class="tag dividend-tag" hidden>Excludes dividends</span></h2>
                 <p class="tile-text">Nemo enim ipsam voluptatem quia voluptas sit.</p>
                 <output id="black-scholes-price" class="price-value" for="pricing-form">—</output>
 

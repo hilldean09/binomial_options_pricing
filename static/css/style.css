@@ -553,6 +553,36 @@ h1, h2, h3 {
     font-variant-numeric: tabular-nums;
 }
 
+/* Tag: a small amber label set beside a heading or term */
+
+/* Gap rather than margin, so a tag that wraps lines up with the text */
+:is(h2, dt):has(> .tag:not([hidden])) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem 0.5rem;
+}
+
+.tag {
+    display: inline-block;
+    padding: 0.1rem 0.45rem;
+    border: 1px solid color-mix(in srgb, var(--warning) 45%, var(--border));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--warning) 10%, var(--surface));
+    color: var(--warning);
+    font-family: var(--font);
+    font-size: 0.7rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.tag[hidden] {
+    display: none;
+}
+
 /* Notice: a small warning tile, gilded in amber rather than purple */
 
 .notice {

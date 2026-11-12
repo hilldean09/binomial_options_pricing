@@ -21,6 +21,8 @@
     const pruneNotice = document.getElementById("prune-notice");
     const pruneNoticeText = document.getElementById("prune-notice-text");
     const blackScholesPriceOutput = document.getElementById("black-scholes-price");
+    // Beside prices the engine works out without dividends.
+    const dividendTags = document.querySelectorAll(".dividend-tag");
 
     const greekOutputs = {
         delta: document.getElementById("greek-delta"),
@@ -279,6 +281,13 @@
         }
     }
 
+    // Tags the prices that ignore dividends, when they were asked for.
+    function updateDividendTags(doDividends) {
+        for (const tag of dividendTags) {
+            tag.hidden = !doDividends;
+        }
+    }
+
     // A legend sits just above the plot, where a wrapped title's second line
     // would land, so give it its own line and pin the title to the top.
     function makeRoomForLegend(figure) {
@@ -357,6 +366,7 @@
 
             const empty = render(result);
             updatePruneNotice(params.num_steps);
+            updateDividendTags(params.do_dividends);
             const time = new Date().toLocaleTimeString();
             if (empty.length > 0) {
                 setStatus(`Updated ${time}, but the response had no value for: ${empty.join(", ")}`, true);
