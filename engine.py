@@ -208,10 +208,10 @@ def _run_crr_lattice_pricing( spot, strike,
             # NOTE: Seperated ifs just for code 
             # extensibility
             if dividend_inputs.do_dividends:
-                new_node_price = max( virtual_spot * dividend_multiplier - strike, new_node_price )
-
                 if virtual_spot * dividend_multiplier - strike > new_node_price:
                     new_node_is_early_exercise = True
+
+                new_node_price = max( virtual_spot * dividend_multiplier - strike, new_node_price )
 
             # TODO: Dividend calculation requires p
             # price formulation of CRR (as opposed 
@@ -236,7 +236,7 @@ def _run_crr_lattice_pricing( spot, strike,
         leverage_lattice.set_node_value( index, new_node_leverage )
 
         if new_node_is_early_exercise:
-            early_exercise_lattice.set_node_value( 1.0 )
+            early_exercise_lattice.set_node_value( index, 1.0 )
 
     option_price = price_lattice.get_node_value( 0 )
 

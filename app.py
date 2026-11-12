@@ -35,8 +35,8 @@ BOP_COLOR_PALETTE = {
     "panel" : "#1b1a22",
     "border" : "#2c2a36",
     "strike_hline" : "#f2a7a7",
-    "marker_1" : "#a78bfa"
-    "node_highlights" : "SOME COLOUR"
+    "marker_1" : "#a78bfa",
+    "node_highlights" : "#f2a7a7"
 }
 
 BOP_NODE_MARKER_SIZE = 16
@@ -152,6 +152,7 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
     if max_draw_depth is None:
         max_draw_depth = BOP_DEFAULT_MAX_DRAW_DEPTH
 
+    do_node_highlights = False
     if highlight_lattice is not None:
         do_node_highlights = True
 
@@ -190,7 +191,7 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
         if do_node_highlights:
             if highlight_lattice.get_node_value( index ) != 0.0:
                 highlight_x_coord.append( node_coord[ 0 ] )
-                highlight_x_coord.append( node_coord[ 1 ] )
+                highlight_y_coord.append( node_coord[ 1 ] )
 
     x_coord_array = x_coord_lattice.array
     y_coord_array = y_coord_lattice.array
@@ -240,7 +241,7 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
                             )
 
     if do_node_highlights:
-        highlights_trace = go.Scatter( name = hightlight_trace_name,
+        highlight_trace = go.Scatter( name = highlight_trace_name,
                                 x = np.asarray( highlight_x_coord ),
                                 y = np.asarray( highlight_y_coord ),
                                 mode = 'markers',
