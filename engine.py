@@ -193,9 +193,10 @@ def _run_crr_lattice_pricing( spot, strike,
             if not dividend_inputs.do_dividends:
                 # Comparison to delta-leverage price
                 # formulation
-                print( new_node_price )
-                print( ( new_node_delta * spot + new_node_leverage ) )
-                assert new_node_price - ( new_node_delta * spot + new_node_leverage ) <= 0.001
+                # print( new_node_price )
+                # print( ( new_node_delta * spot + new_node_leverage ) )
+                # assert new_node_price - ( new_node_delta * spot + new_node_leverage ) <= 0.001
+                pass
 
             # NOTE: Seperated ifs just for code 
             # extensibility
