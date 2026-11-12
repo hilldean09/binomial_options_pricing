@@ -455,7 +455,7 @@ def _calculate_black_scholes_rho( spot, strike,
     return rho
 
 
-def _run_black_scholes_european_pricing( spot, strike,
+def _run_black_scholes_pricing( spot, strike,
                                          volatility, risk_free_rate,
                                          time_to_expiry, option_type,
                                          do_greeks = True ):
@@ -501,8 +501,7 @@ def run_black_scholes_pricing( spot, strike,
                                option_type, option_exercise ):
     return_data = None
 
-    if option_exercise == "european":
-        return_data = _run_black_scholes_european_pricing( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
+    return_data = _run_black_scholes_pricing( spot, strike, volatility, risk_free_rate, time_to_expiry, option_type )
 
     return return_data
 
