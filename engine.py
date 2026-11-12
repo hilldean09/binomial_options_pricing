@@ -193,7 +193,7 @@ def _run_crr_lattice_pricing( spot, strike,
 
             new_node_price = ( p * up_child_price + ( 1 - p ) * down_child_price ) / ( 1 + step_risk_free_rate )
 
-            if not dividend_inputs.do_dividends:
+            # if not dividend_inputs.do_dividends:
                 # Comparison to delta-leverage price
                 # formulation
                 # print( new_node_price )
@@ -203,11 +203,10 @@ def _run_crr_lattice_pricing( spot, strike,
                 # not apparent difference is made to 
                 # results
                 # assert new_node_price - ( new_node_delta * spot + new_node_leverage ) <= 0.001
-                pass
 
             # NOTE: Seperated ifs just for code 
             # extensibility
-            if dividend_inputs.do_dividends:
+            if dividend_inputs.do_dividends and option_exercise = "american":
                 if virtual_spot * dividend_multiplier - strike > new_node_price:
                     new_node_is_early_exercise = True
 
@@ -217,6 +216,7 @@ def _run_crr_lattice_pricing( spot, strike,
             # price formulation of CRR (as opposed 
             # to the delta and bonds formulation)
         else:
+            # At expiration
             # Assumes a rational exercise policy
             if option_type == "call":
                 new_node_price = max( 0, dividend_multiplier * virtual_spot - strike )
