@@ -284,7 +284,7 @@ def run_crr_binomial_pricing( spot, strike,
 # function).
 
 
-def run_closed_crr_binomial_european_pricing( spot, strike,
+def _run_closed_crr_european_pricing( spot, strike,
                                      volatility, risk_free_rate,
                                      time_to_expiry, num_layers,
                                      option_type ):
@@ -320,11 +320,10 @@ def run_closed_crr_binomial_pricing( spot, strike,
                                      option_type, option_exercise ):
     option_price = None
 
-    if option_exercise == "european":
-        option_price = run_closed_crr_binomial_european_pricing( spot, strike,
-                                                                  volatility, risk_free_rate,
-                                                                  time_to_expiry, num_layers,
-                                                                  option_type )
+    option_price = _run_closed_crr_binomial_pricing( spot, strike,
+                                                                volatility, risk_free_rate,
+                                                                time_to_expiry, num_layers,
+                                                                option_type )
 
     return option_price
 
