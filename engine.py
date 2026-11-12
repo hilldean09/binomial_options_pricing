@@ -123,9 +123,10 @@ def _calculate_virtual_spot_in_lattice( spot, volatility, time_to_expiry, num_la
 
 
 def _run_crr_lattice_pricing( spot, strike,
-                               volatility, step_risk_free_rate,
-                               time_to_expiry, num_steps,
-                               option_type, option_exercise ):
+                              volatility, step_risk_free_rate,
+                              time_to_expiry, num_steps,
+                              option_type, option_exercise,
+                              dividend_inputs ):
     """
     Uses an iterative method as opposed
     to a recursive method to leverage 
@@ -158,6 +159,11 @@ def _run_crr_lattice_pricing( spot, strike,
         new_node_delta = None
         new_node_leverage = None
 
+        dividend_multiplier = 1
+        if dividend_inputs.do_dividends:
+            v = _calculate_number_of_ex_dividend_dates_up_to_layer( layer_num, time_to_expiry, num_steps + 1, dividend_inputs )
+            dividend_multiplier = ( 1 - dividend_inputs.dividend_yield ) ** v
+
         if price_lattice.does_node_have_child( index ):
             down_child_index = price_lattice.get_node_down_child( index )
             up_child_index = price_lattice.get_node_up_child( index )
@@ -169,16 +175,22 @@ def _run_crr_lattice_pricing( spot, strike,
             new_node_delta = _calculate_crr_delta( virtual_spot, down_child_price, up_child_price, volatility, time_to_expiry, num_layers )
             new_node_leverage = _calculate_crr_leverage( down_child_price, up_child_price, volatility, time_to_expiry, step_risk_free_rate, num_layers )
             new_node_price = new_node_delta * virtual_spot + new_node_leverage
-            
+
+            # TODO: Dividend calculation requires p
+            # price formulation of CRR (as opposed 
+            # to the delta and bonds formulation)
         else:
             # Assumes a rational exercise policy
             if option_type == "call":
-                new_node_price = max( 0, virtual_spot - strike )
+                new_node_price = max( 0, dividend_multiplier * virtual_spot - strike )
             elif option_type == "put":
-                new_node_price = max( 0, strike - virtual_spot )
+                new_node_price = max( 0, strike - dividend_multiplier * virtual_spot )
 
             # Delta and leverage is not defined
-            # by CRR in this case
+            # by CRR in this case.
+            # NOTE: These 0 values are ignored
+            # regardless in the lattice figure
+            # building.
             new_node_delta = 0
             new_node_leverage = 0
 
@@ -192,10 +204,11 @@ def _run_crr_lattice_pricing( spot, strike,
     return option_price, price_lattice, delta_lattice, leverage_lattice
 
 
-def run_crr_binomial_pricing( spot, strike, \
-                              volatility, risk_free_rate, \
-                              time_to_expiry, num_steps, \
-                              option_type, option_exercise ):
+def run_crr_binomial_pricing( spot, strike,
+                              volatility, risk_free_rate,
+                              time_to_expiry, num_steps,
+                              option_type, option_exercise,
+                              dividend_inputs ):
     """
     CRR Binomial Pricing Model
 
@@ -266,7 +279,6 @@ def run_closed_crr_binomial_european_pricing( spot, strike,
     if a > ( num_layers - 1 ):
         option_price = 0
     else:
-        # TODO: Add put support
         if option_type == "call":
             option_price = spot * scipy.stats.binom.sf( a - 1, num_layers - 1, p_prime ) - strike * ( ( 1 + r ) ** ( -1.0 * ( num_layers - 1 ) ) ) * scipy.stats.binom.sf( a - 1, num_layers - 1, p )
         if option_type == "put":
