@@ -13,7 +13,7 @@ import os
 
 # Project libraries
 from lattice import Lattice
-from structs import Api_Price_Inputs
+from structs import Api_Price_Inputs, Dividend_Inputs
 import engine
 
 app = Flask( __name__ )
@@ -141,6 +141,8 @@ def _calculate_node_lattice_figure_coordinate( index, lattice : Lattice, spot, v
     y_coord = engine._calculate_virtual_spot_in_lattice( spot = spot, volatility = volatility, time_to_expiry = time_to_expiry, num_layers = lattice.num_layers, layer_num = layer_num, index_in_layer = index_in_layer )
 
     return ( x_coord, y_coord )
+
+# TODO: Build early exercise trace
 
 def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_depth=None, draw_last_layer=True, draw_strike_line=True ):
     # Build coordinate lattice
@@ -373,6 +375,7 @@ def api_price():
     option_type = None
     option_exercise = None
     binomial_pricing_model = None
+    dividends_inputs = None
 
     data = request.get_json(force=True)
 
@@ -391,11 +394,15 @@ def api_price():
         option_type = data.get( "option_type", "call" )
         option_exercise = data.get( "option_exercise", "european" )
         binomial_pricing_model = data.get( "pricing_model", "crr" )
+        dividend_inputs = Dividend_Inputs( data.get( "do_divdends", False ),
+                                           float( data.get( "dividend_yield", 0.0 ) ),
+                                           data.get( "ex_dividend_date_list", 0.0 ) )
+
     except:
         # TODO: Add some more significant response
         pass
 
-    inputs = Api_Price_Inputs( spot = spot, strike = strike, volatility = volatility, risk_free_rate = risk_free_rate, time_to_expiry = time_to_expiry, num_steps = num_steps, option_type = option_type, option_exercise = option_exercise, binomial_pricing_model = binomial_pricing_model )
+    inputs = Api_Price_Inputs( spot = spot, strike = strike, volatility = volatility, risk_free_rate = risk_free_rate, time_to_expiry = time_to_expiry, num_steps = num_steps, option_type = option_type, option_exercise = option_exercise, binomial_pricing_model = binomial_pricing_model, dividend_inputs = dividend_inputs )
     binomial_output, binomial_closed_price_output, black_scholes_output, convergence_output = engine.run_engine( inputs )
 
     price_lattice_figure = _build_price_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH )
