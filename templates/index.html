@@ -112,6 +112,35 @@
                         <input id="num_steps" name="num_steps" type="number" step="1" min="1" value="3" required>
                     </div>
 
+                    <!-- Dividends: the switch sets do_dividends and reveals the inputs below -->
+                    <label class="switch" for="do_dividends">
+                        <span class="switch-label">Dividends</span>
+                        <input id="do_dividends" name="do_dividends" class="switch-input" type="checkbox" role="switch" aria-controls="dividend-fields" autocomplete="off">
+                        <span class="switch-track" aria-hidden="true"></span>
+                    </label>
+
+                    <!-- Disabled while hidden so its inputs are skipped and unfocusable -->
+                    <fieldset id="dividend-fields" class="dividend-fields" hidden disabled>
+                        <legend class="visually-hidden">Dividend inputs</legend>
+                        <div class="field">
+                            <label for="dividend_yield">Dividend yield</label>
+                            <input id="dividend_yield" name="dividend_yield" type="number" step="0.01" min="0" max="1" value="0.02" required>
+                        </div>
+                        <div class="field">
+                            <span id="ex-dividend-dates-label" class="field-label">Ex-dividend dates (months)</span>
+                            <!-- Rows come from the template below; no whitespace so :empty matches -->
+                            <ol id="ex-dividend-dates" class="date-list" aria-labelledby="ex-dividend-dates-label"></ol>
+                            <button type="button" id="add-ex-dividend-date" class="add-button">+ Add date</button>
+                        </div>
+                    </fieldset>
+
+                    <template id="ex-dividend-date-template">
+                        <li class="date-row">
+                            <input name="ex_dividend_date" type="number" step="any" min="0" required>
+                            <button type="button" class="remove-button">×</button>
+                        </li>
+                    </template>
+
                     <button type="submit" id="submit-button">Price option</button>
                     <p id="form-status" class="status" role="status" aria-live="polite"></p>
                 </form>

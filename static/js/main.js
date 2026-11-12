@@ -65,6 +65,16 @@
     // Dropdowns, whose values are sent as they are.
     const SELECT_FIELDS = ["option_type", "option_exercise"];
 
+    const dividendSwitch = document.getElementById("do_dividends");
+    const dividendFields = document.getElementById("dividend-fields");
+    const dividendYieldInput = document.getElementById("dividend_yield");
+    const dateList = document.getElementById("ex-dividend-dates");
+    const dateTemplate = document.getElementById("ex-dividend-date-template");
+    const addDateButton = document.getElementById("add-ex-dividend-date");
+
+    // Ex-dividend dates (months from now) listed when the page loads.
+    const DEFAULT_EX_DIVIDEND_DATES = [6];
+
     function isDrawerOpen() {
         return drawer.classList.contains("is-open");
     }
@@ -108,7 +118,96 @@
             params[name] = form.elements[name].value;
         }
 
-        return { params, invalid };
+        const outOfRange = readDividends(params, invalid);
+
+        return { params, invalid, outOfRange };
+    }
+
+    // Marks an input as valid or not, and returns whether it was valid.
+    function check(input, ok) {
+        input.setAttribute("aria-invalid", ok ? "false" : "true");
+        return ok;
+    }
+
+    // Adds the dividend keys to params. Unparseable inputs go on invalid;
+    // returns descriptions of any that parsed but are out of range.
+    function readDividends(params, invalid) {
+        const outOfRange = [];
+
+        params.do_dividends = dividendSwitch.checked;
+        if (!dividendSwitch.checked) {
+            return outOfRange;
+        }
+
+        const isNumber = (input) => input.value.trim() !== "" && Number.isFinite(parseFloat(input.value));
+
+        const dividendYield = parseFloat(dividendYieldInput.value);
+        if (!isNumber(dividendYieldInput)) {
+            check(dividendYieldInput, false);
+            invalid.push("Dividend yield");
+        } else if (check(dividendYieldInput, dividendYield >= 0 && dividendYield < 1)) {
+            params.dividend_yield = dividendYield;
+        } else {
+            outOfRange.push("Dividend yield (from 0 up to, but not including, 1)");
+        }
+
+        // Dates past expiry can't be checked until expiry itself is a number.
+        const expiry = params.time_to_expiry;
+        const dates = [];
+        dateInputs().forEach((input, index) => {
+            const name = `Ex-dividend date ${index + 1}`;
+            const date = parseFloat(input.value);
+
+            if (!isNumber(input)) {
+                check(input, false);
+                invalid.push(name);
+            } else if (check(input, date >= 0 && (expiry === undefined || date <= expiry))) {
+                dates.push(date);
+            } else {
+                outOfRange.push(`${name} (0 to ${expiry ?? "expiry"} months)`);
+            }
+        });
+        params.ex_dividend_date_list = dates;
+
+        return outOfRange;
+    }
+
+    function dateInputs() {
+        return Array.from(dateList.querySelectorAll("input"));
+    }
+
+    // Keeps each row's accessible names in step with its position.
+    function numberDateRows() {
+        dateList.querySelectorAll(".date-row").forEach((row, index) => {
+            row.querySelector("input").setAttribute("aria-label", `Ex-dividend date ${index + 1}, in months`);
+            row.querySelector("button").setAttribute("aria-label", `Remove ex-dividend date ${index + 1}`);
+        });
+    }
+
+    function addDateRow(value) {
+        const row = dateTemplate.content.firstElementChild.cloneNode(true);
+        const input = row.querySelector("input");
+        input.value = value ?? "";
+
+        row.querySelector("button").addEventListener("click", () => removeDateRow(row));
+        dateList.append(row);
+        numberDateRows();
+        return input;
+    }
+
+    // Focus moves to the row that takes this one's place, or the one
+    // before it, or the add button once the list is empty.
+    function removeDateRow(row) {
+        const next = row.nextElementSibling || row.previousElementSibling;
+        row.remove();
+        numberDateRows();
+        (next ? next.querySelector("input") : addDateButton).focus();
+    }
+
+    function syncDividendFields() {
+        const on = dividendSwitch.checked;
+        dividendFields.hidden = !on;
+        dividendFields.disabled = !on;
     }
 
     // "—" is reserved for "not yet priced", so empty values returned by
@@ -223,9 +322,13 @@
     async function submit(event) {
         event.preventDefault();
 
-        const { params, invalid } = readParameters();
+        const { params, invalid, outOfRange } = readParameters();
         if (invalid.length > 0) {
             setStatus("Please enter a number for: " + invalid.join(", "), true);
+            return;
+        }
+        if (outOfRange.length > 0) {
+            setStatus("Out of range: " + outOfRange.join(", "), true);
             return;
         }
 
@@ -271,6 +374,11 @@
     }
 
     form.addEventListener("submit", submit);
+
+    dividendSwitch.addEventListener("change", syncDividendFields);
+    addDateButton.addEventListener("click", () => addDateRow().focus());
+    DEFAULT_EX_DIVIDEND_DATES.forEach(addDateRow);
+    syncDividendFields();
 
     drawerToggle.addEventListener("click", () => setDrawerOpen(!isDrawerOpen()));
 

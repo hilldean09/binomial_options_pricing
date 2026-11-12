@@ -300,6 +300,180 @@ h1, h2, h3 {
     border-color: var(--error);
 }
 
+/* Label-like text for a group with no single control to label */
+.field-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* On/off switch: the checkbox stays in place (for focus and clicks)
+   but invisible, and the track after it is drawn instead. */
+
+.switch {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.switch-input {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    width: 2.25rem;
+    height: 1.25rem;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.switch-track {
+    position: relative;
+    flex: none;
+    width: 2.25rem;
+    height: 1.25rem;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    background: var(--bg);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.switch-track::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0.2rem;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background: var(--text-muted);
+    transform: translateY(-50%);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.switch-input:checked + .switch-track {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.switch-input:checked + .switch-track::after {
+    background: var(--accent-text);
+    transform: translate(0.95rem, -50%);
+}
+
+.switch:hover .switch-track::after {
+    background: var(--text);
+}
+
+.switch:hover .switch-input:checked + .switch-track {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+}
+
+.switch:hover .switch-input:checked + .switch-track::after {
+    background: var(--accent-text);
+}
+
+.switch-input:focus-visible + .switch-track {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .switch-track,
+    .switch-track::after {
+        transition: none;
+    }
+}
+
+/* Inputs revealed by the dividends switch, set in under it */
+
+.dividend-fields {
+    display: grid;
+    gap: 0.9rem;
+    min-width: 0;
+    margin: 0;
+    padding: 0 0 0 0.85rem;
+    border: none;
+    border-left: 2px solid var(--border);
+}
+
+.dividend-fields[hidden] {
+    display: none;
+}
+
+.date-list {
+    display: grid;
+    gap: 0.4rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.date-list:empty::before {
+    content: "No ex-dividend dates";
+    color: var(--text-muted);
+    font-size: 0.875rem;
+}
+
+.date-row {
+    display: flex;
+    gap: 0.4rem;
+}
+
+.remove-button,
+.add-button {
+    font: inherit;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: none;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.remove-button {
+    flex: none;
+    width: 2.4rem;
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.add-button {
+    align-self: flex-start;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.remove-button:hover,
+.add-button:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.remove-button:focus-visible,
+.add-button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+
 #submit-button {
     font: inherit;
     font-weight: 600;
