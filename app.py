@@ -394,7 +394,7 @@ def api_price():
         option_type = data.get( "option_type", "call" )
         option_exercise = data.get( "option_exercise", "european" )
         binomial_pricing_model = data.get( "pricing_model", "crr" )
-        dividend_inputs = Dividend_Inputs( data.get( "do_divdends", False ),
+        dividend_inputs = Dividend_Inputs( bool( data.get( "do_dividends", False ) ),
                                            float( data.get( "dividend_yield", 0.0 ) ),
                                            data.get( "ex_dividend_date_list", 0.0 ) )
 

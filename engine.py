@@ -42,7 +42,7 @@ def _adjust_time_to_expiry_to_annual( time_to_expiry ):
 ##### Dividends #####
 
 def _calculate_number_of_ex_dividend_dates_up_to_layer( layer_num, time_to_expiry, num_layers, dividend_inputs ):
-    assert step_num >= 0
+    assert layer_num >= 0
     timestep = calculate_timestep( time_to_expiry, num_layers - 1 )
     output = 0
 
@@ -133,7 +133,7 @@ def _calculate_virtual_spot_in_lattice( spot, volatility, time_to_expiry, num_la
 
 
 def _run_crr_lattice_pricing( spot, strike,
-                              volatility, step_risk_free_rate,
+                              volatility, risk_free_rate, step_risk_free_rate,
                               time_to_expiry, num_steps,
                               option_type, option_exercise,
                               dividend_inputs ):
@@ -188,20 +188,19 @@ def _run_crr_lattice_pricing( spot, strike,
             # Calculating CRR p
             p, _ = _calculate_crr_p_and_p_prime( volatility, risk_free_rate, time_to_expiry, num_layers )
 
-            timestep = calculate_timestep( time_to_expiry, num_steps )
-            r = _adjust_risk_free_rate_to_step( risk_free_rate, timestep )
-
-            new_node_price = ( p * up_child_price + ( 1 - p ) * down_child_price ) / ( 1 + r )
+            new_node_price = ( p * up_child_price + ( 1 - p ) * down_child_price ) / ( 1 + step_risk_free_rate )
 
             if not dividend_inputs.do_dividends:
                 # Comparison to delta-leverage price
                 # formulation
+                print( new_node_price )
+                print( ( new_node_delta * spot + new_node_leverage ) )
                 assert new_node_price - ( new_node_delta * spot + new_node_leverage ) <= 0.001
 
             # NOTE: Seperated ifs just for code 
             # extensibility
             if dividend_inputs.do_dividends:
-                new_node_price = max( virtual_spot * dividend_multiplier, new_node_price )
+                new_node_price = max( virtual_spot * dividend_multiplier - strike, new_node_price )
 
             # TODO: Dividend calculation requires p
             # price formulation of CRR (as opposed 
@@ -256,7 +255,7 @@ def run_crr_binomial_pricing( spot, strike,
     timestep = calculate_timestep( time_to_expiry, num_steps )
     step_risk_free_rate = _adjust_risk_free_rate_to_step( risk_free_rate, timestep )
 
-    option_price, price_lattice, delta_lattice, leverage_lattice = _run_crr_lattice_pricing( spot, strike, volatility, step_risk_free_rate, time_to_expiry, num_steps, option_type, option_exercise )
+    option_price, price_lattice, delta_lattice, leverage_lattice = _run_crr_lattice_pricing( spot, strike, volatility, risk_free_rate, step_risk_free_rate, time_to_expiry, num_steps, option_type, option_exercise, dividend_inputs )
 
     return option_price, price_lattice, delta_lattice, leverage_lattice
 
@@ -533,7 +532,8 @@ def run_engine( inputs ):
                                                           run_crr_binomial_pricing( inputs.spot, inputs.strike,
                                                            inputs.volatility, inputs.risk_free_rate,
                                                            inputs.time_to_expiry, inputs.num_steps,
-                                                           inputs.option_type, inputs.option_exercise )
+                                                           inputs.option_type, inputs.option_exercise,
+                                                           inputs.dividend_inputs )
         binomial_return = Binomial_Pricing_Return_Data( binomial_option_price, binomial_price_lattice, binomial_delta_lattice, binomial_leverage_lattice )
         binomiaL_closed_return_price = run_closed_crr_binomial_pricing( inputs.spot, inputs.strike,
                                                            inputs.volatility, inputs.risk_free_rate,
