@@ -103,10 +103,10 @@ def _calculate_virtual_spot_in_lattice( spot, volatility, time_to_expiry, num_la
     return virtual_spot
 
 
-def _run_crr_european_pricing( spot, strike,
+def _run_crr_lattice_pricing( spot, strike,
                                volatility, step_risk_free_rate,
                                time_to_expiry, num_steps,
-                               option_type):
+                               option_type, option_exercise ):
     """
     Uses an iterative method as opposed
     to a recursive method to leverage 
@@ -197,9 +197,7 @@ def run_crr_binomial_pricing( spot, strike, \
     timestep = calculate_timestep( time_to_expiry, num_steps )
     step_risk_free_rate = _adjust_risk_free_rate_to_step( risk_free_rate, timestep )
 
-    if option_exercise == "european":
-        # Running CRR for European Options
-        option_price, price_lattice, delta_lattice, leverage_lattice = _run_crr_european_pricing( spot, strike, volatility, step_risk_free_rate, time_to_expiry, num_steps, option_type )
+    option_price, price_lattice, delta_lattice, leverage_lattice = _run_crr_lattice_pricing( spot, strike, volatility, step_risk_free_rate, time_to_expiry, num_steps, option_type, option_exercise )
 
     return option_price, price_lattice, delta_lattice, leverage_lattice
 
