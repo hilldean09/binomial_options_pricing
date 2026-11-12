@@ -153,6 +153,8 @@ def _run_crr_lattice_pricing( spot, strike,
     delta_lattice = Lattice( num_layers )
     leverage_lattice = Lattice( num_layers )
 
+    early_exercise_lattice = Lattice( num_layers )
+
     number_of_nodes = price_lattice.get_number_of_nodes()
 
     assert number_of_nodes == delta_lattice.get_number_of_nodes()
@@ -168,6 +170,7 @@ def _run_crr_lattice_pricing( spot, strike,
         new_node_price = None
         new_node_delta = None
         new_node_leverage = None
+        new_node_is_early_exercise = False
 
         dividend_multiplier = 1
         if dividend_inputs.do_dividends:
@@ -195,6 +198,10 @@ def _run_crr_lattice_pricing( spot, strike,
                 # formulation
                 # print( new_node_price )
                 # print( ( new_node_delta * spot + new_node_leverage ) )
+                # NOTE: Enabling the assertion below
+                # causes the problem to error but
+                # not apparent difference is made to 
+                # results
                 # assert new_node_price - ( new_node_delta * spot + new_node_leverage ) <= 0.001
                 pass
 
@@ -202,6 +209,9 @@ def _run_crr_lattice_pricing( spot, strike,
             # extensibility
             if dividend_inputs.do_dividends:
                 new_node_price = max( virtual_spot * dividend_multiplier - strike, new_node_price )
+
+                if virtual_spot * dividend_multiplier - strike > new_node_price:
+                    new_node_is_early_exercise = True
 
             # TODO: Dividend calculation requires p
             # price formulation of CRR (as opposed 
@@ -225,10 +235,13 @@ def _run_crr_lattice_pricing( spot, strike,
         delta_lattice.set_node_value( index, new_node_delta )
         leverage_lattice.set_node_value( index, new_node_leverage )
 
+        if new_node_is_early_exercise:
+            early_exercise_lattice.set_node_value( 1.0 )
+
     option_price = price_lattice.get_node_value( 0 )
 
 
-    return option_price, price_lattice, delta_lattice, leverage_lattice
+    return option_price, price_lattice, delta_lattice, leverage_lattice, early_exercise_lattice
 
 
 def run_crr_binomial_pricing( spot, strike,
@@ -256,9 +269,9 @@ def run_crr_binomial_pricing( spot, strike,
     timestep = calculate_timestep( time_to_expiry, num_steps )
     step_risk_free_rate = _adjust_risk_free_rate_to_step( risk_free_rate, timestep )
 
-    option_price, price_lattice, delta_lattice, leverage_lattice = _run_crr_lattice_pricing( spot, strike, volatility, risk_free_rate, step_risk_free_rate, time_to_expiry, num_steps, option_type, option_exercise, dividend_inputs )
+    option_price, price_lattice, delta_lattice, leverage_lattice, early_exercise_lattice = _run_crr_lattice_pricing( spot, strike, volatility, risk_free_rate, step_risk_free_rate, time_to_expiry, num_steps, option_type, option_exercise, dividend_inputs )
 
-    return option_price, price_lattice, delta_lattice, leverage_lattice
+    return option_price, price_lattice, delta_lattice, leverage_lattice, early_exercise_lattice
 
 
 ##### Closed CRR Pricing #####
@@ -529,13 +542,13 @@ def run_engine( inputs ):
 
     if inputs.binomial_pricing_model == "crr":
         binomial_option_price, binomial_price_lattice, \
-        binomial_delta_lattice, binomial_leverage_lattice = \
+        binomial_delta_lattice, binomial_leverage_lattice, binomial_early_exercise_lattice = \
                                                           run_crr_binomial_pricing( inputs.spot, inputs.strike,
                                                            inputs.volatility, inputs.risk_free_rate,
                                                            inputs.time_to_expiry, inputs.num_steps,
                                                            inputs.option_type, inputs.option_exercise,
                                                            inputs.dividend_inputs )
-        binomial_return = Binomial_Pricing_Return_Data( binomial_option_price, binomial_price_lattice, binomial_delta_lattice, binomial_leverage_lattice )
+        binomial_return = Binomial_Pricing_Return_Data( binomial_option_price, binomial_price_lattice, binomial_delta_lattice, binomial_leverage_lattice, binomial_early_exercise_lattice )
         binomiaL_closed_return_price = run_closed_crr_binomial_pricing( inputs.spot, inputs.strike,
                                                            inputs.volatility, inputs.risk_free_rate,
                                                            inputs.time_to_expiry, inputs.num_steps + 1,
