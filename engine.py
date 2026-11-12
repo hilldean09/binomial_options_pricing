@@ -71,6 +71,16 @@ def _calculate_crr_up( volatility, time_to_expiry, num_layers ):
 def _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers ):
     return _calculate_crr_up( volatility, time_to_expiry, num_layers ), _calculate_crr_down( volatility, time_to_expiry, num_layers )
 
+def _calculate_crr_p_and_p_prime( volatility, risk_free_rate, 
+                                  time_to_expiry, num_layers ):
+    u, d = _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers )
+    timestep = calculate_timestep( time_to_expiry, num_layers - 1 )
+    r = _adjust_risk_free_rate_to_step( risk_free_rate, timestep )
+
+    p = ( ( 1 + r ) - d ) / ( u - d )
+    p_prime = ( u / ( 1 + r ) ) * p
+
+    return p, p_prime
 
 def _calculate_crr_delta( spot, down_child_price, up_child_price, volatility, time_to_expiry, num_layers ):
     # \Delta = ( C_u - C_d ) / (( u - d ) * S )
@@ -242,18 +252,6 @@ def run_crr_binomial_pricing( spot, strike,
 # transparently as the complement of the
 # cumulative binomial distribution (as a
 # function).
-
-
-def _calculate_crr_p_and_p_prime( volatility, risk_free_rate, 
-                                  time_to_expiry, num_layers ):
-    u, d = _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers )
-    timestep = calculate_timestep( time_to_expiry, num_layers - 1 )
-    r = _adjust_risk_free_rate_to_step( risk_free_rate, timestep )
-
-    p = ( ( 1 + r ) - d ) / ( u - d )
-    p_prime = ( u / ( 1 + r ) ) * p
-
-    return p, p_prime
 
 
 def run_closed_crr_binomial_european_pricing( spot, strike,
