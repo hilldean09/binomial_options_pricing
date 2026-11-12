@@ -51,7 +51,7 @@ I was inspired to conduct this project by a video by Roman Paolucci and the feat
 
 I would like to acknowledge the giants whose shoulders I stand atop including the authors of all referenced papers.
 
-Finally, as an Australian citizen, I would like to acknowledge my fortune in being able to study and learn in this country and the original custodians of this land 
+Finally, as an Australian citizen, I would like to acknowledge my fortune in being able to study and learn in this country and the original custodians of this land.
 
 # Use of Generative Artificial Intelligence
 
