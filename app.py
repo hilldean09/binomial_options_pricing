@@ -36,6 +36,7 @@ BOP_COLOR_PALETTE = {
     "border" : "#2c2a36",
     "strike_hline" : "#f2a7a7",
     "marker_1" : "#a78bfa"
+    "node_highlights" : "SOME COLOUR"
 }
 
 BOP_NODE_MARKER_SIZE = 16
@@ -59,6 +60,8 @@ BOP_FIGURE_LAYOUT_LEGEND_X = 1.0
 BOP_STRIKE_HLINE_WIDTH = 3
 
 BOP_CONVERGENCE_DEFAULT_MARKER_SIZE = 6
+
+BOP_HIGHLIGHT_MARKER_SIZE_FACTOR = 1.2
 
 ##### Front End Constants End #####
 
@@ -144,16 +147,22 @@ def _calculate_node_lattice_figure_coordinate( index, lattice : Lattice, spot, v
 
 # TODO: Build early exercise trace
 
-def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_depth=None, draw_last_layer=True, draw_strike_line=True ):
+def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_depth=None, draw_last_layer=True, draw_strike_line=True, highlight_lattice=None, highlight_trace_name='highlights' ):
     # Build coordinate lattice
     if max_draw_depth is None:
         max_draw_depth = BOP_DEFAULT_MAX_DRAW_DEPTH
+
+    if highlight_lattice is not None:
+        do_node_highlights = True
 
     x_coord_lattice = Lattice( min( max_draw_depth, lattice.num_layers ) )
     y_coord_lattice = Lattice( x_coord_lattice.num_layers )
 
     edge_x_coord : list[ float | None ] = []
     edge_y_coord : list[ float | None ] = []
+
+    highlight_x_coord : list[ float ] = []
+    highlight_y_coord : list[ float ] = []
 
     coord_lattice_num_nodes = x_coord_lattice.get_number_of_nodes()
     assert coord_lattice_num_nodes == y_coord_lattice.get_number_of_nodes()
@@ -177,6 +186,11 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
 
             edge_x_coord += [ node_coord[ 0 ], down_child_x_coord, None, node_coord[ 0 ], up_child_x_coord, None ]
             edge_y_coord += [ node_coord[ 1 ], down_child_y_coord, None, node_coord[ 1 ], up_child_y_coord, None ]
+
+        if do_node_highlights:
+            if highlight_lattice.get_node_value( index ) != 0.0:
+                highlight_x_coord.append( node_coord[ 0 ] )
+                highlight_x_coord.append( node_coord[ 1 ] )
 
     x_coord_array = x_coord_lattice.array
     y_coord_array = y_coord_lattice.array
@@ -225,7 +239,23 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
                              showlegend = False
                             )
 
-    traces = [ edges_trace, nodes_trace ]
+    if do_node_highlights:
+        highlights_trace = go.Scatter( name = hightlight_trace_name,
+                                x = np.asarray( highlight_x_coord ),
+                                y = np.asarray( highlight_y_coord ),
+                                mode = 'markers',
+                                marker = dict(
+                                    size = BOP_HIGHLIGHT_MARKER_SIZE_FACTOR * marker_size,
+                                    color = BOP_COLOR_PALETTE[ "node_highlights" ]
+                                ),
+                                showlegend = False,
+                             )
+
+    traces = None
+    if do_node_highlights:
+        traces = [ edges_trace, highlight_trace, nodes_trace ]
+    else:
+        traces = [ edges_trace, nodes_trace ]
 
     figure = go.Figure( data = traces )
 
@@ -235,7 +265,12 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
     return figure
 
 def _build_price_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
-    figure = _build_general_lattice_figure( inputs, binomial_output, binomial_output.price_lattice, max_draw_depth=max_draw_depth )
+
+    early_exercise_lattice = None
+    if do_early_exercise:
+        early_exercise_lattice = binomial_output.early_exercise_lattice
+
+    figure = _build_general_lattice_figure( inputs, binomial_output, binomial_output.price_lattice, max_draw_depth=max_draw_depth, highlight_lattice=early_exercise_lattice, highlight_trace_name='early exercise' )
 
     # TODO: Add colour bar title update
 
@@ -260,7 +295,8 @@ def _build_price_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
     return figure
 
 
-def _build_delta_lattice_figure( inputs, binomial_output, max_draw_depth=None ):
+def _build_delta_lattice_figure( inputs, binomial_output, max_draw_depth=None, do_early_exercise=False ):
+
     figure = _build_general_lattice_figure( inputs, binomial_output, binomial_output.delta_lattice, max_draw_depth=max_draw_depth, draw_last_layer=False )
 
     title = _construct_lattice_title( inputs, binomial_output, "delta" )
