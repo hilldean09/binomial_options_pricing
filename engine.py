@@ -171,7 +171,7 @@ def _run_crr_lattice_pricing( spot, strike,
 
         dividend_multiplier = 1
         if dividend_inputs.do_dividends:
-            v = _calculate_number_of_ex_dividend_dates_up_to_layer( layer_num, time_to_expiry, num_steps + 1, dividend_inputs )
+            v = _calculate_number_of_ex_dividend_dates_up_to_layer( layer_num, time_to_expiry, num_layers, dividend_inputs )
             dividend_multiplier = ( 1 - dividend_inputs.dividend_yield ) ** v
 
         if price_lattice.does_node_have_child( index ):
@@ -184,7 +184,24 @@ def _run_crr_lattice_pricing( spot, strike,
             # C = \Delta S + B
             new_node_delta = _calculate_crr_delta( virtual_spot, down_child_price, up_child_price, volatility, time_to_expiry, num_layers )
             new_node_leverage = _calculate_crr_leverage( down_child_price, up_child_price, volatility, time_to_expiry, step_risk_free_rate, num_layers )
-            new_node_price = new_node_delta * virtual_spot + new_node_leverage
+
+            # Calculating CRR p
+            p, _ = _calculate_crr_p_and_p_prime( volatility, risk_free_rate, time_to_expiry, num_layers )
+
+            timestep = calculate_timestep( time_to_expiry, num_steps )
+            r = _adjust_risk_free_rate_to_step( risk_free_rate, timestep )
+
+            new_node_price = ( p * up_child_price + ( 1 - p ) * down_child_price ) / ( 1 + r )
+
+            if not dividend_inputs.do_dividends:
+                # Comparison to delta-leverage price
+                # formulation
+                assert new_node_price - ( new_node_delta * spot + new_node_leverage ) <= 0.001
+
+            # NOTE: Seperated ifs just for code 
+            # extensibility
+            if dividend_inputs.do_dividends:
+                new_node_price = max( virtual_spot * dividend_multiplier, new_node_price )
 
             # TODO: Dividend calculation requires p
             # price formulation of CRR (as opposed 
