@@ -206,7 +206,7 @@ def _run_crr_lattice_pricing( spot, strike,
 
             # NOTE: Seperated ifs just for code 
             # extensibility
-            if dividend_inputs.do_dividends and option_exercise = "american":
+            if dividend_inputs.do_dividends and option_exercise == "american":
                 if virtual_spot * dividend_multiplier - strike > new_node_price:
                     new_node_is_early_exercise = True
 
@@ -284,7 +284,7 @@ def run_crr_binomial_pricing( spot, strike,
 # function).
 
 
-def _run_closed_crr_european_pricing( spot, strike,
+def _run_closed_crr_binomial_pricing( spot, strike,
                                      volatility, risk_free_rate,
                                      time_to_expiry, num_layers,
                                      option_type ):
