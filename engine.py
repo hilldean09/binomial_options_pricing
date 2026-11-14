@@ -207,10 +207,18 @@ def _run_crr_lattice_pricing( spot, strike,
             # NOTE: Seperated ifs just for code 
             # extensibility
             if dividend_inputs.do_dividends and option_exercise == "american":
-                if virtual_spot * dividend_multiplier - strike > new_node_price:
-                    new_node_is_early_exercise = True
 
-                new_node_price = max( virtual_spot * dividend_multiplier - strike, new_node_price )
+                if option_type == "call":
+                    new_node_price = max( virtual_spot * dividend_multiplier - strike, new_node_price )
+
+                    if virtual_spot * dividend_multiplier - strike > new_node_price:
+                        new_node_is_early_exercise = True
+
+                elif option_type == "put":
+                    new_node_price = max( strike - virtual_spot * dividend_multiplier, new_node_price )
+
+                    if strike - virtual_spot * dividend_multiplier > new_node_price:
+                        new_node_is_early_exercise = True
 
             # TODO: Dividend calculation requires p
             # price formulation of CRR (as opposed 
