@@ -1,0 +1,19 @@
+
+# Options (Briefly)
+
+For the sake of clarity (and many an asterisk) the following explanation will only be concerned with vanilla options, e.g. European and American puts and calls.
+
+An option (or options-contract) is am agreement granting the buyer of the contract, at some price, the right, but not obligation, to buy pr sell a specified amount of an underlying asset or instrument from or to the seller at a specified price up until or at a specified date in the future. Typically we are concerned with publicly traded options contracts which follow a standardised format and are traded over an exchange, though so called over-the-counter (OTC) options exist whereby parties deal and tailor the contract with the other directly. An option contract includes settlement terms which specify whether the underlying asset must be delivered to the relevant party or whether the respective monetary amount may be paid in lieu.
+
+Some quick terminology:
+- The spot price refers to the price of the underlying asset at the sale of option or current price (usually made clear if not equivalent by the context).
+- The strike price refers to the agreed price in the future at which the underlying asset can be traded.
+- Exercising an option refers to buyer exercising their right to buy from or sell to the seller of the option, transacting the underlying asset.
+- The expiration date, (pretty self-evidently) refers to the date at which an option expires, for some options this is the only date at which the option can be exercised, for others this is the final date at which the option can be exercised.
+- Time-to-expiry refers to the duration of time between the sale of the option and the expiration date or between the present and the expiration (again typically made clear, if not equivalent, by the context).
+
+## Call Options
+
+A call options grants the buyer the right, but not obligation to buy the agree
+
+
