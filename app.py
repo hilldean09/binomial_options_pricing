@@ -389,6 +389,10 @@ def _build_convergence_figure( inputs, convergence_output ):
     return figure
 
 
+def _build_payoff_function_figure( strike, option_type ):
+    pass
+
+
 ##### Routes #####
 
 @app.route("/")
