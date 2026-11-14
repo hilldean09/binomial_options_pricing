@@ -41,9 +41,11 @@ BOP_APP_PORT=[SOME_PORT]
 
 # Features
 
-The project in still in early stages but currently features for European and American options on non-dividend and dividend paying assets:
+The project currently features, for European and American options on non-dividend and dividend paying assets:
 - A recursively computed Cox, Ross, Rubinstein (CRR) binomial options pricing model (with associated figures for price, early exercise, delta, and leverage).
-- Closed-form Black-Scholes pricing model and computation of the greeks.
+- Closed-form CRR pricing model (for non-dividend paying underlying assets).
+- Closed-form Black-Scholes (pre-Merton) pricing model and computation of the greeks.
+- CRR to Black-Scholes convergence demonstration.
 
 # Acknowledgements
 
