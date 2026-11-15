@@ -397,7 +397,7 @@ def _build_convergence_figure( inputs, convergence_output ):
     return figure
 
 
-def _build_payoff_function_figure( payoff_function_inptus, payoff_function_outputs ):
+def _build_payoff_function_figure( payoff_function_inputs, payoff_function_outputs ):
     payoff_trace = go.Scatter( name='payoff',
                              x = payoff_function_outputs.spot_array,
                              y = payoff_function_outputs.payoff_array,
@@ -580,9 +580,15 @@ def api_payoff_function():
     spot_step = BOP_PAYOFF_FUNCTION_SPOT_STEP_MULTIPLIER * strike
 
     payoff_function_returns = informative.get_payoff_function_arrays( inputs.strike, inputs.option_price, inputs.option_type, spot_min, spot_max, spot_step )
+    payoff_function_figure = _build_payoff_function_figure( inputs, payoff_function_returns )
 
-    # TODO: Payoff figure creation
+    output = {
+        "figures" : {
+            "payoff_and_profit_function" : json.loads( json.dumps( payoff_function_figure, cls=plotly.utils.PlotlyJSONEncoder ) )
+        }
+    }
 
+    return jsonify( output )
 
 if __name__ == "__main__":
     env_variables = Environment_Variables()
