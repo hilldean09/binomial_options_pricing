@@ -47,6 +47,9 @@ The project currently features, for European and American options on non-dividen
 - Closed-form Black-Scholes (pre-Merton) pricing model and computation of the greeks.
 - CRR to Black-Scholes convergence demonstration.
 
+The project also features some smaller educational passages and interactive features:
+- A brief explanation of (vanilla) options including an interactive payoff function demonstration.
+
 # Acknowledgements
 
 I was inspired to conduct this project by a video by Roman Paolucci and the featured project intended for aspiring researchers (https://github.com/romanmichaelpaolucci/Quant-Guild-Library/tree/main/2026%20Video%20Lectures/130.%20Projects%20to%20Help%20you%20Become%20a%20Quant%20(Beginner)/02%20-%20Quant%20Researcher/01%20-%20Intro%20-%20Binomial%20Tree%20Pricer). I have avoided using the associated repository for reference beyond formatting a Flask app and serving Plotly images via JSON. I have not viewed in any depth the functions related to pricing in the repository, instead referencing and reading the CRR paper directly.
