@@ -38,8 +38,8 @@ BOP_COLOR_PALETTE = {
     "strike_hline" : "#f2a7a7",
     "marker_1" : "#a78bfa",
     "node_highlights" : "#85d0b0",
-    "payoff_line" : "#a78bfa",
-    "profit_line" : "#85d0b0"
+    "payoff_line" : "#fac484",
+    "profit_line" : "#7e56a2"
 }
 
 BOP_NODE_MARKER_SIZE = 16
