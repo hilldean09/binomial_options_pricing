@@ -13,8 +13,9 @@ import os
 
 # Project libraries
 from lattice import Lattice
-from structs import Api_Price_Inputs, Dividend_Inputs
+from structs import Api_Price_Inputs, Dividend_Inputs, Api_Payoff_Function_Inputs
 import engine
+import informative
 
 app = Flask( __name__ )
 
@@ -36,7 +37,9 @@ BOP_COLOR_PALETTE = {
     "border" : "#2c2a36",
     "strike_hline" : "#f2a7a7",
     "marker_1" : "#a78bfa",
-    "node_highlights" : "#85d0b0"
+    "node_highlights" : "#85d0b0",
+    "payoff_line" : "SOME COLOUR",
+    "profit_line" : "SOME COLOUR"
 }
 
 BOP_NODE_MARKER_SIZE = 16
@@ -62,6 +65,11 @@ BOP_STRIKE_HLINE_WIDTH = 3
 BOP_CONVERGENCE_DEFAULT_MARKER_SIZE = 6
 
 BOP_HIGHLIGHT_MARKER_SIZE_FACTOR = 1.2
+
+BOP_PAYOFF_FUNCTION_SPOT_RANGE_MULTIPLIER = 0.5
+BOP_PAYOFF_FUNCTION_SPOT_STEP_MULTIPLIER = 0.01
+
+BOP_PAYOFF_FUNCTION_LINE_WIDTH = 2
 
 ##### Front End Constants End #####
 
@@ -389,8 +397,65 @@ def _build_convergence_figure( inputs, convergence_output ):
     return figure
 
 
-def _build_payoff_function_figure( strike, option_type ):
-    pass
+def _build_payoff_function_figure( payoff_function_inptus, payoff_function_outputs ):
+    payoff_trace = go.Scatter( name='payoff',
+                             x = payoff_function_outputs.spot_array,
+                             y = payoff_function_outputs.payoff_array,
+                             mode = 'lines',
+                             line = dict(
+                                color = BOP_COLOR_PALETTE[ "payoff_line" ],
+                                width = BOP_PAYOFF_FUNCTION_LINE_WIDTH
+                             ),
+                             hoverinfo = 'skip',
+                             showlegend = True
+                            )
+
+    profit_trace = go.Scatter( name='profit',
+                             x = payoff_function_outputs.spot_array,
+                             y = payoff_function_outputs.profit_array,
+                             mode = 'lines',
+                             line = dict(
+                                color = BOP_COLOR_PALETTE[ "profit_line" ],
+                                width = BOP_PAYOFF_FUNCTION_LINE_WIDTH
+                             ),
+                             hoverinfo = 'skip',
+                             showlegend = True
+                            )
+
+    traces = [ profit_trace, payout_trace ]
+
+    figure = go.Figure( data = traces )
+
+    # NOTE: Reusing the strike hline formatting
+    figure.add_vline( x = payoff_function_inputs.strike, name = "Strike Price", line = dict( width = BOP_STRIKE_HLINE_WIDTH, dash = "dash", color = BOP_COLOR_PALETTE[ "strike_hline" ] ) )
+
+    if payoff_function_inputs.option_type == "call":
+        option_type_string = "Call"
+    elif payoff_function_inputs.option_type == "put":
+        option_type_string = "Put"
+
+    title = f"Payoff and Profit Functions of Exercising a {option_type_string} Option With Strike ${payoff_function_inputs.strike:.2f} Bought at ${payoff_function_inputs.option_price:.2f}"
+
+    layout = _base_figure_layout( title )
+
+    layout.update(
+            xaxis = dict( 
+                title = "Spot Price at Exercise (dollars)",
+                gridcolor = BOP_COLOR_PALETTE[ "grid" ],
+                zeroline = False,
+                color = BOP_COLOR_PALETTE[ "muted" ]
+            ),
+            yaxis = dict( 
+                title = "Payoff and Profit (dollars)",
+                gridcolor = BOP_COLOR_PALETTE[ "grid" ],
+                zeroline = True,
+                color = BOP_COLOR_PALETTE[ "muted" ]
+            )
+        )
+
+    figure.update_layout( layout )
+
+    return figure
 
 
 ##### Routes #####
@@ -441,6 +506,8 @@ def api_price():
         # TODO: Add some more significant response
         pass
 
+    assert option_type == "call" or option_type == "put"
+
     inputs = Api_Price_Inputs( spot = spot, strike = strike, volatility = volatility, risk_free_rate = risk_free_rate, time_to_expiry = time_to_expiry, num_steps = num_steps, option_type = option_type, option_exercise = option_exercise, binomial_pricing_model = binomial_pricing_model, dividend_inputs = dividend_inputs )
     binomial_output, binomial_closed_price_output, black_scholes_output, convergence_output = engine.run_engine( inputs )
 
@@ -489,6 +556,33 @@ def api_price():
     }
 
     return jsonify( output )
+
+@app.route( "/api/payoff-function", methods=["Post"] )
+def api_payoff_function():
+    strike = None
+    option_price = None
+    option_type = None
+
+    data = request.get_json(force=True)
+
+    try:
+        strike = float( data[ "strike" ] )
+        option_price = float( data[ "option_price" ] )
+        option_type = data.get( "option_type", "call" )
+    except:
+        # TODO: Add response
+        pass
+
+    inputs = Api_Payoff_Function_Inputs( strike, option_price, option_type )
+
+    spot_min = inputs.strike - ( BOP_PAYOFF_FUNCTION_SPOT_RANGE_MULTIPLIER * inputs.strike )
+    spot_max = inputs.strike + ( BOP_PAYOFF_FUNCTION_SPOT_RANGE_MULTIPLIER * inputs.strike )
+    spot_step = BOP_PAYOFF_FUNCTION_SPOT_STEP_MULTIPLIER * strike
+
+    payoff_function_returns = informative.get_payoff_function_arrays( inputs.strike, inputs.option_price, inputs.option_type, spot_min, spot_max, spot_step )
+
+    # TODO: Payoff figure creation
+
 
 if __name__ == "__main__":
     env_variables = Environment_Variables()
