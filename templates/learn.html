@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Learn · Binomial Options Pricing{% endblock %}
+
+{% block content %}
+    <!-- Sections are listed in texts/learn.json and rendered by learn.js -->
+    <main class="learn">
+        <nav class="tile learn-contents" aria-labelledby="contents-heading">
+            <h2 id="contents-heading">Contents</h2>
+            <ol id="learn-contents-list" class="contents-list"></ol>
+        </nav>
+
+        <div id="learn-sections" class="learn-sections">
+            <p id="learn-status" class="status" role="status">Loading…</p>
+        </div>
+    </main>
+
+    <!-- Payoff function figure, placed where a section has a
+         "figure: payoff-function" comment. learn.js gives each copy its
+         own ids, linking labels to fields. -->
+    <template id="payoff-function-template">
+        <div class="figure-card">
+            <div class="figure-controls">
+                <div class="field">
+                    <label data-for="option_type">Option type</label>
+                    <select data-field="option_type">
+                        <option value="call">Call</option>
+                        <option value="put">Put</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label data-for="strike">Strike price</label>
+                    <input data-field="strike" type="number" step="any" min="0">
+                </div>
+                <div class="field">
+                    <label data-for="option_price">Premium</label>
+                    <input data-field="option_price" type="number" step="0.01" min="0">
+                </div>
+            </div>
+            <p class="figure-source" hidden></p>
+            <p class="status" role="status" aria-live="polite"></p>
+            <div class="figure"></div>
+        </div>
+    </template>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/learn.js') }}"></script>
+{% endblock %}

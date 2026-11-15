@@ -813,3 +813,196 @@ h1, h2, h3 {
 .info-popover p:last-child {
     margin-bottom: 0;
 }
+
+/* Learn page: contents beside the sections, stacked on narrow screens */
+
+.learn {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: grid;
+    grid-template-columns: 15rem minmax(0, 1fr);
+    gap: var(--gap);
+    align-items: start;
+}
+
+.learn-sections {
+    display: grid;
+    gap: var(--gap);
+    min-width: 0;
+}
+
+.learn-contents {
+    position: sticky;
+    top: 1rem;
+    max-height: calc(100dvh - 2rem);
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.learn-contents h2 {
+    margin-bottom: 0.6rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.contents-list,
+.contents-list ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.contents-list ol {
+    margin: 0.15rem 0 0.4rem 0.75rem;
+    padding-left: 0.6rem;
+    border-left: 1px solid var(--border);
+}
+
+.contents-list a {
+    display: block;
+    padding: 0.2rem 0;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    line-height: 1.35;
+    text-decoration: none;
+}
+
+.contents-list > li > a {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.contents-list a:hover,
+.contents-list a[aria-current="location"] {
+    color: var(--accent);
+}
+
+.contents-list a:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+    border-radius: 4px;
+}
+
+@media (max-width: 860px) {
+    .learn {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .learn-contents {
+        /* Relative, not static: the corner gilding is placed against it */
+        position: relative;
+        top: auto;
+        max-height: none;
+    }
+}
+
+/* Long-form text: lines kept to a readable length, figures full width */
+
+.prose {
+    padding: 1.5rem 1.75rem;
+    font-size: 0.975rem;
+    line-height: 1.7;
+}
+
+.prose > :not(.figure-card) {
+    max-width: 72ch;
+}
+
+.prose h2 {
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.prose h3 {
+    margin: 2rem 0 0.6rem;
+    font-size: 1.15rem;
+}
+
+.prose h2,
+.prose h3 {
+    scroll-margin-top: 1rem;
+}
+
+.prose p,
+.prose ul,
+.prose ol {
+    margin: 0 0 0.9rem;
+}
+
+.prose ul,
+.prose ol {
+    padding-left: 1.4rem;
+}
+
+.prose li + li {
+    margin-top: 0.4rem;
+}
+
+.prose li::marker {
+    color: var(--accent);
+}
+
+.prose a {
+    color: var(--accent);
+}
+
+.prose a:hover {
+    color: var(--accent-hover);
+}
+
+.prose code {
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    background: var(--bg);
+    font-family: var(--mono);
+    font-size: 0.9em;
+}
+
+.prose > :last-child {
+    margin-bottom: 0;
+}
+
+/* Interactive figure in a section: its controls sit above the plot */
+
+.figure-card {
+    margin: 1.25rem 0 1.5rem;
+    padding: 1rem 1.25rem 0.5rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    line-height: 1.5;
+}
+
+.figure-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: 0.75rem;
+}
+
+.figure-card .field input,
+.figure-card .field select {
+    background: var(--surface);
+}
+
+.figure-source {
+    margin: 0.75rem 0 0;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+}
+
+.figure-card .status {
+    margin-top: 0.5rem;
+}
+
+/* Takes no room until there's something to say */
+.figure-card .status:empty {
+    min-height: 0;
+    margin: 0;
+}
+
+.figure-card .figure {
+    margin-top: 0.25rem;
+}
