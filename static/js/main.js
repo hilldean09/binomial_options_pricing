@@ -44,12 +44,6 @@
     // collapsed section wait here until it opens. Keyed by figure element.
     const deferredFigures = new Map();
 
-    const FIGURE_CONFIG = { responsive: true, displayModeBar: false };
-
-    // Below this width (px) figure titles no longer fit on one line.
-    const NARROW_FIGURE_WIDTH = 520;
-    const TITLE_LINE_HEIGHT = 20;
-
     // Most lattice layers the figures draw. Mirrors BOP_DEFAULT_MAX_DRAW_DEPTH
     // in app.py, so keep the two in step.
     const MAX_DRAW_DEPTH = 50;
@@ -288,44 +282,23 @@
         }
     }
 
-    // A legend sits just above the plot, where a wrapped title's second line
-    // would land, so give it its own line and pin the title to the top.
-    function makeRoomForLegend(figure) {
-        if (!figure.data.some((trace) => trace.showlegend)) {
-            return;
-        }
-        figure.layout.margin.t += TITLE_LINE_HEIGHT;
-        Object.assign(figure.layout.title, { yref: "container", y: 1, yanchor: "top", pad: { t: 12 } });
-    }
-
-    // Plotly doesn't wrap titles, so split long ones at the middle word.
-    function wrapTitle(layout) {
-        const text = layout.title.text;
-        const middle = text.indexOf(" ", Math.floor(text.length / 2));
-
-        if (middle !== -1) {
-            layout.title.text = `${text.slice(0, middle)}<br>${text.slice(middle + 1)}`;
-            layout.margin.t += TITLE_LINE_HEIGHT;
-        }
-    }
-
-    // Draws the figure, or clears the panel and returns false if there isn't one.
+    // Draws the figure, or clears the panel and returns false if there isn't
+    // one. Figures in a collapsed section are held until it opens.
     function renderFigure(element, figure) {
         deferredFigures.delete(element);
-        if (!figure) {
-            Plotly.purge(element);
-            return false;
-        }
-        if (element.closest("details:not([open])")) {
+        if (figure && element.closest("details:not([open])")) {
             deferredFigures.set(element, figure);
             return true;
         }
-        if (element.clientWidth < NARROW_FIGURE_WIDTH) {
-            wrapTitle(figure.layout);
-            makeRoomForLegend(figure);
+        return BOP.figures.draw(element, figure);
+    }
+
+    // Lets the Learn page's figures start from this pricing.
+    function saveLastPricing(params, result) {
+        const price = result.binomial_option_price;
+        if (typeof price === "number" && Number.isFinite(price)) {
+            BOP.lastPricing.save({ strike: params.strike, option_type: params.option_type, option_price: price });
         }
-        Plotly.react(element, figure.data, figure.layout, FIGURE_CONFIG);
-        return true;
     }
 
     async function submit(event) {
@@ -367,6 +340,7 @@
             const empty = render(result);
             updatePruneNotice(params.num_steps);
             updateDividendTags(params.do_dividends);
+            saveLastPricing(params, result);
             const time = new Date().toLocaleTimeString();
             if (empty.length > 0) {
                 setStatus(`Updated ${time}, but the response had no value for: ${empty.join(", ")}`, true);
