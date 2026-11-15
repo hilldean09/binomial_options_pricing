@@ -39,7 +39,7 @@ Analogously to calls, the buyer of a put option is said to be long the put and p
 
 We stated above that a short call or short put profits from the price of the underlying asset decreasing and increasing respectively; this wording, while true in the sense of the changing value of the option contract, may be misleading with regard to exercise alone. 
 
-More precisely, a short call or short put profits at exercise from the price of the underlying not exceeding or not falling below the strike price respectively; in this case (assuming the counterparty has a rational exercise policy) the short side profits by exactly the price of the option. There is one additional case where the short side profits, when the payoff to the long side at exercise does not exceed the option price, that is below the so called break-even point (see below).
+More precisely, a short call or short put profits at exercise from the price of the underlying not exceeding or not falling below the strike price respectively; in this case (assuming the counterparty has a rational exercise policy) the short side profits by exactly the price of the option at expiry. There is one additional case where the short side profits, when the payoff to the long side at exercise does not exceed the option price, that is below the so called break-even point (see below).
 
 ## The Payoff Function
 
