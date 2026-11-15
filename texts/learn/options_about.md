@@ -35,9 +35,13 @@ The counterpart to call options, a put option grants the buyer the right, but no
 
 Analogously to calls, the buyer of a put option is said to be long the put and profits from the underlying asset decreasing in price. The seller of a put is said to write and be short the put, profiting from the underlying asset increasing in price.
 
+## Short-Side Profit
+
+We stated above that a short call or short put profits from the price of the underlying asset decreasing and increasing respectively, this wording, while true in the sense of the changing value of the option contract, may be misleading solely in reference to exercise. More precisely a short call or short put profits at exercise from the price of underlying not exceeding or not falling below the strike price respectively, in this case (assuming the counterparty has a rational exercise policy) the short side profits exactly the price of the option.
+
 ## The Payoff Function
 
-The *payoff function* of an option refers to the realised return upon exercising the option as a function of the spot price at exercise. Below we plot the payoff function for your given parameters; to explore the function try altering the option type (call or put) and the strike price.
+The *payoff function* of an option refers to the gross amount received upon exercising the option as a function of the spot price at exercise. Below we plot the payoff function for your given parameters; to explore the function try altering the option type (call or put), the strike price, and the premium (option price).
 
 <!-- figure: payoff-function -->
 
