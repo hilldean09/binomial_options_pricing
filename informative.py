@@ -3,7 +3,7 @@
 
 import numpy as np
 
-def get_payoff_function( strike, option_price, option_type, spot_min, spot_max, spot_step ):
+def get_payoff_function_arrays( strike, option_price, option_type, spot_min, spot_max, spot_step ):
     assert spot_min < spot_max
     assert spot_min < strike and strike < spot_max
     assert spot_step < spot_max - spot_min
@@ -18,7 +18,10 @@ def get_payoff_function( strike, option_price, option_type, spot_min, spot_max, 
     profit_value = 0.0
 
     for index, spot_value in enumerate( spot_range ):
-        payoff_value = max( 0, strike - spot_value )
+        if option_type == "call":
+            payoff_value = max( 0, strike - spot_value )
+        if option_type == "put":
+            payoff_value = max( 0, spot_value - strike )
         profit_value = payoff_value - option_price
 
         if spot_value < strike:
