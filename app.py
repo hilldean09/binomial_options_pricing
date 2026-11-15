@@ -464,6 +464,10 @@ def _build_payoff_function_figure( payoff_function_inputs, payoff_function_outpu
 def api_index():
     return render_template( "index.html" )
 
+@app.route("/learn")
+def api_learn():
+    return render_template( "learn.html" )
+
 @app.route( "/api/price", methods=["Post"] )
 def api_price():
     """

@@ -39,7 +39,7 @@ Analogously to calls, the buyer of a put option is said to be long the put and p
 
 The *payoff function* of an option refers to the realised return upon exercising the option as a function of the spot price at exercise. Below we plot the payoff function for your given parameters; to explore the function try altering the options type (call or put) and the strike price.
 
-!!!INSERT PAYOFF FUNCTION FIGURE AREA!!!
+<!-- figure: payoff-function -->
 
 Coincidentally, the shape of the payoff and profits functions may seem familiar from the field of machine learning as the rectified linear unit (ReLU) function.
 
