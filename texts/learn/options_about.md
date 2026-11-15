@@ -21,7 +21,7 @@ A *European-style option*, or just European option, is an option whereby the buy
 
 ## American-Style Option
 
-An *American-style option*, or, again, just American option, is an option whereby the buyer may exercise the option at any time up and until the expiration date. Exercising the option prior to the expiration date is referred to as an early exercise and can introduce some computational difficulties when handling valuation.
+An *American-style option*, or, again, just American option, is an option whereby the buyer may exercise the option at any time up to and including the expiration date. Exercising the option prior to the expiration date is referred to as an early exercise and can introduce some computational difficulties when handling valuation.
 
 ## Call Options
 
