@@ -37,14 +37,16 @@ Analogously to calls, the buyer of a put option is said to be long the put and p
 
 ## Short-Side Profit
 
-We stated above that a short call or short put profits from the price of the underlying asset decreasing and increasing respectively, this wording, while true in the sense of the changing value of the option contract, may be misleading solely in reference to exercise. More precisely a short call or short put profits at exercise from the price of underlying not exceeding or not falling below the strike price respectively, in this case (assuming the counterparty has a rational exercise policy) the short side profits exactly the price of the option.
+We stated above that a short call or short put profits from the price of the underlying asset decreasing and increasing respectively; this wording, while true in the sense of the changing value of the option contract, may be misleading with regard to exercise alone. 
+
+More precisely, a short call or short put profits at exercise from the price of the underlying not exceeding or not falling below the strike price respectively; in this case (assuming the counterparty has a rational exercise policy) the short side profits by exactly the price of the option. There is one additional case where the short side profits, when the payoff to the long side at exercise does not exceed the option price, that is below the so called break-even point (see below).
 
 ## The Payoff Function
 
-The *payoff function* of an option refers to the gross amount received upon exercising the option as a function of the spot price at exercise. Below we plot the payoff function for your given parameters; to explore the function try altering the option type (call or put), the strike price, and the premium (option price).
+The *payoff function* of an option refers to the gross amount received upon exercising the option as a function of the spot price at exercise. The *profit function*, as is self-explanatory, depicts the profit of the long side of the option at exercise and is equal to the payoff function minus the premium. Below we plot the payoff and profit functions for your given parameters; to explore the function, try altering the option type (call or put), the strike price, and the premium (option price).
 
 <!-- figure: payoff-function -->
 
-Coincidentally, the shape of the payoff and profit functions may seem familiar from the field of machine learning as the rectified linear unit (ReLU) function.
+A coincidental note: the shape of the payoff and profit functions may seem familiar from the field of machine learning as the rectified linear unit (ReLU) function.
 
 
