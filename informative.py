@@ -14,7 +14,29 @@ def get_payoff_function( strike, option_price, option_type, spot_min, spot_max, 
     payoff_array = np.zeros( len( spot_range + 1 ) )
     profit_array = np.zeros( len( spot_range + 1 ) )
 
-    for spot_value in spot_range:
-        pass
+    payoff_value = 0.0
+    profit_value = 0.0
+
+    for index, spot_value in enumerate( spot_range ):
+        payoff_value = max( 0, strike - spot_value )
+        profit_value = payoff_value - option_price
+
+        if spot_value < strike:
+            spot_array[ index ] = spot_value
+            payoff_array[ index ] = payoff_value
+            profit_array[ index ] = profit_value
+
+            if spot_value + spot_step <= strike:
+                spot_array[ index + 1 ] = strike
+                payoff_array[ index + 1 ] = 0
+                profit_array[ index + 1 ] = -1.0 * option_price
+
+        else:
+            spot_array[ index + 1 ] = spot_value
+            payoff_array[ index + 1 ] = payoff_value
+            profit_array[ index + 1 ] = profit_value
+
+    return spot_array, payoff_array, profit_array
+
 
 
