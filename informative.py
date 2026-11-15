@@ -27,15 +27,10 @@ def get_payoff_function_arrays( strike, option_price, option_type, spot_min, spo
 
         profit_value = payoff_value - option_price
 
-        if spot_value < strike:
-            if spot_value + spot_step <= strike:
+        if spot_value <= strike and spot_value + spot_step > strike:
                 spot_array[ index ] = strike
                 payoff_array[ index ] = 0
                 profit_array[ index ] = -1.0 * option_price
-            else:
-                spot_array[ index ] = spot_value
-                payoff_array[ index ] = payoff_value
-                profit_array[ index ] = profit_value
 
         else:
             spot_array[ index ] = spot_value
@@ -43,6 +38,8 @@ def get_payoff_function_arrays( strike, option_price, option_type, spot_min, spo
             profit_array[ index ] = profit_value
 
     output = Payoff_Function_Data( spot_array, payoff_array, profit_array )
+
+    print( spot_array )
 
     return output
 
