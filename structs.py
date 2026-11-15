@@ -49,3 +49,17 @@ class Convergence_Return_Data:
         self.black_scholes_price = black_scholes_price
 
 
+##### Informative #####
+
+class Api_Payoff_Function_Inputs:
+    def __init__( self, strike, option_price, option_type ):
+        self.strike = strike
+        self.option_price = option_price
+        self.option_type = option_type
+
+class Payoff_Function_Data:
+    def __init__( self, spot_array, payoff_array, profit_array ):
+        self.spot_array = spot_array
+        self.payoff_array = payoff_array
+        self.profit_array = profit_array
+
