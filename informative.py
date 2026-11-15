@@ -2,6 +2,7 @@
 # sections
 
 import numpy as np
+from structs import Payoff_Function_Data
 
 def get_payoff_function_arrays( strike, option_price, option_type, spot_min, spot_max, spot_step ):
     assert spot_min < spot_max
@@ -39,7 +40,9 @@ def get_payoff_function_arrays( strike, option_price, option_type, spot_min, spo
             payoff_array[ index + 1 ] = payoff_value
             profit_array[ index + 1 ] = profit_value
 
-    return spot_array, payoff_array, profit_array
+    output = Payoff_Function_Data( spot_array, payoff_array, profit_array )
+
+    return output
 
 
 
