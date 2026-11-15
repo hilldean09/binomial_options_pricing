@@ -422,7 +422,7 @@ def _build_payoff_function_figure( payoff_function_inputs, payoff_function_outpu
                              showlegend = True
                             )
 
-    traces = [ profit_trace, payout_trace ]
+    traces = [ profit_trace, payoff_trace ]
 
     figure = go.Figure( data = traces )
 
