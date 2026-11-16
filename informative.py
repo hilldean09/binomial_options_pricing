@@ -39,8 +39,6 @@ def get_payoff_function_arrays( strike, option_price, option_type, spot_min, spo
 
     output = Payoff_Function_Data( spot_array, payoff_array, profit_array )
 
-    print( spot_array )
-
     return output
 
 
