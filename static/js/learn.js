@@ -37,11 +37,22 @@
         return id;
     }
 
+    // A heading's text as it reads on screen. Rendered maths also holds
+    // its TeX source and a MathML copy, which textContent would include.
+    function visibleText(heading) {
+        const copy = heading.cloneNode(true);
+        for (const math of copy.querySelectorAll(".katex")) {
+            math.replaceWith(math.querySelector(".katex-html")?.textContent ?? "");
+        }
+        return copy.textContent;
+    }
+
+    // Copies the heading's rendered content, so any maths in it shows.
     function contentsItem(heading) {
         const item = document.createElement("li");
         const link = document.createElement("a");
         link.href = "#" + heading.id;
-        link.textContent = heading.textContent;
+        link.append(...Array.from(heading.childNodes, (node) => node.cloneNode(true)));
         item.append(link);
         return item;
     }
@@ -56,7 +67,7 @@
         let item = null;
         let sublist = null;
         for (const heading of section.querySelectorAll("h2, h3")) {
-            heading.id = uniqueId(heading.textContent);
+            heading.id = uniqueId(visibleText(heading));
             if (heading.tagName === "H2") {
                 item = contentsItem(heading);
                 sublist = null;

@@ -870,6 +870,11 @@ h1, h2, h3 {
     text-decoration: none;
 }
 
+/* KaTeX enlarges maths by default; keep it in step with the link text */
+.contents-list .katex {
+    font-size: 1em;
+}
+
 .contents-list > li > a {
     color: var(--text);
     font-weight: 600;
