@@ -64,34 +64,41 @@ $$
 $\Delta$ and $B$ will henceforth refer, unless stated otherwise, to these solution of the system of equations.
 
 We now show that no rational investor would value the option below the cost of the hedging portfolio. If an option is priced at $C$ below the cost of the hedging portfolio $\Delta S + B$ we will buy the option and sell the hedging portfolio. At expiry the value of the option and hedging portfolio will be equivalent as we have just shown, therefore the overall value of our positions at expiry is zero and we profit the difference between the call and hedging portfolio prices $( \Delta S + B ) - C > 0$. However, if the option is priced above the cost depending on whether the option is European or American there exist separate arbitrage opportunities (consider the converse of the previous argument and the opportunity for immediate exercise respectively. Finally, under the assumption that the risk-free interest rate is positive (negative interest rates do occur but are considered rare and unconventional) we find that for an option with one period to expiry under the two state simplification
-
 $$
 C = \Delta S + B \quad \text{and } \quad P = \Delta S + B .
 $$
-
 Considering the expansion of $\Delta$ and $B$ and defining
-
 $$
 p = \frac{r-d}{u-d} \quad \text{and } \quad 1-p = \frac{u-r}{u-d} ,
 $$
-
 we can simply the option pricing expression to
-
 $$
 C = \frac{ p C_u + \left(1-p\right) C_d }{ r } \quad \text{and } \quad P = \frac{ p P_u + \left(1-p\right) P_d }{ r } .
 $$
-
 Note that it can be proven that under the assumption $p$ has the properties of a probability which leads to the closed-form of the CRR binomial pricing model.
 
 Additionally, in the non-dividend paying case and assuming $r$ is positive it can be proven that early exercise is never optimal (consider comparing the pricing formulas to $S-K$ and $K-S$ for call and put options respectively).
 
+## Some Key Features
+
+Note that, as we promised to show, the CRR pricing model does not depend or make any assumptions on investors attitude to risk instead arguing a price via the assumption that investors do not wish to be on the sadder end of riskless arbitrage opportunities. Additionally the CRR pricing model does not depend on investors opinions on $q$ (the probability that the underlying asset's value moves geometrically by $u$). In combination, it does not matter 
+
 ## Pricing of Options $\geq 2$ Periods From Expiry
 
-To price options $\geq 2$ periods from we simply recursively apply the pricing formula, but instead of $C_u$ and $C_d$ denoting the payoff at expiry they denote the option price after the underlying assets price moves by $u$ and $d$ respectively. 
+To price options $\geq 2$ periods from we simply recursively apply the pricing formula, but instead of $C_u$ and $C_d$ denoting the payoff at expiry they denote the option price after the underlying assets price moves by $u$ and $d$ respectively. We assume that $u$ and $d$ remain constant (and by proxy this will assume that volatility, $\sigma$ is constant) through the chosen number of periods.
 
 In implementation this can be thought of computing the option price at each node layer-by-layer, starting from expiry, in the lattices seen in the "Pricer" section of this app.
 
+Note that as time moves forward and the underlying asset's value traverses the available paths under the two-state simplification the values of $\Delta$ and $B$ change depending on the underlying asset's movement and thus the hedging portfolio need be updated.
+
 ## Pricing Options on Dividend Paying Assets and Early Exercise
 
-We will now consider pricing options conditioned on dividend paying underlying assets and the resulting complications of early exercise in the American option case. We will only present the case for which the asset pays a constant dividend yield (or constant on the period with which we are concerned at the very least) though the methodology can be expanded to dividends as an arbitrary function on known information. Upon an ex-dividend date (the data at which one must hold an asset to be entitled to the next dividend payment) the asset's value declines by the dividend yield (considering a company's literal capital decreasing by the dividend yield per share). We assume that the dividend yield and ex-dividend dates are perfectly known.
+We will now consider pricing options conditioned on dividend paying underlying assets and the resulting complications of early exercise in the American option case. We will only present the case for which the asset pays a constant dividend yield (or constant on the period with which we are concerned at the very least) though the methodology can be expanded to dividends as an arbitrary function on known information. The core mechanism is that upon an ex-dividend date (the data at which one must hold an asset to be entitled to the next dividend payment) the asset's value declines by the dividend yield (considering a company's literal capital decreasing by the dividend yield per share). We assume that the dividend yield and ex-dividend dates are perfectly known.
+
+Previously we stated that in the non-dividend paying underlying asset case early-exercise is never optimal, however in the dividend paying case this is not strictly true. Early-exercise is optimal where the immediate payoff of the option exceed the value of the hedging portfolio at that instance, that is when
+$$
+\frac{ p C_u + \left(1-p\right) C_d }{ r } < S - K \quad \text{or } \quad \frac{ p P_u + \left(1-p\right) P_d }{ r } < K - S 
+$$
+in the call and put cases respectively.
+
 
