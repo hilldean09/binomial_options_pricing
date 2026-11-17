@@ -22,10 +22,11 @@ $$
 
 Where $S_{i+1}$ indicates the spot price one period after $S_i$. We stated the requirement $u>d$, however we must also impose $u > r$ where $r$ is the risk-free interest rate over the period (the risk-free rate) to avoid arbitrage opportunities; note that this assumes the risk-free rate remains constant over the period.
 
+Note that for American options we assume that exercise is only possible at each beginning or end of each period.
 
 ## Valuation by Arbitrage Arguments
 
-To price an option on a non-dividend paying underlying asset under the two-state simplification we first consider a European option that is one period from expiry with spot price $S$ and strike price $K$ (we will find that in the non-dividend paying case European and American options are priced equivalently). The payout at expiry of such an option is 
+To price an option on a non-dividend paying underlying asset under the two-state simplification we first consider an option that is one period from expiry with spot price $S$ and strike price $K$ (we will find that in the non-dividend paying case European and American options are priced equivalently). The payout at expiry of such an option is 
 $$
 \begin{cases}
 C_u = \max\left[ 0, uS - K \right] \quad & \text{with probability } q \\ 
@@ -41,7 +42,7 @@ P_d = \max\left[ 0, K - dS \right] \quad & \text{with probability } (1-q)
 $$
 $C$ and $P$ will be used to denote call and put options respectively and their prices.
 
-To price the option via arbitrage arguments we wish to construct a portfolio in the present that is equivalent to the option's payoff one period out at expiry, to achieve this we consider two instruments; the underlying asset and risk-free bonds. The portfolio, referred to as the hedging portfolio is comprised of $\Delta$ units of the underlying asset, where each unit represents the quantity specified by the option contract, and $B$ dollars of risk-free bonds; negative $\Delta$ implies selling units of the underlying asset and negative $B$ implies the lending of risk-free bonds. The cost of the hedging portfolio is
+To price the option via arbitrage arguments we wish to construct a portfolio in the present that is equivalent to the option's payoff one period out at expiry, to achieve this we consider two instruments; the underlying asset and risk-free bonds. The portfolio, referred to as the hedging portfolio is comprised of $\Delta$ units of the underlying asset, where each unit represents the quantity specified by the option contract, and $B$ borrowed dollars of risk-free bonds; negative $\Delta$ implies selling units of the underlying asset and negative $B$ implies lending via risk-free bonds. The cost of the hedging portfolio is
 
 $$
 \Delta S + B .
@@ -62,7 +63,35 @@ $$
 $$
 $\Delta$ and $B$ will henceforth refer, unless stated otherwise, to these solution of the system of equations.
 
-We now show that no rational investor would value the option below the cost of the hedging portfolio. If an option is priced at $C$ below the cost of the hedging portfolio $\Delta S + B$ we will buy the option and sell the hedging portfolio. At expiry the value of the option and hedging portfolio will be equivalent as we have just shown, therefore the overall value of our positions at expiry is zero and we profit the difference between the call and hedging portfolio prices $( \Delta S + B ) - C > 0$.
+We now show that no rational investor would value the option below the cost of the hedging portfolio. If an option is priced at $C$ below the cost of the hedging portfolio $\Delta S + B$ we will buy the option and sell the hedging portfolio. At expiry the value of the option and hedging portfolio will be equivalent as we have just shown, therefore the overall value of our positions at expiry is zero and we profit the difference between the call and hedging portfolio prices $( \Delta S + B ) - C > 0$. However, if the option is priced above the cost depending on whether the option is European or American there exist separate arbitrage opportunities (consider the converse of the previous argument and the opportunity for immediate exercise respectively. Finally, under the assumption that the risk-free interest rate is positive (negative interest rates do occur but are considered rare and unconventional) we find that for an option with one period to expiry under the two state simplification
 
+$$
+C = \Delta S + B \quad \text{and } \quad P = \Delta S + B .
+$$
 
+Considering the expansion of $\Delta$ and $B$ and defining
+
+$$
+p = \frac{r-d}{u-d} \quad \text{and } \quad 1-p = \frac{u-r}{u-d} ,
+$$
+
+we can simply the option pricing expression to
+
+$$
+C = \frac{ p C_u + \left(1-p\right) C_d }{ r } \quad \text{and } \quad P = \frac{ p P_u + \left(1-p\right) P_d }{ r } .
+$$
+
+Note that it can be proven that under the assumption $p$ has the properties of a probability which leads to the closed-form of the CRR binomial pricing model.
+
+Additionally, in the non-dividend paying case and assuming $r$ is positive it can be proven that early exercise is never optimal (consider comparing the pricing formulas to $S-K$ and $K-S$ for call and put options respectively).
+
+## Pricing of Options $\geq 2$ Periods From Expiry
+
+To price options $\geq 2$ periods from we simply recursively apply the pricing formula, but instead of $C_u$ and $C_d$ denoting the payoff at expiry they denote the option price after the underlying assets price moves by $u$ and $d$ respectively. 
+
+In implementation this can be thought of computing the option price at each node layer-by-layer, starting from expiry, in the lattices seen in the "Pricer" section of this app.
+
+## Pricing Options on Dividend Paying Assets and Early Exercise
+
+We will now consider pricing options conditioned on dividend paying underlying assets and the resulting complications of early exercise in the American option case. We will only present the case for which the asset pays a constant dividend yield (or constant on the period with which we are concerned at the very least) though the methodology can be expanded to dividends as an arbitrary function on known information. Upon an ex-dividend date (the data at which one must hold an asset to be entitled to the next dividend payment) the asset's value declines by the dividend yield (considering a company's literal capital decreasing by the dividend yield per share). We assume that the dividend yield and ex-dividend dates are perfectly known.
 
