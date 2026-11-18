@@ -172,10 +172,10 @@ def _run_crr_lattice_pricing( spot, strike,
         new_node_leverage = None
         new_node_is_early_exercise = False
 
-        dividend_multiplier = 1
+        dividend_multiplier = 1.0
         if dividend_inputs.do_dividends:
             v = _calculate_number_of_ex_dividend_dates_up_to_layer( layer_num, time_to_expiry, num_layers, dividend_inputs )
-            dividend_multiplier = ( 1 - dividend_inputs.dividend_yield ) ** v
+            dividend_multiplier = ( 1.0 - dividend_inputs.dividend_yield ) ** v
 
         if price_lattice.does_node_have_child( index ):
             down_child_index = price_lattice.get_node_down_child( index )
@@ -206,7 +206,7 @@ def _run_crr_lattice_pricing( spot, strike,
 
             # NOTE: Seperated ifs just for code 
             # extensibility
-            if dividend_inputs.do_dividends and option_exercise == "american":
+            if option_exercise == "american":
 
                 if option_type == "call":
                     if virtual_spot * dividend_multiplier - strike > new_node_price:

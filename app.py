@@ -273,7 +273,7 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
 
     return figure
 
-def _build_price_lattice_figure( inputs, binomial_output, max_draw_depth=None, do_early_exercise=False ):
+def _build_price_lattice_figure( inputs, binomial_output, max_draw_depth=None, do_early_exercise=True ):
 
     early_exercise_lattice = None
     if do_early_exercise:
@@ -515,7 +515,7 @@ def api_price():
     inputs = Api_Price_Inputs( spot = spot, strike = strike, volatility = volatility, risk_free_rate = risk_free_rate, time_to_expiry = time_to_expiry, num_steps = num_steps, option_type = option_type, option_exercise = option_exercise, binomial_pricing_model = binomial_pricing_model, dividend_inputs = dividend_inputs )
     binomial_output, binomial_closed_price_output, black_scholes_output, convergence_output = engine.run_engine( inputs )
 
-    price_lattice_figure = _build_price_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH, do_early_exercise = inputs.dividend_inputs.do_dividends )
+    price_lattice_figure = _build_price_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH, do_early_exercise = True )
     delta_lattice_figure = _build_delta_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH )
     leverage_lattice_figure = _build_leverage_lattice_figure( inputs, binomial_output, BOP_DEFAULT_MAX_DRAW_DEPTH )
 
