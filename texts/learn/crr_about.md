@@ -5,6 +5,8 @@ The Cox, Ross, Rubinstein (CRR) binomial options pricing model is a discrete mod
 
 The core of the CRR binomial options pricing model is a two-state simplification of the underlying asset's return over a period whereby arbitrage (riskless trading strategies) arguments can be applied to derive a price for an option on the underlying asset. The model produces a closed-form solution for the price of an option on non-dividend-paying underlying assets with the exception of American puts and can recursively compute a price for dividend-paying underlying assets for European and American calls and puts.
 
+Note that this is intended to outline the key feature. The original paper is a wonderful and entertaining read; the BibLaTeX citation can be found under the "References" subsection.
+
 ## Risk-Neutral Valuation and the CRR Model
 
 Risk-neutral valuation, in the context of financial instruments, refers to a method of evaluating the price of an asset or instrument as if investors are indifferent to risk (either by assumption or necessity).
@@ -111,4 +113,19 @@ where $\sigma$ is the annual volatility of the asset, $t$ is the time to expiry 
 
 Note that the assumption of constant volatility and requiring volatility as an input parameter is a core limitation of the CRR model. If the debacle of requiring volatility as an input parameter is not immediately clear consider that volatility is a latent or hidden process; realized volatility is a lagging estimate (takes time to reflect regime changes) and using implied volatility is circular, effectively chasing the market.
 
+## References
+
+@article{cox_option_1979,
+	title = {Option pricing: A simplified approach},
+	volume = {7},
+	issn = {0304-405X},
+	url = {https://www.sciencedirect.com/science/article/pii/0304405X79900151},
+	doi = {https://doi.org/10.1016/0304-405X(79)90015-1},
+	abstract = {This paper presents a simple discrete-time model for valuing options. The fundamental economic principles of option pricing by arbitrage methods are particularly clear in this setting. Its development requires only elementary mathematics, yet it contains as a special limiting case the celebrated Black-Scholes model, which has previously been derived only by much more difficult methods. The basic model readily lends itself to generalization in many ways. Moreover, by its very construction, it gives rise to a simple and efficient numerical procedure for valuing options for which premature exercise may be optimal.},
+	pages = {229--263},
+	number = {3},
+	journaltitle = {Journal of Financial Economics},
+	author = {Cox, John C. and Ross, Stephen A. and Rubinstein, Mark},
+	date = {1979},
+}
 
