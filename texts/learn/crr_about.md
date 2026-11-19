@@ -3,7 +3,7 @@
 
 The Cox, Ross, Rubinstein (CRR) binomial options pricing model is a discrete model for the risk-neutral valuation of options prices and reproduces the famous Black-Scholes and jump process options pricing formulas in the limiting cases.
 
-The core of the CRR binomial options pricing model is a two-state simplification of the underlying asset's return over a period whereby arbitrage (riskless trading strategies) arguments can be applied to derive a price for an option on the underlying asset. The model produces a closed-form solution for the price of an option on non-dividend-paying underlying assets and can recursively compute a price for dividend-paying underlying assets in both the European and American cases.
+The core of the CRR binomial options pricing model is a two-state simplification of the underlying asset's return over a period whereby arbitrage (riskless trading strategies) arguments can be applied to derive a price for an option on the underlying asset. The model produces a closed-form solution for the price of an option on non-dividend-paying underlying assets with the exception of American puts and can recursively compute a price for dividend-paying underlying assets for European and American calls and puts.
 
 ## Risk-Neutral Valuation and the CRR Model
 
@@ -18,7 +18,7 @@ $$
 S_{i+1} = \begin{cases} uS_i \quad & \text{with probability }q \\
                         dS_i \quad & \text{with probability }(1-q) \end{cases} ,
 $$
-where $S_{i+1}$ indicates the spot price one period after $S_i$. We stated the requirement $u>d$; however, we must also impose $u > r > d$ where $r$ is one plus risk-free interest rate over the period (the risk-free rate), i.e. the growth factor, to avoid arbitrage opportunities; note that this assumes the risk-free rate remains constant over the period.
+where $S_{i+1}$ indicates the spot price one period after $S_i$. We stated the requirement $u>d$; however, we must also impose $u > r > d$ where $r$ is one plus risk-free interest rate (the risk-free rate) over the period, i.e. the growth factor, to avoid arbitrage opportunities; note that this assumes the risk-free rate remains constant over the period.
 
 Note that for American options we assume that exercise is only possible at the beginning or end of each period.
 
@@ -57,9 +57,9 @@ $$
 $$
 Solving for $\Delta$ and $B$ gives
 $$
-\Delta = \frac{C_u - C_d}{(u-d)S} \quad \text{and} \quad B = \frac{uC_d - dC_u}{(u-d)r} .
+\Delta = \frac{C_u - C_d}{(u-d)S} \quad \text{and} \quad B = \frac{uC_d - dC_u}{(u-d)r} ,
 $$
-$\Delta$ and $B$ will henceforth refer, unless stated otherwise, to these solutions of the system of equations.
+and analogously for puts. $\Delta$ and $B$ will henceforth refer, unless stated otherwise, to these solutions of the system of equations.
 
 We now show that no rational investor would value the option below the cost of the hedging portfolio. If an option is priced at $C$ below the cost of the hedging portfolio $\Delta S + B$, we will buy the option and sell the hedging portfolio. At expiry, the value of the option and hedging portfolio will be equivalent, as we have just shown; therefore, the overall value of our positions at expiry is zero and we profit by the difference between the call and hedging portfolio prices $( \Delta S + B ) - C > 0$. However, if the option is priced above the cost, depending on whether the option is European or American, there exist separate arbitrage opportunities (consider the converse of the previous argument and the opportunity for immediate exercise respectively). Finally, under the assumption that the risk-free interest rate is positive (negative interest rates do occur but are considered rare and unconventional) we find that for a option, with the exception of American puts, with one period to expiry under the two-state simplification
 $$
@@ -73,7 +73,7 @@ we can simplify the option pricing expression to
 $$
 C = \frac{ p C_u + \left(1-p\right) C_d }{ r } \quad \text{and } \quad P = \frac{ p P_u + \left(1-p\right) P_d }{ r } .
 $$
-Note that it can be proven that under the assumption $p$ has the properties of a probability which leads to the closed-form of the CRR binomial pricing model.
+Note that it can be proven $p$ has the properties of a probability which, after the extension to arbitrary numbers of periods, to the closed-form binomial of the CRR pricing model.
 
 We now address the exclusion of American put options. In the non-dividend-paying case and assuming a positive risk-free rate ($r>1$) is positive, it can be proven that early exercise is never optimal for American call option (consider comparing the pricing formulas to $S-K$), however early exercise can be very well optimal for American put options, as such for their pricing we must defer to pricing under early exercise which will be covered later.
 
