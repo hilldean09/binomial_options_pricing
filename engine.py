@@ -94,6 +94,15 @@ def _calculate_crr_leverage( down_child_price, up_child_price, volatility, time_
     return ( u * down_child_price - d * up_child_price ) / ( ( u - d ) * ( 1 + step_risk_free_rate ) )
 
 
+def _calculate_dividend_multiplier( layer_num, time_to_expiry, num_layers, dividend_inputs ):
+    dividend_multiplier = 1.0
+    if dividend_inputs.do_dividends:
+        v = _calculate_number_of_ex_dividend_dates_up_to_layer( layer_num, time_to_expiry, num_layers, dividend_inputs )
+        dividend_multiplier = ( 1.0 - dividend_inputs.dividend_yield ) ** v
+
+    return dividend_multiplier
+
+
 def _calculate_virtual_spot_in_lattice( spot, volatility, time_to_expiry, num_layers,
                                         layer_num : int, index_in_layer : int ):
     """
@@ -172,10 +181,7 @@ def _run_crr_lattice_pricing( spot, strike,
         new_node_leverage = None
         new_node_is_early_exercise = False
 
-        dividend_multiplier = 1.0
-        if dividend_inputs.do_dividends:
-            v = _calculate_number_of_ex_dividend_dates_up_to_layer( layer_num, time_to_expiry, num_layers, dividend_inputs )
-            dividend_multiplier = ( 1.0 - dividend_inputs.dividend_yield ) ** v
+        dividend_multiplier = _calculate_dividend_multiplier( layer_num, time_to_expiry, num_layers, dividend_inputs )
 
         if price_lattice.does_node_have_child( index ):
             down_child_index = price_lattice.get_node_down_child( index )
