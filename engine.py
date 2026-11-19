@@ -104,7 +104,7 @@ def _calculate_dividend_multiplier( layer_num, time_to_expiry, num_layers, divid
 
 
 def _calculate_virtual_spot_in_lattice( spot, volatility, time_to_expiry, num_layers,
-                                        layer_num : int, index_in_layer : int ):
+                                        layer_num : int, index_in_layer : int, dividend_inputs ):
     """
       uS : diff = 1
      /
@@ -125,6 +125,8 @@ def _calculate_virtual_spot_in_lattice( spot, volatility, time_to_expiry, num_la
     virtual_spot = None
     index_in_layer_diff = None
 
+    dividend_multiplier = _calculate_dividend_multiplier( layer_num, time_to_expiry, num_layers, dividend_inputs )
+
     median_index_in_layer = ( layer_num + 2 ) / 2 - 1
 
     u, d = _calculate_crr_u_and_d( volatility, time_to_expiry, num_layers )
@@ -138,7 +140,7 @@ def _calculate_virtual_spot_in_lattice( spot, volatility, time_to_expiry, num_la
         index_in_layer_diff = 2 * ( median_index_in_layer - index_in_layer )
         virtual_spot = ( d )**( index_in_layer_diff ) * spot
 
-    return virtual_spot
+    return virtual_spot * dividend_multiplier
 
 
 def _run_crr_lattice_pricing( spot, strike,
@@ -174,14 +176,12 @@ def _run_crr_lattice_pricing( spot, strike,
         layer_num = price_lattice.get_node_layer( index )
         index_in_layer = price_lattice.get_node_layer_index( index )
 
-        virtual_spot = _calculate_virtual_spot_in_lattice( spot, volatility, time_to_expiry, num_layers, layer_num, index_in_layer )
+        virtual_spot = _calculate_virtual_spot_in_lattice( spot, volatility, time_to_expiry, num_layers, layer_num, index_in_layer, dividend_inputs )
 
         new_node_price = None
         new_node_delta = None
         new_node_leverage = None
         new_node_is_early_exercise = False
-
-        dividend_multiplier = _calculate_dividend_multiplier( layer_num, time_to_expiry, num_layers, dividend_inputs )
 
         if price_lattice.does_node_have_child( index ):
             down_child_index = price_lattice.get_node_down_child( index )
@@ -215,16 +215,16 @@ def _run_crr_lattice_pricing( spot, strike,
             if option_exercise == "american":
 
                 if option_type == "call":
-                    if virtual_spot * dividend_multiplier - strike > new_node_price:
+                    if virtual_spot - strike > new_node_price:
                         new_node_is_early_exercise = True
 
-                    new_node_price = max( virtual_spot * dividend_multiplier - strike, new_node_price )
+                    new_node_price = max( virtual_spot - strike, new_node_price )
 
                 elif option_type == "put":
-                    if strike - virtual_spot * dividend_multiplier > new_node_price:
+                    if strike - virtual_spot > new_node_price:
                         new_node_is_early_exercise = True
 
-                    new_node_price = max( strike - virtual_spot * dividend_multiplier, new_node_price )
+                    new_node_price = max( strike - virtual_spot, new_node_price )
 
             # TODO: Dividend calculation requires p
             # price formulation of CRR (as opposed 
@@ -233,9 +233,9 @@ def _run_crr_lattice_pricing( spot, strike,
             # At expiration
             # Assumes a rational exercise policy
             if option_type == "call":
-                new_node_price = max( 0, dividend_multiplier * virtual_spot - strike )
+                new_node_price = max( 0, virtual_spot - strike )
             elif option_type == "put":
-                new_node_price = max( 0, strike - dividend_multiplier * virtual_spot )
+                new_node_price = max( 0, strike - virtual_spot )
 
             # Delta and leverage is not defined
             # by CRR in this case.

@@ -144,12 +144,12 @@ def _construct_lattice_title( inputs, binomial_output, lattice_type ):
     return title
 
 
-def _calculate_node_lattice_figure_coordinate( index, lattice : Lattice, spot, volatility, time_to_expiry, timestep ):
+def _calculate_node_lattice_figure_coordinate( index, lattice : Lattice, spot, volatility, time_to_expiry, timestep, dividend_inputs ):
     layer_num = lattice.get_node_layer( index )
     index_in_layer = lattice.get_node_layer_index( index )
 
     x_coord = layer_num * timestep
-    y_coord = engine._calculate_virtual_spot_in_lattice( spot = spot, volatility = volatility, time_to_expiry = time_to_expiry, num_layers = lattice.num_layers, layer_num = layer_num, index_in_layer = index_in_layer )
+    y_coord = engine._calculate_virtual_spot_in_lattice( spot = spot, volatility = volatility, time_to_expiry = time_to_expiry, num_layers = lattice.num_layers, layer_num = layer_num, index_in_layer = index_in_layer, dividend_inputs = dividend_inputs )
 
     return ( x_coord, y_coord )
 
@@ -179,7 +179,7 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
     timestep = engine.calculate_timestep( inputs.time_to_expiry, lattice.num_layers - 1 )
 
     for index in range( coord_lattice_num_nodes - 1, -1, -1 ):
-        node_coord = _calculate_node_lattice_figure_coordinate( index, lattice, inputs.spot, inputs.volatility, inputs.time_to_expiry, timestep )
+        node_coord = _calculate_node_lattice_figure_coordinate( index, lattice, inputs.spot, inputs.volatility, inputs.time_to_expiry, timestep, inputs.dividend_inputs )
         x_coord_lattice.set_node_value( index, node_coord[ 0 ] )
         y_coord_lattice.set_node_value( index, node_coord[ 1 ] )
 
