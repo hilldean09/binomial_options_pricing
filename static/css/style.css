@@ -966,6 +966,27 @@ h1, h2, h3 {
     font-size: 0.9em;
 }
 
+/* Code blocks: one background for the whole block, scrolling sideways
+   rather than spilling past the panel */
+.prose pre {
+    margin: 0 0 0.9rem;
+    padding: 0.85rem 1rem;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    line-height: 1.5;
+    tab-size: 4;
+}
+
+.prose pre code {
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    font-size: 0.85rem;
+}
+
 .prose > :last-child {
     margin-bottom: 0;
 }
