@@ -79,7 +79,7 @@ We now address the exclusion of American put options. In the non-dividend-paying
 
 ## Some Key Features
 
-Note that, as we promised to show, the CRR pricing model does not depend on, or make any assumptions about, investors' attitude to risk, instead arguing a price via the assumption that investors do not wish to be on the sadder end of riskless arbitrage opportunities. Additionally, the CRR pricing model does not depend on investors' opinions on $q$ (the probability that the underlying asset's value moves geometrically by $u$). In combination, it does not matter 
+Note that, as we promised to show, the CRR pricing model does not depend on, or make any assumptions about, investors' attitude to risk, instead arguing a price via the assumption that investors do not wish to be on the sadder end of riskless arbitrage opportunities. Additionally, the CRR pricing model does not depend on investors' opinions on $q$ (the probability that the underlying asset's value moves geometrically by $u$). It is clear to see that this is therefore quite the powerful valuation tool.
 
 ## Pricing of Options $\geq 2$ Periods From Expiry
 
@@ -98,5 +98,17 @@ $$
 \frac{ p C_u + \left(1-p\right) C_d }{ r } < S - K \quad \text{or } \quad \frac{ p P_u + \left(1-p\right) P_d }{ r } < K - S 
 $$
 in the call and put cases respectively.
+
+## Definition of $u$ and $d$ for Black-Scholes as a Limiting Case
+
+For a given option on a non-dividend paying underlying asset, excluding American puts, as the number of periods tend to infinity (and the length of said periods tend to $0$ to maintain the time to expiry) the CRR binomial options pricing model converges to the Black-Scholes options pricing model. We will not prove the result here however will state how $u$ and $d$ are defined and do good on our promise to show that assuming constant $u$ and $d$ imposes assuming $\sigma$ constant in practical application.
+
+We define $u$ and $d$ as
+$$
+u = e^{\sigma \sqrt{\frac{t}{n}} } \quad \text{and } \quad d = e^{-\sigma \sqrt{\frac{t}{n}} }
+$$
+where $\sigma$ is the annual volatility of the asset, $t$ is the time to expiry in years, and $n$ is the number of periods (of course we can similarly translate the mutual unit of time, in this case years, to whatever we please).
+
+Note that the assumption of constant volatility and requiring volatility as an input parameter is a core limitation of the CRR model. If the debacle of requiring volatility as an input parameter is not immediately clear consider that realized volatility is a latent process (takes time to reflect regime changes) and using implied volatility is circular, effectively chasing the market.
 
 
