@@ -9,7 +9,7 @@ The core of the CRR binomial options pricing model is a two-state simplification
 
 Risk-neutral valuation, in the context of financial instruments, refers to a method of evaluating the price of an asset or instrument as if investors are indifferent to risk (either by assumption or necessity).
 
-The CRR model, under its assumptions and as we will see, does not depend on whether an investor is risk-averse or risk-inclined; to quote the authors, "\[i\]n constructing the formula, the only assumption we made about an individual's behaviour was that \[they\] prefer\[\] more wealth to less wealth".
+The CRR model, under its assumptions and as we will see, does not depend on whether an investor is risk-averse or risk-inclined; to quote the authors, "\[i\]n constructing the formula, the only assumption we made about an individual's behavio\[u\]r was that \[they\] prefer\[\] more wealth to less wealth".
 
 ## Two-State Simplification
 
