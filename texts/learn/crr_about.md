@@ -18,7 +18,7 @@ $$
 S_{i+1} = \begin{cases} uS_i \quad & \text{with probability }q \\
                         dS_i \quad & \text{with probability }(1-q) \end{cases} ,
 $$
-where $S_{i+1}$ indicates the spot price one period after $S_i$. We stated the requirement $u>d$; however, we must also impose $u > r > d$ where $r$ is one plus risk-free interest rate (the risk-free rate) over the period, i.e. the growth factor, to avoid arbitrage opportunities; note that this assumes the risk-free rate remains constant over the period.
+where $S_{i+1}$ indicates the spot price one period after $S_i$. We stated the requirement $u>d$; however, we must also impose $u > r > d$ where $r$ is one plus risk-free interest rate over the period, i.e. the growth factor, to avoid arbitrage opportunities; note that this assumes the risk-free rate remains constant over the period which we are concerned.
 
 Note that for American options we assume that exercise is only possible at the beginning or end of each period.
 
@@ -61,7 +61,7 @@ $$
 $$
 and analogously for puts. $\Delta$ and $B$ will henceforth refer, unless stated otherwise, to these solutions of the system of equations.
 
-We now show that no rational investor would value the option below the cost of the hedging portfolio. If an option is priced at $C$ below the cost of the hedging portfolio $\Delta S + B$, we will buy the option and sell the hedging portfolio. At expiry, the value of the option and hedging portfolio will be equivalent, as we have just shown; therefore, the overall value of our positions at expiry is zero and we profit by the difference between the call and hedging portfolio prices $( \Delta S + B ) - C > 0$. However, if the option is priced above the cost, depending on whether the option is European or American, there exist separate arbitrage opportunities (consider the converse of the previous argument and the opportunity for immediate exercise respectively). Finally, under the assumption that the risk-free interest rate is positive (negative interest rates do occur but are considered rare and unconventional) we find that for a option, with the exception of American puts, with one period to expiry under the two-state simplification
+We now show that no rational investor would value the option below the cost of the hedging portfolio. If an option is priced at $C$ below the cost of the hedging portfolio $\Delta S + B$, we will buy the option and sell the hedging portfolio. At expiry, the value of the option and hedging portfolio will be equivalent, as we have just shown; therefore, the overall value of our positions at expiry is zero and we profit by the difference between the option and hedging portfolio prices $( \Delta S + B ) - C > 0$. However, if the option is priced above the cost there exists similar arbitrage opportunities (consider the converse of the previous argument and the risk of immediate exercise respectively). Finally, under the assumption that the risk-free interest rate is positive (negative interest rates do occur but are considered rare and unconventional) we find that for an option, with the exception of American puts, with one period to expiry under the two-state simplification
 $$
 C = \Delta S + B \quad \text{and } \quad P = \Delta S + B .
 $$
@@ -73,9 +73,9 @@ we can simplify the option pricing expression to
 $$
 C = \frac{ p C_u + \left(1-p\right) C_d }{ r } \quad \text{and } \quad P = \frac{ p P_u + \left(1-p\right) P_d }{ r } .
 $$
-Note that it can be proven $p$ has the properties of a probability which, after the extension to arbitrary numbers of periods, to the closed-form binomial of the CRR pricing model.
+Note that it can be proven $p$ has the properties of a probability which, after the extension to arbitrary numbers of periods, leads to the closed-form binomial of the CRR pricing model.
 
-We now address the exclusion of American put options. In the non-dividend-paying case and assuming a positive risk-free rate ($r>1$) is positive, it can be proven that early exercise is never optimal for American call option (consider comparing the pricing formulas to $S-K$), however early exercise can be very well optimal for American put options, as such for their pricing we must defer to pricing under early exercise which will be covered later.
+We now address the exclusion of American put options. In the non-dividend-paying case and assuming a positive risk-free rate ($r>1$), it can be proven that early exercise is never optimal for American call option (consider comparing the pricing formulas to $S-K$), however early exercise can be very well optimal for American put options, as such for their pricing we must defer to pricing under early exercise which will be covered later.
 
 ## Some Key Features
 
@@ -83,7 +83,7 @@ Note that, as we promised to show, the CRR pricing model does not depend on, or 
 
 ## Pricing of Options $\geq 2$ Periods From Expiry
 
-To price options $\geq 2$ periods from expiry, we simply recursively apply the pricing formula, but instead of $C_u$ and $C_d$ denoting the payoff at expiry they denote the option price after the underlying asset's price moves by $u$ and $d$ respectively. We assume that $u$ and $d$ remain constant (and by proxy this will assume that volatility, $\sigma$, is constant) through the chosen number of periods.
+To price options $\geq 2$ periods from expiry, we simply recursively apply the pricing formula, but instead of $C_u$ and $C_d$ denoting the payoff at expiry they denote the option price after the underlying asset's price moves by $u$ and $d$ respectively. We assume that $u$ and $d$ remain constant (we will show that this implicitly assumes that volatility, $\sigma$, is constant) through the chosen number of periods.
 
 In implementation, this can be thought of as computing the option price at each node layer-by-layer, starting from expiry, in the lattices seen in the "Pricer" section of this app.
 
@@ -91,7 +91,7 @@ Note that as time moves forward and the underlying asset's value traverses the a
 
 ## Pricing Options on Dividend-Paying Assets and Early Exercise
 
-We will now consider pricing options conditioned on dividend-paying underlying assets and the resulting complications of early exercise in the American option case. We will only present the case for which the asset pays a constant dividend yield (or constant on the period with which we are concerned at the very least) though the methodology can be expanded to dividends as an arbitrary function on known information. The core mechanism is that upon an ex-dividend date (the date before which one must hold an asset to be entitled to the next dividend payment) the asset's value declines by the dividend yield on one unit (considering a company's literal capital decreasing by the total dividends paid to all shareholders). We assume that the dividend yield and ex-dividend dates are perfectly known.
+We will now consider pricing options conditioned on dividend-paying underlying assets and the resulting complications of early exercise in the American option case. We will only present the case for which the asset pays a constant dividend yield (or constant on the period with which we are concerned at the very least) though the methodology can be expanded to dividends as an arbitrary function on known information. The core mechanism is that upon an ex-dividend date (the date before which one must hold an asset to be entitled to the next dividend payment) the asset's value declines by the dollar dividend yield on one unit (considering a company's literal capital decreasing by the total dividends paid to all shareholders). We assume that the dividend yield and ex-dividend dates are perfectly known.
 
 Previously we stated that in the non-dividend-paying underlying asset case early exercise is never optimal for call options; however, in the dividend-paying case this is not strictly true. Early exercise is optimal where the immediate payoff of the option exceeds the value of the hedging portfolio at that instant, that is when
 $$
@@ -109,6 +109,6 @@ u = e^{\sigma \sqrt{\frac{t}{n}} } \quad \text{and } \quad d = e^{-\sigma \sqrt{
 $$
 where $\sigma$ is the annual volatility of the asset, $t$ is the time to expiry in years, and $n$ is the number of periods (of course we can similarly translate the mutual unit of time, in this case years, to whatever we please).
 
-Note that the assumption of constant volatility and requiring volatility as an input parameter is a core limitation of the CRR model. If the debacle of requiring volatility as an input parameter is not immediately clear consider that realized volatility is a latent process (takes time to reflect regime changes) and using implied volatility is circular, effectively chasing the market.
+Note that the assumption of constant volatility and requiring volatility as an input parameter is a core limitation of the CRR model. If the debacle of requiring volatility as an input parameter is not immediately clear consider that volatility is a latent or hidden process; realized volatility is a lagging estimate (takes time to reflect regime changes) and using implied volatility is circular, effectively chasing the market.
 
 
