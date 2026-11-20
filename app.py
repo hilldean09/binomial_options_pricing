@@ -125,9 +125,13 @@ def _construct_lattice_title( inputs, binomial_output, lattice_type ):
 
     if inputs.option_type == "call":
         option_type_string = "Call"
+    elif inputs.option_type == "put":
+        option_type_string = "Put"
 
     if inputs.option_exercise == "european":
         option_exercise_string = "European"
+    elif inputs.option_exercise == "american":
+        option_exercise_string = "American"
 
     if inputs.binomial_pricing_model == "crr":
         binomial_pricing_model_string = "CRR Binomial Pricing"
@@ -257,7 +261,7 @@ def _build_general_lattice_figure( inputs, binomial_output, lattice, max_draw_de
                                     size = BOP_HIGHLIGHT_MARKER_SIZE_FACTOR * marker_size,
                                     color = BOP_COLOR_PALETTE[ "node_highlights" ]
                                 ),
-                                showlegend = False,
+                                showlegend = True,
                              )
 
     traces = None
