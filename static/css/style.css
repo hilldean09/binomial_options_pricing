@@ -148,6 +148,14 @@ h1, h2, h3 {
     font-size: 0.875rem;
 }
 
+.site-footer p {
+    margin: 0 0 0.6rem;
+}
+
+.site-footer p:last-child {
+    margin-bottom: 0;
+}
+
 /* Dashboard grid */
 
 .dashboard {

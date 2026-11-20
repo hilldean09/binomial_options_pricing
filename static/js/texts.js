@@ -1,6 +1,6 @@
 // Shared text loading for every page: fetches the files in texts/ (served
 // through the static/texts link), renders Markdown with KaTeX maths, and
-// fills in the subtitle under the title.
+// fills in the subtitle under the title and the footer.
 
 window.BOP = window.BOP || {};
 
@@ -10,6 +10,7 @@ window.BOP = window.BOP || {};
     const TEXTS_URL = document.currentScript.dataset.textsUrl;
 
     const subtitle = document.getElementById("subtitle");
+    const footnote = document.getElementById("footnote");
 
     // $$display$$ or $inline$ maths. "\$" is a literal dollar sign, so it
     // neither opens nor closes inline maths.
@@ -28,7 +29,8 @@ window.BOP = window.BOP || {};
     // headingOffset pushes headings down a level each, so a file's "#" can
     // sit below the page's own <h1>. inline renders a one-liner without
     // wrapping it in a <p>, for text placed into an existing element.
-    function renderMarkdown(source, { headingOffset = 0, inline = false } = {}) {
+    // breaks keeps single line breaks, as in a letter's sign-off.
+    function renderMarkdown(source, { headingOffset = 0, inline = false, breaks = false } = {}) {
         const maths = [];
         const text = source.replace(MATH, (match, display, inline) => {
             maths.push(katex.renderToString(display ?? inline, {
@@ -39,11 +41,15 @@ window.BOP = window.BOP || {};
         });
         const restoreMaths = (html) => html.replace(/@@MATH(\d+)@@/g, (match, index) => maths[index]);
 
+        // Options given to marked replace its defaults rather than adding to
+        // them, so they're merged in here.
+        const options = { ...marked.defaults, breaks };
+
         if (inline) {
-            return restoreMaths(marked.parseInline(text.trim()));
+            return restoreMaths(marked.parseInline(text.trim(), options));
         }
 
-        const tokens = marked.lexer(text);
+        const tokens = marked.lexer(text, options);
         if (headingOffset) {
             marked.walkTokens(tokens, (token) => {
                 if (token.type === "heading") {
@@ -52,7 +58,7 @@ window.BOP = window.BOP || {};
             });
         }
 
-        return restoreMaths(marked.parser(tokens));
+        return restoreMaths(marked.parser(tokens, options));
     }
 
     // Splits a Markdown file into { heading, body } sections keyed by the
@@ -81,7 +87,12 @@ window.BOP = window.BOP || {};
         subtitle.textContent = (await fetchText("under_title.txt")).trim();
     }
 
+    async function loadFootnote() {
+        footnote.innerHTML = renderMarkdown(await fetchText("footnote.md"), { breaks: true });
+    }
+
     BOP.texts = { fetchText, renderMarkdown, splitSections };
 
     loadSubtitle().catch((error) => console.error(error));
+    loadFootnote().catch((error) => console.error(error));
 })();
