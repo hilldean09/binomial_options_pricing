@@ -1,6 +1,7 @@
 {
     "sections": [
         "learn/options_about.md",
+        "learn/prerequisites_about.md",
         "learn/crr_about.md"
     ]
 }
