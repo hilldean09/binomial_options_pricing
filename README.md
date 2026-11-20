@@ -1,6 +1,6 @@
 # Binomial Options Pricing
 
-A binomial options pricing (Flask) app intended for my personal education and the exploration of various binomial options pricing models (e.g. CRR, RB).
+A binomial options pricing (Flask) app intended for my personal and general education and the exploration of various binomial options pricing models (e.g. CRR, RB).
 
 # Quickstart
 
@@ -49,6 +49,8 @@ The project currently features, for European and American options on non-dividen
 
 The project also features some smaller educational passages and interactive features:
 - A brief explanation of (vanilla) options including an interactive payoff function demonstration.
+- Explanations of some prerequisite concepts (risk-free rates and dividends).
+- Overview of the CRR binomial options pricing model.
 
 # Acknowledgements
 
