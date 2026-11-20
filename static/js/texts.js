@@ -26,8 +26,9 @@ window.BOP = window.BOP || {};
     // Maths is set aside before the Markdown pass so its underscores and
     // backslashes aren't read as Markdown, then put back as KaTeX.
     // headingOffset pushes headings down a level each, so a file's "#" can
-    // sit below the page's own <h1>.
-    function renderMarkdown(source, { headingOffset = 0 } = {}) {
+    // sit below the page's own <h1>. inline renders a one-liner without
+    // wrapping it in a <p>, for text placed into an existing element.
+    function renderMarkdown(source, { headingOffset = 0, inline = false } = {}) {
         const maths = [];
         const text = source.replace(MATH, (match, display, inline) => {
             maths.push(katex.renderToString(display ?? inline, {
@@ -36,6 +37,11 @@ window.BOP = window.BOP || {};
             }));
             return `@@MATH${maths.length - 1}@@`;
         });
+        const restoreMaths = (html) => html.replace(/@@MATH(\d+)@@/g, (match, index) => maths[index]);
+
+        if (inline) {
+            return restoreMaths(marked.parseInline(text.trim()));
+        }
 
         const tokens = marked.lexer(text);
         if (headingOffset) {
@@ -46,7 +52,7 @@ window.BOP = window.BOP || {};
             });
         }
 
-        return marked.parser(tokens).replace(/@@MATH(\d+)@@/g, (match, index) => maths[index]);
+        return restoreMaths(marked.parser(tokens));
     }
 
     // Splits a Markdown file into { heading, body } sections keyed by the

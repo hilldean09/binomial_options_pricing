@@ -24,6 +24,12 @@
     // Beside prices the engine works out without dividends.
     const dividendTags = document.querySelectorAll(".dividend-tag");
 
+    // One-liners under the price headings: element id -> file in texts/.
+    const PRICE_TEXTS = {
+        "crr-price-text": "under_crr_price.md",
+        "black-scholes-price-text": "under_black_scholes_price.md",
+    };
+
     const greekOutputs = {
         delta: document.getElementById("greek-delta"),
         gamma: document.getElementById("greek-gamma"),
@@ -385,6 +391,19 @@
             hideDrawer();
         }
     });
+
+    async function loadPriceTexts() {
+        const { fetchText, renderMarkdown } = BOP.texts;
+        await Promise.all(Object.entries(PRICE_TEXTS).map(async ([id, name]) => {
+            try {
+                document.getElementById(id).innerHTML = renderMarkdown(await fetchText(name), { inline: true });
+            } catch (error) {
+                console.error(error);
+            }
+        }));
+    }
+
+    loadPriceTexts();
 
     // The closed state has to paint first for the slide to be seen.
     setTimeout(() => setDrawerOpen(true), DRAWER_OPEN_DELAY);
