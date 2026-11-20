@@ -21,8 +21,10 @@
     const pruneNotice = document.getElementById("prune-notice");
     const pruneNoticeText = document.getElementById("prune-notice-text");
     const blackScholesPriceOutput = document.getElementById("black-scholes-price");
-    // Beside prices the engine works out without dividends.
+    // Beside prices the engine works out without dividends, or that
+    // don't hold for American puts.
     const dividendTags = document.querySelectorAll(".dividend-tag");
+    const americanPutTags = document.querySelectorAll(".american-put-tag");
 
     // One-liners under the price headings: element id -> file in texts/.
     const PRICE_TEXTS = {
@@ -282,9 +284,13 @@
     }
 
     // Tags the prices that ignore dividends, when they were asked for.
-    function updateDividendTags(doDividends) {
+    function updateExclusionTags(params) {
         for (const tag of dividendTags) {
-            tag.hidden = !doDividends;
+            tag.hidden = !params.do_dividends;
+        }
+        const isAmericanPut = params.option_type === "put" && params.option_exercise === "american";
+        for (const tag of americanPutTags) {
+            tag.hidden = !isAmericanPut;
         }
     }
 
@@ -345,7 +351,7 @@
 
             const empty = render(result);
             updatePruneNotice(params.num_steps);
-            updateDividendTags(params.do_dividends);
+            updateExclusionTags(params);
             saveLastPricing(params, result);
             const time = new Date().toLocaleTimeString();
             if (empty.length > 0) {
