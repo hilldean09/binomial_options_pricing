@@ -292,6 +292,11 @@ h1, h2, h3 {
 
 /* Form */
 
+/* Keeps the form clear of the heading above it */
+#inputs-heading {
+    margin-bottom: 1rem;
+}
+
 #pricing-form {
     display: grid;
     gap: 0.9rem;
