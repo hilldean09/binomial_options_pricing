@@ -67,7 +67,6 @@ Finally, as an Australian citizen, I would like to acknowledge my fortune in bei
 # Media
 
 <img width="1362" height="1310" alt="bop_main_page_european_call" src="https://github.com/user-attachments/assets/be0dfbbb-db74-4e05-b317-97e5405844c3" />
-<img width="1333" height="1306" alt="bop_american_put" src="https://github.com/user-attachments/assets/ceea0a52-047e-47d7-9fec-6b8e5c0f2e50" />
 <img width="1326" height="1378" alt="bop_european_call_delta_and_leverage" src="https://github.com/user-attachments/assets/8e400946-8f63-4eed-8dbd-0c47af2e7c42" />
 <img width="1306" height="1110" alt="bop_american_call_with_dividends" src="https://github.com/user-attachments/assets/65a4e2bd-c3cd-4d4c-abfc-9c84df71de39" />
 <img width="1314" height="1217" alt="bop_learn_main_page" src="https://github.com/user-attachments/assets/3c422b57-68d1-4117-8097-2191951777bb" />
