@@ -26,28 +26,29 @@ BOP_DEFAULT_MAX_DRAW_DEPTH = 50
 
 BOP_COLOR_PALETTE = {
     "background" : "#121117",
-    "grid" : "#3b3848",
-    "edge" : "#7c5bd6",
+    "grid" : "rgba(210,174,104,0.13)",
+    "edge" : "#b8955a",
     "paper_bgcolor" : "rgba(0,0,0,0)",
     "plot_bgcolor" : "rgba(0,0,0,0)",
-    "title" : "#e8e6ef",
-    "text" : "#e8e6ef",
-    "muted" : "#9d99ab",
-    "panel" : "#1b1a22",
-    "border" : "#2c2a36",
-    "strike_hline" : "#f2a7a7",
+    "title" : "#f3e6c4",
+    "text" : "#efe9f6",
+    "muted" : "#aaa0bb",
+    "panel" : "#19131f",
+    "border" : "#8a6a2f",
+    "strike_hline" : "#f0d9a0",
     "marker_1" : "#a78bfa",
     "node_highlights" : "#85d0b0",
-    "payoff_line" : "#fac484",
-    "profit_line" : "#7e56a2"
+    "payoff_line" : "#e8c98a",
+    "profit_line" : "#a78bfa"
 }
 
 BOP_NODE_MARKER_SIZE = 16
 BOP_NODE_MIN_MARKER_SIZE = 8
 BOP_NODE_MARKER_SCALING_START_N = 20
 BOP_EDGE_WIDTH = 1
-BOP_FIGURE_LAYOUT_TITLE_FONT_SIZE = 16
-BOP_FIGURE_LAYOUT_FONT_FAMILY_STRING = "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+BOP_FIGURE_LAYOUT_TITLE_FONT_SIZE = 20
+BOP_FIGURE_LAYOUT_FONT_FAMILY_STRING = "'Josefin Sans', system-ui, sans-serif"
+BOP_FIGURE_LAYOUT_TITLE_FONT_FAMILY_STRING = "'Cormorant Garamond', Garamond, Georgia, serif"
 BOP_FIGURE_LAYOUT_MARGINS = {
     "l" : 60,
     "r" : 30,
@@ -96,7 +97,7 @@ class Environment_Variables:
 
 def _base_figure_layout( title : str ):
     return dict(
-        title = dict( text = title, font = dict( size = BOP_FIGURE_LAYOUT_TITLE_FONT_SIZE, color = BOP_COLOR_PALETTE[ "title" ] ) ),
+        title = dict( text = title, font = dict( size = BOP_FIGURE_LAYOUT_TITLE_FONT_SIZE, color = BOP_COLOR_PALETTE[ "title" ], family = BOP_FIGURE_LAYOUT_TITLE_FONT_FAMILY_STRING, weight = 600 ) ),
         paper_bgcolor = BOP_COLOR_PALETTE[ "paper_bgcolor" ],
         plot_bgcolor = BOP_COLOR_PALETTE[ "plot_bgcolor" ],
         font = dict( color = BOP_COLOR_PALETTE[ "text" ], family = BOP_FIGURE_LAYOUT_FONT_FAMILY_STRING ),
