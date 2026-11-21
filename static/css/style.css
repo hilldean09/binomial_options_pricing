@@ -1265,9 +1265,16 @@ h1, h2, h3 {
     margin: 0 auto;
     padding: 0 1rem;
     display: grid;
-    grid-template-columns: 15rem minmax(0, 1fr);
+    grid-template-columns: 16rem minmax(0, 1fr);
     gap: var(--gap);
     align-items: start;
+}
+
+/* Section numbers (§1, 1.2, ...) count the headings in reading order, so
+   the contents, built from the same headings, count alike */
+.learn-sections,
+.contents-list {
+    counter-reset: section subsection plate;
 }
 
 .learn-sections {
@@ -1293,11 +1300,10 @@ h1, h2, h3 {
 }
 
 .learn-contents h2 {
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.75rem;
     color: var(--text-muted);
-    font-size: 0.8rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 0.14em;
 }
 
 .contents-list,
@@ -1308,18 +1314,50 @@ h1, h2, h3 {
 }
 
 .contents-list ol {
-    margin: 0.15rem 0 0.4rem 0.75rem;
-    padding-left: 0.6rem;
-    border-left: 1px solid var(--border);
+    margin: 0.15rem 0 0.5rem 0.45rem;
+    padding-left: 0.75rem;
+    border-left: 1px dashed var(--border-strong);
 }
 
+.contents-list > li {
+    counter-increment: section;
+    counter-set: subsection 0;
+}
+
+.contents-list ol > li {
+    counter-increment: subsection;
+}
+
+/* Number hung in the margin, so a wrapped title lines up under itself.
+   (Not a grid: a title with maths in it is several nodes, which would
+   each take a cell.) */
 .contents-list a {
+    position: relative;
     display: block;
-    padding: 0.2rem 0;
+    padding: 0.2rem 0 0.2rem 2rem;
     color: var(--text-muted);
     font-size: 0.875rem;
     line-height: 1.35;
     text-decoration: none;
+}
+
+.contents-list a::before {
+    position: absolute;
+    top: 0.2rem;
+    left: 0;
+    color: var(--text-muted);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    line-height: 1.6;
+    opacity: 0.8;
+}
+
+.contents-list > li > a::before {
+    content: "\00a7" counter(section);
+}
+
+.contents-list ol a::before {
+    content: counter(section) "." counter(subsection);
 }
 
 /* KaTeX enlarges maths by default; keep it in step with the link text */
@@ -1329,7 +1367,15 @@ h1, h2, h3 {
 
 .contents-list > li > a {
     color: var(--text);
+    font-family: var(--label);
+    font-size: 1rem;
     font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+.contents-list > li > a .katex {
+    text-transform: none;
 }
 
 .contents-list a:hover,
@@ -1337,10 +1383,14 @@ h1, h2, h3 {
     color: var(--accent);
 }
 
+.contents-list a[aria-current="location"]::before {
+    color: var(--accent);
+    opacity: 1;
+}
+
 .contents-list a:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 1px;
-    border-radius: 4px;
 }
 
 @media (max-width: 860px) {
@@ -1359,7 +1409,7 @@ h1, h2, h3 {
 /* Long-form text: lines kept to a readable length, figures full width */
 
 .prose {
-    padding: 1.5rem 1.75rem;
+    padding: 1.75rem 2rem;
     font-size: 0.975rem;
     line-height: 1.7;
 }
@@ -1368,19 +1418,51 @@ h1, h2, h3 {
     max-width: 72ch;
 }
 
+/* Section headings: the section number set out ahead, over a full rule */
 .prose h2 {
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    max-width: none;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--border-strong);
+    font-size: 1.75rem;
+    counter-increment: section;
+    counter-set: subsection 0;
 }
 
 .prose h3 {
-    margin: 2rem 0 0.6rem;
-    font-size: 1.15rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    margin: 2.25rem 0 0.6rem;
+    font-size: 1.2rem;
+    counter-increment: subsection;
+}
+
+.prose h2::before,
+.prose h3::before {
+    flex: none;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-weight: 400;
+    letter-spacing: 0;
+}
+
+.prose h2::before {
+    content: "\00a7" counter(section);
+    font-size: 1.1rem;
+}
+
+.prose h3::before {
+    content: counter(section) "." counter(subsection);
+    font-size: 0.85rem;
 }
 
 .prose h2,
 .prose h3 {
-    scroll-margin-top: 1rem;
+    scroll-margin-top: 1.5rem;
 }
 
 .prose p,
@@ -1398,12 +1480,20 @@ h1, h2, h3 {
     margin-top: 0.4rem;
 }
 
-.prose li::marker {
+.prose ul > li::marker {
+    content: "\2013  ";
     color: var(--accent);
+}
+
+.prose ol > li::marker {
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.85em;
 }
 
 .prose a {
     color: var(--accent);
+    text-underline-offset: 0.2em;
 }
 
 .prose a:hover {
@@ -1412,10 +1502,10 @@ h1, h2, h3 {
 
 .prose code {
     padding: 0.1rem 0.3rem;
-    border-radius: 4px;
-    background: var(--bg);
+    background: var(--field-bg);
+    border: 1px solid var(--border);
     font-family: var(--mono);
-    font-size: 0.9em;
+    font-size: 0.88em;
 }
 
 /* Code blocks: one background for the whole block, scrolling sideways
@@ -1425,33 +1515,59 @@ h1, h2, h3 {
     padding: 0.85rem 1rem;
     overflow-x: auto;
     scrollbar-width: thin;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-left: 3px solid var(--accent);
+    background: var(--field-bg);
     line-height: 1.5;
     tab-size: 4;
 }
 
 .prose pre code {
     padding: 0;
-    border-radius: 0;
+    border: none;
     background: none;
     font-size: 0.85rem;
+}
+
+/* Display maths scrolls sideways on a narrow screen rather than spilling */
+.prose .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.2rem 0;
+    scrollbar-width: thin;
 }
 
 .prose > :last-child {
     margin-bottom: 0;
 }
 
-/* Interactive figure in a section: its controls sit above the plot */
+/* Interactive figure in a section, framed as a numbered plate: its
+   caption, then its controls above the plot */
 
 .figure-card {
-    margin: 1.25rem 0 1.5rem;
-    padding: 1rem 1.25rem 0.5rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--bg);
+    margin: 1.5rem 0 1.75rem;
+    padding: 0 1.25rem 0.5rem;
+    border: 1px solid var(--border-strong);
+    background: var(--field-bg);
     line-height: 1.5;
+    counter-increment: plate;
+}
+
+/* Scoped to the card so it outranks .prose p */
+.figure-card .plate-label {
+    margin: 0 -1.25rem 1rem;
+    padding: 0.35rem 1.25rem;
+    border-bottom: 1px solid var(--border-strong);
+    font-family: var(--label);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.plate-label::before {
+    content: "Plate " counter(plate) " \2014  ";
+    color: var(--accent);
 }
 
 .figure-controls {
@@ -1460,15 +1576,11 @@ h1, h2, h3 {
     gap: 0.75rem;
 }
 
-.figure-card .field input,
-.figure-card .field select {
-    background: var(--surface);
-}
-
-.figure-source {
+.figure-card .figure-source {
     margin: 0.75rem 0 0;
     color: var(--text-muted);
-    font-size: 0.8rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
 }
 
 .figure-card .status {

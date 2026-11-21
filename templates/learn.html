@@ -6,6 +6,7 @@
     <!-- Sections are listed in texts/learn.json and rendered by learn.js -->
     <main class="learn">
         <nav class="tile learn-contents" aria-labelledby="contents-heading">
+            <span class="sheet-code" aria-hidden="true">IDX</span>
             <h2 id="contents-heading">Contents</h2>
             <ol id="learn-contents-list" class="contents-list"></ol>
         </nav>
@@ -20,6 +21,8 @@
          own ids, linking labels to fields. -->
     <template id="payoff-function-template">
         <div class="figure-card">
+            <!-- Captioned as a numbered plate; the number is a CSS counter -->
+            <p class="plate-label" aria-hidden="true">Payoff function</p>
             <div class="figure-controls">
                 <div class="field">
                     <label data-for="option_type">Option type</label>
