@@ -1033,6 +1033,30 @@ h1, h2, h3 {
     font-size: 0.82rem;
 }
 
+/* Smaller plates and dials on a phone, three greeks to a row */
+@media (max-width: 560px) {
+    .tile {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .details {
+        grid-template-columns: repeat(auto-fit, minmax(4.75rem, 1fr));
+    }
+
+    .detail:has(> dd[id^="greek-"]) {
+        width: 4.75rem;
+        height: 4.75rem;
+    }
+
+    .detail:has(> dd[id^="greek-"]) dt {
+        font-size: 0.55rem;
+    }
+
+    .detail:has(> dd[id^="greek-"]) dd {
+        font-size: 0.75rem;
+    }
+}
+
 /* Tag: a small amber beacon set beside a heading or term */
 
 /* Gap rather than margin, so a tag that wraps lines up with the text */
@@ -1503,6 +1527,17 @@ h1, h2, h3 {
 
 .prose > :not(.figure-card) {
     max-width: 70ch;
+}
+
+@media (max-width: 760px) {
+    .prose {
+        padding: 1.6rem 1.25rem;
+        font-size: 1.1rem;
+    }
+
+    .prose h2 {
+        font-size: 1.35rem;
+    }
 }
 
 /* A star ahead of each part's title */
