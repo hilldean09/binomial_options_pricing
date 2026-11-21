@@ -1,30 +1,73 @@
-/* Dark by default; neutrals carry a faint violet tint to sit with the accent. */
+/* Orrery: the binomial tree as a star chart, read off brass instruments.
+   Dark by default; a violet night sky, with brass as the ornament and
+   amber kept for warnings. */
 :root {
     color-scheme: dark;
 
-    --bg: #121117;
-    --surface: #1b1a22;
-    --border: #2c2a36;
-    --text: #e8e6ef;
-    --text-muted: #9d99ab;
+    --bg: #0d0b16;
+    --bg-high: #17112a;
+    /* Plates are a little see-through, so the stars show faintly */
+    --surface: rgb(23 18 39 / 0.8);
+    --surface-solid: #171227;
+    --surface-raised: #211a36;
+    --field-bg: rgb(8 6 15 / 0.55);
+    --border: #2e2647;
+    --text: #ebe7f7;
+    --text-muted: #a49dbb;
     --accent: #a78bfa;
     --accent-hover: #c4b5fd;
     --accent-text: #15121f;
-    --gild-light: #c4b5fd;
-    --gild-dark: #7c5bd6;
-    --gild-size: 14px;
-    --gild-width: 2px;
-    --scrollbar-thumb: #3b3848;
+    --starlight: #dcd6ff;
+    --star-glow: rgb(196 181 253 / 0.75);
+    --brass-light: #f1d38f;
+    --brass: #c99a52;
+    --brass-dark: #7d5a26;
+    --brass-line: color-mix(in srgb, var(--brass) 40%, var(--border));
+    --gild-light: var(--brass-light);
+    --gild-dark: var(--brass-dark);
+    --scrollbar-thumb: #3a3156;
     --error: #ef6f61;
     --warning: #e9b65c;
     --warning-dark: #a87a2a;
-    --radius: 10px;
-    --drawer-width: min(20rem, calc(100vw - 3.5rem));
-    --drawer-toggle-width: 2.25rem;
+    --radius: 6px;
+    --drawer-width: min(20rem, calc(100vw - 3.75rem));
+    --drawer-toggle-width: 2.75rem;
     --drawer-offset: 0.5rem;
-    --gap: 1.25rem;
-    --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --gap: 1.5rem;
+    --font: "EB Garamond", Garamond, Georgia, serif;
+    --display: Cinzel, "EB Garamond", Georgia, serif;
+    --mono: "Space Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+
+    /* Star field: dots tiled at unrelated sizes, so no pattern shows */
+    --stars:
+        radial-gradient(0.94px 0.94px at 82px 38px, #ffffff, transparent),
+        radial-gradient(0.76px 0.76px at 18px 137px, #ffffff, transparent),
+        radial-gradient(0.72px 0.72px at 129px 54px, #fff4dc, transparent),
+        radial-gradient(0.84px 0.84px at 107px 17px, #fff4dc, transparent),
+        radial-gradient(0.77px 0.77px at 30px 289px, #e4dcff, transparent),
+        radial-gradient(1.05px 1.05px at 322px 321px, #ffffff, transparent),
+        radial-gradient(0.94px 0.94px at 295px 299px, #e4dcff, transparent),
+        radial-gradient(1.22px 1.22px at 23px 285px, #cfc4ff, transparent),
+        radial-gradient(1.02px 1.02px at 214px 73px, #cfc4ff, transparent),
+        radial-gradient(1.11px 1.11px at 286px 417px, #ffffff, transparent),
+        radial-gradient(0.76px 0.76px at 192px 381px, #ffffff, transparent),
+        radial-gradient(1.07px 1.07px at 577px 61px, #fff4dc, transparent),
+        radial-gradient(0.73px 0.73px at 68px 54px, #a79fd0, transparent),
+        radial-gradient(0.61px 0.61px at 74px 58px, #b9b0de, transparent),
+        radial-gradient(0.71px 0.71px at 101px 23px, #b9b0de, transparent),
+        radial-gradient(0.66px 0.66px at 20px 76px, #a79fd0, transparent),
+        radial-gradient(0.68px 0.68px at 114px 73px, #b9b0de, transparent),
+        radial-gradient(0.63px 0.63px at 30px 131px, #a79fd0, transparent),
+        radial-gradient(0.63px 0.63px at 38px 125px, #c9c0ea, transparent),
+        radial-gradient(0.67px 0.67px at 19px 195px, #a79fd0, transparent);
+    --stars-size: 137px 137px, 173px 173px, 211px 211px, 251px 251px, 293px 293px, 347px 347px, 389px 389px, 419px 419px, 467px 467px, 503px 503px, 557px 557px, 613px 613px, 79px 79px, 97px 97px, 109px 109px, 127px 127px, 151px 151px, 163px 163px, 191px 191px, 229px 229px;
+    --stars-bright:
+        radial-gradient(1.67px 1.67px at 272px 218px, #ece6ff, transparent),
+        radial-gradient(1.42px 1.42px at 299px 232px, #ffffff, transparent),
+        radial-gradient(1.25px 1.25px at 184px 249px, #ece6ff, transparent),
+        radial-gradient(1.73px 1.73px at 537px 506px, #ece6ff, transparent),
+        radial-gradient(1.79px 1.79px at 294px 623px, #ffffff, transparent);
+    --stars-bright-size: 331px 331px, 443px 443px, 587px 587px, 677px 677px, 751px 751px;
 }
 
 /* Thin, themed scrollbars on a transparent track so they read as part
@@ -45,12 +88,54 @@
     box-sizing: border-box;
 }
 
+/* Night sky, deepest at the foot of the page, under a fixed star field */
 body {
     margin: 0;
-    background: var(--bg);
+    min-height: 100vh;
+    background: linear-gradient(180deg, var(--bg-high), var(--bg) 70%) fixed;
     color: var(--text);
     font-family: var(--font);
+    font-size: 1.05rem;
     line-height: 1.5;
+}
+
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+}
+
+body::before {
+    background-image: var(--stars);
+    background-size: var(--stars-size);
+    opacity: 0.7;
+}
+
+/* The brighter stars twinkle, slowly */
+body::after {
+    background-image: var(--stars-bright);
+    background-size: var(--stars-bright-size);
+    animation: twinkle 7s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+    from {
+        opacity: 0.35;
+    }
+
+    to {
+        opacity: 0.95;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body::after {
+        animation: none;
+        opacity: 0.7;
+    }
 }
 
 /* Keeps page content clear of the drawer toggle */
@@ -58,9 +143,13 @@ body.has-drawer {
     padding-left: calc(var(--drawer-toggle-width) - 0.5rem);
 }
 
+/* Headings in engraved Roman capitals */
 h1, h2, h3 {
     margin: 0;
-    line-height: 1.2;
+    font-family: var(--display);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: 0.08em;
 }
 
 /* Header / footer */
