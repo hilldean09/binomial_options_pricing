@@ -49,6 +49,10 @@
     /* A four-pointed star, for ornaments */
     --star4: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0L12 8L20 10L12 12L10 20L8 12L0 10L8 8Z' fill='%23c99a52'/%3E%3C/svg%3E");
 
+    /* Compass rose and a small constellation, for ornaments */
+    --compass-rose: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 12L10.73 10.73L16.60 7.40L13.27 13.27ZM12 12L13.27 10.73L16.60 16.60L10.73 13.27ZM12 12L13.27 13.27L7.40 16.60L10.73 10.73ZM12 12L10.73 13.27L7.40 7.40L13.27 10.73Z' fill='%237d5a26'/%3E%3Cpath d='M12 12L9.40 12.00L12.00 1.00L14.60 12.00ZM12 12L12.00 9.40L23.00 12.00L12.00 14.60ZM12 12L14.60 12.00L12.00 23.00L9.40 12.00ZM12 12L12.00 14.60L1.00 12.00L12.00 9.40Z' fill='%23f1d38f'/%3E%3Ccircle cx='12' cy='12' r='7.5' fill='none' stroke='%23c99a52' stroke-width='0.8'/%3E%3Ccircle cx='12' cy='12' r='1.3' fill='%2317112a'/%3E%3C/svg%3E");
+    --constellation-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 18'%3E%3Cpath d='M3 13L16 6L29 10L45 3' fill='none' stroke='%23dcd6ff' stroke-opacity='0.45' stroke-width='0.7'/%3E%3Cg fill='%23dcd6ff'%3E%3Ccircle cx='3' cy='13' r='1.3'/%3E%3Ccircle cx='16' cy='6' r='1.8'/%3E%3Ccircle cx='29' cy='10' r='1.2'/%3E%3Ccircle cx='45' cy='3' r='1.6'/%3E%3C/g%3E%3C/svg%3E");
+
     /* Star field: dots tiled at unrelated sizes, so no pattern shows */
     --stars:
         radial-gradient(0.94px 0.94px at 82px 38px, #ffffff, transparent),
@@ -462,7 +466,7 @@ h1, h2, h3 {
     font-style: italic;
 }
 
-/* Parameters drawer */
+/* Parameters drawer: a brass instrument panel */
 
 .drawer {
     position: fixed;
@@ -471,7 +475,7 @@ h1, h2, h3 {
     z-index: 10;
     width: var(--drawer-width);
     transform: translateX(calc(-100% - var(--drawer-offset)));
-    transition: transform 0.25s ease;
+    transition: transform 0.3s ease;
 }
 
 .drawer.is-open {
@@ -480,62 +484,100 @@ h1, h2, h3 {
 
 .drawer-panel {
     padding: 0;
+    /* Over the page, so not see-through */
+    background: var(--surface-solid);
 }
 
 .drawer.is-open .drawer-panel {
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
 }
 
 .drawer-body {
-    padding: 1.25rem;
+    padding: 1.75rem 1.6rem 1.4rem;
     max-height: calc(100dvh - 2rem);
     overflow-y: auto;
     scrollbar-width: thin;
 }
 
+/* The toggle is a knurled brass knob on the panel's edge, its pointer
+   turning as the drawer opens, with its name lettered below */
 .drawer-toggle {
     position: absolute;
     top: 1.25rem;
-    left: calc(100% - 1px);
+    left: calc(100% + 0.3rem);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.4rem;
+    gap: 0.6rem;
     width: var(--drawer-toggle-width);
-    padding: 0.75rem 0;
-    border: 1px solid var(--border);
-    border-left: none;
-    border-radius: 0 6px 6px 0;
-    background: var(--surface);
-    color: var(--text-muted);
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--brass);
     font: inherit;
-    font-size: 0.8rem;
+    font-family: var(--display);
+    font-size: 0.68rem;
     font-weight: 600;
-    letter-spacing: 0.04em;
-    writing-mode: vertical-rl;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
     cursor: pointer;
 }
 
-.drawer-toggle:hover,
-.drawer-toggle:focus-visible {
-    color: var(--accent);
+.drawer-toggle > :last-child {
+    writing-mode: vertical-rl;
 }
 
-.drawer-toggle:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 1px;
+.drawer-toggle:hover {
+    color: var(--brass-light);
 }
 
 .drawer-toggle-icon {
-    color: var(--accent);
-    font-size: 1.1rem;
-    line-height: 1;
-    /* Vertical text turns the chevron to point down; point it right */
-    transform: rotate(-90deg);
-    transition: transform 0.25s ease;
+    position: relative;
+    flex: none;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    /* Hides the chevron; the knob's pointer stands in for it */
+    font-size: 0;
+    background: repeating-conic-gradient(var(--brass-light) 0 4deg, var(--brass-dark) 4deg 12deg);
+    box-shadow: 0 4px 10px rgb(0 0 0 / 0.55);
+    transition: transform 0.35s ease;
+}
+
+/* The knob's face, inside the knurled rim */
+.drawer-toggle-icon::before {
+    content: "";
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #3b3058, #120d1d 75%);
+    box-shadow: inset 0 0 0 1px var(--brass-dark);
+}
+
+/* The pointer, up when closed */
+.drawer-toggle-icon::after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: calc(50% - 1px);
+    width: 2px;
+    height: calc(50% - 8px);
+    border-radius: 1px;
+    background: var(--brass-light);
+    box-shadow: 0 0 4px rgb(241 211 143 / 0.8);
 }
 
 .drawer.is-open .drawer-toggle-icon {
-    transform: rotate(90deg);
+    transform: rotate(180deg);
+}
+
+.drawer-toggle:focus-visible {
+    outline: none;
+}
+
+.drawer-toggle:focus-visible .drawer-toggle-icon {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -549,12 +591,12 @@ h1, h2, h3 {
 
 /* Keeps the form clear of the heading above it */
 #inputs-heading {
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
 }
 
 #pricing-form {
     display: grid;
-    gap: 0.9rem;
+    gap: 0.95rem;
 }
 
 .field-row {
@@ -569,37 +611,56 @@ h1, h2, h3 {
     gap: 0.3rem;
 }
 
-.field label {
-    font-size: 0.875rem;
+/* Labels in small engraved capitals */
+.field label,
+.field-label,
+.switch {
+    font-family: var(--display);
+    font-size: 0.72rem;
     font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.field label,
+.field-label {
+    color: var(--text-muted);
 }
 
 .field input,
 .field select {
     font: inherit;
     font-family: var(--mono);
+    font-size: 0.9rem;
     padding: 0.5rem 0.65rem;
     border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--bg);
+    border-radius: 4px;
+    background: var(--field-bg);
     color: var(--text);
     width: 100%;
 }
 
+.field select {
+    appearance: none;
+    padding-right: 2rem;
+    background: var(--field-bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23c99a52' stroke-width='1.3'/%3E%3C/svg%3E") right 0.7rem center / 0.65rem no-repeat;
+    cursor: pointer;
+}
+
+.field input:hover,
+.field select:hover {
+    border-color: var(--brass-line);
+}
+
 .field input:focus,
 .field select:focus {
+    border-color: var(--brass);
     outline: 2px solid var(--accent);
     outline-offset: 1px;
 }
 
 .field input[aria-invalid="true"] {
     border-color: var(--error);
-}
-
-/* Label-like text for a group with no single control to label */
-.field-label {
-    font-size: 0.875rem;
-    font-weight: 600;
 }
 
 .visually-hidden {
@@ -615,7 +676,8 @@ h1, h2, h3 {
 }
 
 /* On/off switch: the checkbox stays in place (for focus and clicks)
-   but invisible, and the track after it is drawn instead. */
+   but invisible, and the track after it is drawn instead: a brass knob
+   in a slot, with an indicator lamp beside it that lights when on. */
 
 .switch {
     position: relative;
@@ -623,8 +685,6 @@ h1, h2, h3 {
     align-items: center;
     justify-content: space-between;
     gap: 0.75rem;
-    font-size: 0.875rem;
-    font-weight: 600;
     cursor: pointer;
 }
 
@@ -633,7 +693,7 @@ h1, h2, h3 {
     top: 50%;
     right: 0;
     transform: translateY(-50%);
-    width: 2.25rem;
+    width: 2.5rem;
     height: 1.25rem;
     margin: 0;
     opacity: 0;
@@ -643,48 +703,59 @@ h1, h2, h3 {
 .switch-track {
     position: relative;
     flex: none;
-    width: 2.25rem;
+    width: 2.5rem;
     height: 1.25rem;
-    border: 1px solid var(--border);
+    border: 1px solid var(--brass-line);
     border-radius: 999px;
-    background: var(--bg);
+    background: var(--field-bg);
     transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
+/* The lamp */
+.switch-track::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 0.55rem);
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #3a3150;
+    transform: translateY(-50%);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* The knob */
 .switch-track::after {
     content: "";
     position: absolute;
     top: 50%;
-    left: 0.2rem;
-    width: 0.8rem;
-    height: 0.8rem;
+    left: 2px;
+    width: 0.95rem;
+    height: 0.95rem;
     border-radius: 50%;
-    background: var(--text-muted);
+    background: radial-gradient(circle at 35% 30%, var(--brass-light), var(--brass) 55%, var(--brass-dark));
+    box-shadow: 0 1px 3px rgb(0 0 0 / 0.5);
     transform: translateY(-50%);
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    transition: transform 0.2s ease, filter 0.2s ease;
 }
 
 .switch-input:checked + .switch-track {
-    background: var(--accent);
+    background: color-mix(in srgb, var(--accent) 40%, var(--field-bg));
     border-color: var(--accent);
 }
 
+.switch-input:checked + .switch-track::before {
+    background: var(--accent-hover);
+    box-shadow: 0 0 4px var(--accent-hover), 0 0 10px var(--accent);
+}
+
 .switch-input:checked + .switch-track::after {
-    background: var(--accent-text);
-    transform: translate(0.95rem, -50%);
+    transform: translate(calc(2.5rem - 0.95rem - 6px), -50%);
 }
 
 .switch:hover .switch-track::after {
-    background: var(--text);
-}
-
-.switch:hover .switch-input:checked + .switch-track {
-    background: var(--accent-hover);
-    border-color: var(--accent-hover);
-}
-
-.switch:hover .switch-input:checked + .switch-track::after {
-    background: var(--accent-text);
+    filter: brightness(1.15);
 }
 
 .switch-input:focus-visible + .switch-track {
@@ -694,6 +765,7 @@ h1, h2, h3 {
 
 @media (prefers-reduced-motion: reduce) {
     .switch-track,
+    .switch-track::before,
     .switch-track::after {
         transition: none;
     }
@@ -708,7 +780,7 @@ h1, h2, h3 {
     margin: 0;
     padding: 0 0 0 0.85rem;
     border: none;
-    border-left: 2px solid var(--border);
+    border-left: 1px solid var(--brass-line);
 }
 
 .dividend-fields[hidden] {
@@ -726,7 +798,7 @@ h1, h2, h3 {
 .date-list:empty::before {
     content: "No ex-dividend dates";
     color: var(--text-muted);
-    font-size: 0.875rem;
+    font-style: italic;
 }
 
 .date-row {
@@ -737,8 +809,8 @@ h1, h2, h3 {
 .remove-button,
 .add-button {
     font: inherit;
-    border: 1px solid var(--border);
-    border-radius: 6px;
+    border: 1px solid var(--brass-line);
+    border-radius: 4px;
     background: none;
     color: var(--text-muted);
     cursor: pointer;
@@ -753,15 +825,18 @@ h1, h2, h3 {
 
 .add-button {
     align-self: flex-start;
-    padding: 0.35rem 0.75rem;
-    font-size: 0.875rem;
+    padding: 0.35rem 0.8rem;
+    font-family: var(--display);
+    font-size: 0.72rem;
     font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
 }
 
 .remove-button:hover,
 .add-button:hover {
-    border-color: var(--accent);
-    color: var(--accent);
+    border-color: var(--brass);
+    color: var(--brass-light);
 }
 
 .remove-button:focus-visible,
@@ -770,20 +845,32 @@ h1, h2, h3 {
     outline-offset: 1px;
 }
 
+/* A rounded instrument button, lit from above */
 #submit-button {
-    font: inherit;
-    font-weight: 600;
     width: 100%;
-    padding: 0.6rem 1rem;
-    border: none;
-    border-radius: 6px;
-    background: var(--accent);
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--accent-hover);
+    border-radius: 999px;
+    background: radial-gradient(120% 160% at 50% 0%, var(--accent-hover), var(--accent) 55%, #7c5bd6);
+    box-shadow: 0 0 18px rgb(167 139 250 / 0.3);
     color: var(--accent-text);
+    font: inherit;
+    font-family: var(--display);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
     cursor: pointer;
 }
 
 #submit-button:hover {
-    background: var(--accent-hover);
+    box-shadow: 0 0 24px rgb(167 139 250 / 0.55);
+    filter: brightness(1.08);
+}
+
+#submit-button:focus-visible {
+    outline: 2px solid var(--brass-light);
+    outline-offset: 2px;
 }
 
 #submit-button:disabled {
@@ -794,8 +881,8 @@ h1, h2, h3 {
 .status {
     margin: 0;
     min-height: 1.5em;
-    font-size: 0.875rem;
     color: var(--text-muted);
+    font-style: italic;
 }
 
 .status.is-error {
@@ -1065,18 +1152,24 @@ h1, h2, h3 {
     }
 }
 
-/* Disclosure: a tile-styled bar that expands to show more tiles */
+/* Disclosure: a tile-styled bar that expands to show more tiles, opened
+   by turning its compass rose */
 
 .disclosure {
     min-width: 0;
 }
 
 .disclosure-bar {
+    --corner-size: 30px;
+
     display: flex;
     align-items: center;
-    gap: 0.6rem;
-    padding: 0.85rem 1.25rem;
+    gap: 0.8rem;
+    padding: 1rem 2rem;
+    font-family: var(--display);
+    font-size: 1rem;
     font-weight: 600;
+    letter-spacing: 0.08em;
     list-style: none;
     cursor: pointer;
 }
@@ -1088,23 +1181,26 @@ h1, h2, h3 {
 
 .disclosure-bar:hover,
 .disclosure-bar:focus-visible {
-    color: var(--accent);
+    color: var(--brass-light);
 }
 
 .disclosure-bar:focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: 1px;
+    outline-offset: 2px;
 }
 
 .disclosure-icon {
-    color: var(--accent);
-    font-size: 1.1rem;
-    line-height: 1;
-    transition: transform 0.25s ease;
+    flex: none;
+    width: 1.5rem;
+    height: 1.5rem;
+    /* Hides the chevron; the rose stands in for it */
+    font-size: 0;
+    background: var(--compass-rose) center / contain no-repeat;
+    transition: transform 0.45s ease;
 }
 
 .disclosure[open] .disclosure-icon {
-    transform: rotate(90deg);
+    transform: rotate(135deg);
 }
 
 .disclosure-body {
@@ -1146,7 +1242,9 @@ h1, h2, h3 {
     border-radius: 50%;
     background: none;
     color: var(--text-muted);
-    font: italic 700 0.6rem/1 Georgia, "Times New Roman", serif;
+    font: italic 600 0.7rem/1 var(--font);
+    letter-spacing: 0;
+    text-transform: none;
     vertical-align: 0.05em;
     cursor: pointer;
 }
@@ -1161,7 +1259,7 @@ h1, h2, h3 {
 .info-button:hover,
 .info-button:focus-visible,
 .info-button.is-active {
-    color: var(--accent);
+    color: var(--brass-light);
 }
 
 .info-button:focus-visible {
@@ -1176,23 +1274,36 @@ h1, h2, h3 {
     padding: 0;
     width: min(26rem, calc(100vw - 2rem));
     overflow: visible;
+    background: var(--surface-solid);
     color: var(--text);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* A star-chart card: a small constellation drawn in its top corner */
+.info-popover::after {
+    content: "";
+    position: absolute;
+    top: 1.1rem;
+    right: 2.6rem;
+    width: 48px;
+    height: 18px;
+    background: var(--constellation-mark) center / contain no-repeat;
+    pointer-events: none;
 }
 
 .info-popover-body {
     max-height: min(60vh, 26rem);
     overflow-y: auto;
     scrollbar-width: thin;
-    padding: 1rem 1.15rem;
-    font-size: 0.875rem;
-    line-height: 1.6;
+    padding: 1.3rem 1.6rem;
+    font-size: 1.02rem;
+    line-height: 1.55;
 }
 
 .info-popover h3 {
-    margin-bottom: 0.5rem;
-    color: var(--accent);
-    font-size: 0.95rem;
+    margin-bottom: 0.6rem;
+    color: var(--brass-light);
+    font-size: 1rem;
 }
 
 .info-popover p {
