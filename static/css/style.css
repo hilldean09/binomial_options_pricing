@@ -53,6 +53,9 @@
     --compass-rose: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 12L10.73 10.73L16.60 7.40L13.27 13.27ZM12 12L13.27 10.73L16.60 16.60L10.73 13.27ZM12 12L13.27 13.27L7.40 16.60L10.73 10.73ZM12 12L10.73 13.27L7.40 7.40L13.27 10.73Z' fill='%237d5a26'/%3E%3Cpath d='M12 12L9.40 12.00L12.00 1.00L14.60 12.00ZM12 12L12.00 9.40L23.00 12.00L12.00 14.60ZM12 12L14.60 12.00L12.00 23.00L9.40 12.00ZM12 12L12.00 14.60L1.00 12.00L12.00 9.40Z' fill='%23f1d38f'/%3E%3Ccircle cx='12' cy='12' r='7.5' fill='none' stroke='%23c99a52' stroke-width='0.8'/%3E%3Ccircle cx='12' cy='12' r='1.3' fill='%2317112a'/%3E%3C/svg%3E");
     --constellation-mark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 18'%3E%3Cpath d='M3 13L16 6L29 10L45 3' fill='none' stroke='%23dcd6ff' stroke-opacity='0.45' stroke-width='0.7'/%3E%3Cg fill='%23dcd6ff'%3E%3Ccircle cx='3' cy='13' r='1.3'/%3E%3Ccircle cx='16' cy='6' r='1.8'/%3E%3Ccircle cx='29' cy='10' r='1.2'/%3E%3Ccircle cx='45' cy='3' r='1.6'/%3E%3C/g%3E%3C/svg%3E");
 
+    /* A small star, for list markers */
+    --star-small: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10' width='10' height='10'%3E%3Cpath d='M5 0.5L6 4L9.5 5L6 6L5 9.5L4 6L0.5 5L4 4Z' fill='%23c99a52'/%3E%3C/svg%3E");
+
     /* Star field: dots tiled at unrelated sizes, so no pattern shows */
     --stars:
         radial-gradient(0.94px 0.94px at 82px 38px, #ffffff, transparent),
@@ -1321,7 +1324,7 @@ h1, h2, h3 {
     margin: 0 auto;
     padding: 0 1rem;
     display: grid;
-    grid-template-columns: 15rem minmax(0, 1fr);
+    grid-template-columns: 16.5rem minmax(0, 1fr);
     gap: var(--gap);
     align-items: start;
 }
@@ -1332,22 +1335,34 @@ h1, h2, h3 {
     min-width: 0;
 }
 
+/* The list scrolls rather than the panel, so the panel's brass corners
+   stay put */
 .learn-contents {
     position: sticky;
     top: 1rem;
+    display: flex;
+    flex-direction: column;
     max-height: calc(100dvh - 2rem);
+    /* Clear of the corner quadrants */
+    padding: 2rem 1.5rem 1.6rem;
+}
+
+.learn-contents .contents-list {
+    min-height: 0;
     overflow-y: auto;
     scrollbar-width: thin;
 }
 
 .learn-contents h2 {
-    margin-bottom: 0.6rem;
-    color: var(--text-muted);
-    font-size: 0.8rem;
-    letter-spacing: 0.06em;
+    margin-bottom: 0.9rem;
+    color: var(--brass-light);
+    font-size: 0.85rem;
+    letter-spacing: 0.18em;
     text-transform: uppercase;
 }
 
+/* The contents as a meridian: one line down the side, each part a star
+   on it and each section a smaller point */
 .contents-list,
 .contents-list ol {
     margin: 0;
@@ -1355,19 +1370,75 @@ h1, h2, h3 {
     list-style: none;
 }
 
+.contents-list {
+    --meridian: 0.55rem;
+
+    position: relative;
+    padding: 0.1rem 0 0.1rem 1.5rem;
+}
+
+.contents-list::before {
+    content: "";
+    position: absolute;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    left: var(--meridian);
+    width: 1px;
+    background: linear-gradient(transparent, var(--brass-line) 6%, var(--brass-line) 94%, transparent);
+}
+
+.contents-list > li + li {
+    margin-top: 0.55rem;
+}
+
 .contents-list ol {
-    margin: 0.15rem 0 0.4rem 0.75rem;
-    padding-left: 0.6rem;
-    border-left: 1px solid var(--border);
+    margin: 0.15rem 0 0;
 }
 
 .contents-list a {
+    position: relative;
     display: block;
-    padding: 0.2rem 0;
+    padding: 0.18rem 0;
     color: var(--text-muted);
-    font-size: 0.875rem;
-    line-height: 1.35;
+    font-size: 0.98rem;
+    line-height: 1.3;
     text-decoration: none;
+}
+
+/* Markers, centred on the meridian */
+.contents-list a::before {
+    content: "";
+    position: absolute;
+    top: 0.62em;
+    left: calc(var(--meridian) - 1.5rem - var(--mark) / 2 + 0.5px);
+    width: var(--mark);
+    height: var(--mark);
+    transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.contents-list > li > a {
+    --mark: 13px;
+
+    color: var(--text);
+    font-family: var(--display);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+}
+
+.contents-list > li > a::before {
+    top: 0.45em;
+    background: var(--star4) center / contain no-repeat;
+}
+
+.contents-list ol a {
+    --mark: 5px;
+}
+
+.contents-list ol a::before {
+    border-radius: 50%;
+    background: var(--starlight);
+    opacity: 0.55;
 }
 
 /* KaTeX enlarges maths by default; keep it in step with the link text */
@@ -1375,20 +1446,32 @@ h1, h2, h3 {
     font-size: 1em;
 }
 
-.contents-list > li > a {
-    color: var(--text);
-    font-weight: 600;
-}
-
 .contents-list a:hover,
 .contents-list a[aria-current="location"] {
-    color: var(--accent);
+    color: var(--brass-light);
+}
+
+/* Where the reader is: that star glows */
+.contents-list a[aria-current="location"]::before {
+    opacity: 1;
+    filter: drop-shadow(0 0 3px var(--brass-light)) drop-shadow(0 0 7px rgb(241 211 143 / 0.6));
+    transform: scale(1.35);
+}
+
+.contents-list ol a[aria-current="location"]::before {
+    background: var(--brass-light);
 }
 
 .contents-list a:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 1px;
-    border-radius: 4px;
+    border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .contents-list a::before {
+        transition: none;
+    }
 }
 
 @media (max-width: 860px) {
@@ -1404,26 +1487,46 @@ h1, h2, h3 {
     }
 }
 
-/* Long-form text: lines kept to a readable length, figures full width */
+/* Long-form text: pages of a dark star atlas, ruled faintly with rings
+   and meridians drawn from the top-right corner. Lines kept to a
+   readable length, figures full width. */
 
 .prose {
-    padding: 1.5rem 1.75rem;
-    font-size: 0.975rem;
-    line-height: 1.7;
+    padding: 2rem 2.5rem;
+    background:
+        repeating-radial-gradient(circle at 100% 0%, transparent 0 79px, rgb(201 154 82 / 0.07) 79px 80px),
+        repeating-conic-gradient(from 180deg at 100% 0%, rgb(201 154 82 / 0.05) 0 0.2deg, transparent 0.2deg 7.5deg),
+        color-mix(in srgb, #2a2018 14%, var(--surface));
+    font-size: 1.15rem;
+    line-height: 1.65;
 }
 
 .prose > :not(.figure-card) {
-    max-width: 72ch;
+    max-width: 70ch;
 }
 
+/* A star ahead of each part's title */
 .prose h2 {
-    margin-bottom: 1rem;
-    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    font-size: 1.6rem;
+}
+
+.prose h2::before {
+    content: "";
+    flex: none;
+    width: 18px;
+    height: 18px;
+    background: var(--star4) center / contain no-repeat;
+    filter: drop-shadow(0 0 4px rgb(241 211 143 / 0.6));
 }
 
 .prose h3 {
-    margin: 2rem 0 0.6rem;
-    font-size: 1.15rem;
+    margin: 2.25rem 0 0.6rem;
+    color: var(--brass-light);
+    font-size: 1.12rem;
 }
 
 .prose h2,
@@ -1434,24 +1537,29 @@ h1, h2, h3 {
 .prose p,
 .prose ul,
 .prose ol {
-    margin: 0 0 0.9rem;
+    margin: 0 0 0.95rem;
 }
 
 .prose ul,
 .prose ol {
-    padding-left: 1.4rem;
+    padding-left: 1.5rem;
 }
 
 .prose li + li {
     margin-top: 0.4rem;
 }
 
-.prose li::marker {
-    color: var(--accent);
+.prose ul {
+    list-style-image: var(--star-small);
+}
+
+.prose ol > li::marker {
+    color: var(--brass);
 }
 
 .prose a {
     color: var(--accent);
+    text-underline-offset: 0.18em;
 }
 
 .prose a:hover {
@@ -1461,21 +1569,21 @@ h1, h2, h3 {
 .prose code {
     padding: 0.1rem 0.3rem;
     border-radius: 4px;
-    background: var(--bg);
+    background: var(--field-bg);
     font-family: var(--mono);
-    font-size: 0.9em;
+    font-size: 0.8em;
 }
 
 /* Code blocks: one background for the whole block, scrolling sideways
    rather than spilling past the panel */
 .prose pre {
-    margin: 0 0 0.9rem;
-    padding: 0.85rem 1rem;
+    margin: 0 0 0.95rem;
+    padding: 0.9rem 1.1rem;
     overflow-x: auto;
     scrollbar-width: thin;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    background: var(--bg);
+    border: 1px solid var(--brass-line);
+    border-radius: var(--radius);
+    background: var(--field-bg);
     line-height: 1.5;
     tab-size: 4;
 }
@@ -1487,18 +1595,29 @@ h1, h2, h3 {
     font-size: 0.85rem;
 }
 
+/* Display maths scrolls sideways on a narrow screen rather than spilling */
+.prose .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.2rem 0;
+    scrollbar-width: thin;
+}
+
 .prose > :last-child {
     margin-bottom: 0;
 }
 
-/* Interactive figure in a section: its controls sit above the plot */
+/* Interactive figure in a section, set into the page like an instrument's
+   inset window: its controls sit above the plot */
 
 .figure-card {
-    margin: 1.25rem 0 1.5rem;
-    padding: 1rem 1.25rem 0.5rem;
-    border: 1px solid var(--border);
+    margin: 1.5rem 0 1.75rem;
+    padding: 1.1rem 1.25rem 0.5rem;
+    border: 1px solid var(--brass-line);
     border-radius: var(--radius);
-    background: var(--bg);
+    background: var(--field-bg);
+    box-shadow: inset 0 2px 12px rgb(0 0 0 / 0.45);
+    font-size: 1rem;
     line-height: 1.5;
 }
 
@@ -1510,13 +1629,13 @@ h1, h2, h3 {
 
 .figure-card .field input,
 .figure-card .field select {
-    background: var(--surface);
+    background-color: var(--surface-solid);
 }
 
-.figure-source {
+.figure-card .figure-source {
     margin: 0.75rem 0 0;
     color: var(--text-muted);
-    font-size: 0.8rem;
+    font-style: italic;
 }
 
 .figure-card .status {
