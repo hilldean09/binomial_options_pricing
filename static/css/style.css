@@ -1,10 +1,16 @@
-/* Dark by default; neutrals carry a faint violet tint to sit with the accent. */
+/* Drafting sheet: a working drawing on violet-tinted graph paper. Dark by
+   default; neutrals carry a faint violet tint to sit with the accent. */
 :root {
     color-scheme: dark;
 
-    --bg: #121117;
-    --surface: #1b1a22;
-    --border: #2c2a36;
+    --bg: #110f17;
+    /* Translucent, so the graph paper shows faintly through the sheets */
+    --surface: rgb(27 26 34 / 0.88);
+    --surface-solid: #1b1a22;
+    --surface-raised: #23212c;
+    --field-bg: rgb(10 9 14 / 0.45);
+    --border: #2f2c3b;
+    --border-strong: #464157;
     --text: #e8e6ef;
     --text-muted: #9d99ab;
     --accent: #a78bfa;
@@ -12,19 +18,23 @@
     --accent-text: #15121f;
     --gild-light: #c4b5fd;
     --gild-dark: #7c5bd6;
-    --gild-size: 14px;
-    --gild-width: 2px;
+    --gild-size: 16px;
+    --gild-width: 1.5px;
+    --gild-offset: 6px;
     --scrollbar-thumb: #3b3848;
     --error: #ef6f61;
     --warning: #e9b65c;
     --warning-dark: #a87a2a;
-    --radius: 10px;
+    --radius: 0;
+    --grid-minor: rgb(167 139 250 / 0.045);
+    --grid-major: rgb(167 139 250 / 0.085);
     --drawer-width: min(20rem, calc(100vw - 3.5rem));
     --drawer-toggle-width: 2.25rem;
     --drawer-offset: 0.5rem;
-    --gap: 1.25rem;
-    --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --gap: 1.5rem;
+    --font: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --label: "Barlow Condensed", "Arial Narrow", "IBM Plex Sans", sans-serif;
 }
 
 /* Thin, themed scrollbars on a transparent track so they read as part
@@ -45,9 +55,17 @@
     box-sizing: border-box;
 }
 
+/* Graph paper: a fine 8px grid under a heavier 40px one */
 body {
     margin: 0;
-    background: var(--bg);
+    background-color: var(--bg);
+    background-image:
+        linear-gradient(var(--grid-major) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-major) 1px, transparent 1px),
+        linear-gradient(var(--grid-minor) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-minor) 1px, transparent 1px);
+    background-size: 40px 40px, 40px 40px, 8px 8px, 8px 8px;
+    background-position: -1px -1px;
     color: var(--text);
     font-family: var(--font);
     line-height: 1.5;
@@ -58,9 +76,20 @@ body.has-drawer {
     padding-left: calc(var(--drawer-toggle-width) - 0.5rem);
 }
 
+/* Headings are lettered like a drawing: condensed capitals, tracked out */
 h1, h2, h3 {
     margin: 0;
-    line-height: 1.2;
+    font-family: var(--label);
+    font-weight: 600;
+    line-height: 1.15;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* Maths keeps its own letter case and spacing inside lettered headings */
+:is(h1, h2, h3) .katex {
+    letter-spacing: normal;
+    text-transform: none;
 }
 
 /* Header / footer */
@@ -233,6 +262,8 @@ h1, h2, h3 {
 
 .drawer-panel {
     padding: 0;
+    /* Over the page, so not see-through */
+    background: var(--surface-solid);
 }
 
 .drawer.is-open .drawer-panel {
@@ -800,6 +831,7 @@ h1, h2, h3 {
     padding: 0;
     width: min(26rem, calc(100vw - 2rem));
     overflow: visible;
+    background: var(--surface-solid);
     color: var(--text);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
