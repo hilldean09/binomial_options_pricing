@@ -313,6 +313,33 @@
         }
     }
 
+    // Lights one random up/down path through the header's constellation
+    // (base.html), in step order, as a nod to the path a price might take.
+    function traceConstellation() {
+        const sky = document.querySelector(".constellation");
+        if (!sky) {
+            return;
+        }
+        for (const element of sky.querySelectorAll(".is-lit")) {
+            element.classList.remove("is-lit");
+        }
+        const path = [sky.querySelector('[data-node="0-0"]')];
+        let ups = 0;
+        for (let step = 0; step < Number(sky.dataset.steps); step++) {
+            const up = Math.random() < 0.5;
+            path.push(sky.querySelector(`[data-edge="${step}-${ups}-${up ? "u" : "d"}"]`));
+            ups += up ? 1 : 0;
+            path.push(sky.querySelector(`[data-node="${step + 1}-${ups}"]`));
+        }
+        // Restyles the old path before lighting the new, so its animations
+        // start again.
+        sky.getBoundingClientRect();
+        path.forEach((element, order) => {
+            element?.style.setProperty("--k", order);
+            element?.classList.add("is-lit");
+        });
+    }
+
     async function submit(event) {
         event.preventDefault();
 
@@ -353,6 +380,7 @@
             updatePruneNotice(params.num_steps);
             updateExclusionTags(params);
             saveLastPricing(params, result);
+            traceConstellation();
             const time = new Date().toLocaleTimeString();
             if (empty.length > 0) {
                 setStatus(`Updated ${time}, but the response had no value for: ${empty.join(", ")}`, true);

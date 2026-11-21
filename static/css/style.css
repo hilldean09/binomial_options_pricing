@@ -46,6 +46,9 @@
     --corner-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg transform='translate(0 40) scale(1 -1)' fill='none' stroke='%23c99a52'%3E%3Cpath d='M1 40V7A6 6 0 0 1 7 1H40' stroke-width='1.6'/%3E%3Cpath d='M9 40A31 31 0 0 1 40 9' stroke-width='1'/%3E%3Cpath d='M9.00 40.00L3.50 40.00M9.47 34.62L6.52 34.10M10.87 29.40L8.05 28.37M13.15 24.50L8.39 21.75M16.25 20.07L13.95 18.15M20.07 16.25L18.15 13.95M24.50 13.15L21.75 8.39M29.40 10.87L28.37 8.05M34.62 9.47L34.10 6.52M40.00 9.00L40.00 3.50' stroke-width='0.9'/%3E%3Ccircle cx='8.5' cy='8.5' r='2.4' fill='%23c99a52' stroke='none'/%3E%3Ccircle cx='7.8' cy='7.8' r='0.8' fill='%23fff6dc' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
     --corner-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg transform='translate(40 40) scale(-1 -1)' fill='none' stroke='%237d5a26'%3E%3Cpath d='M1 40V7A6 6 0 0 1 7 1H40' stroke-width='1.6'/%3E%3Cpath d='M9 40A31 31 0 0 1 40 9' stroke-width='1'/%3E%3Cpath d='M9.00 40.00L3.50 40.00M9.47 34.62L6.52 34.10M10.87 29.40L8.05 28.37M13.15 24.50L8.39 21.75M16.25 20.07L13.95 18.15M20.07 16.25L18.15 13.95M24.50 13.15L21.75 8.39M29.40 10.87L28.37 8.05M34.62 9.47L34.10 6.52M40.00 9.00L40.00 3.50' stroke-width='0.9'/%3E%3Ccircle cx='8.5' cy='8.5' r='2.4' fill='%237d5a26' stroke='none'/%3E%3Ccircle cx='7.8' cy='7.8' r='0.8' fill='%23fff6dc' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
 
+    /* A four-pointed star, for ornaments */
+    --star4: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M10 0L12 8L20 10L12 12L10 20L8 12L0 10L8 8Z' fill='%23c99a52'/%3E%3C/svg%3E");
+
     /* Star field: dots tiled at unrelated sizes, so no pattern shows */
     --stars:
         radial-gradient(0.94px 0.94px at 82px 38px, #ffffff, transparent),
@@ -169,34 +172,109 @@ h1, h2, h3 {
     padding: 2rem 1rem 1rem;
 }
 
+/* The title, centred over the constellation */
+.site-header {
+    position: relative;
+    isolation: isolate;
+    padding-top: 4.25rem;
+    text-align: center;
+    overflow-x: clip;
+}
+
+.constellation {
+    position: absolute;
+    z-index: -1;
+    top: 1rem;
+    left: 1rem;
+    width: calc(100% - 2rem);
+    height: auto;
+    max-height: 14rem;
+    overflow: visible;
+}
+
+/* Edges draw themselves in, step by step, then the stars come out along
+   them. Both are held at their start (backwards fill) until their turn,
+   and end at their resting style, so later states can restyle them. */
+.constellation .edges line {
+    stroke: var(--starlight);
+    stroke-opacity: 0.22;
+    stroke-width: 0.8;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 0;
+    vector-effect: non-scaling-stroke;
+    animation: edge-draw 0.7s ease-out calc(0.25s + var(--i) * 0.16s) backwards;
+    transition: stroke 0.4s ease, stroke-opacity 0.4s ease;
+}
+
+.constellation .nodes circle {
+    fill: var(--starlight);
+    filter: drop-shadow(0 0 2.5px var(--star-glow));
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: star-appear 0.5s ease-out calc(var(--i) * 0.16s) backwards;
+    transition: fill 0.4s ease;
+}
+
+.constellation .nodes .bright {
+    filter: drop-shadow(0 0 4px var(--star-glow)) drop-shadow(0 0 9px rgb(196 181 253 / 0.4));
+}
+
+.constellation .nodes .root {
+    fill: var(--brass-light);
+    filter: drop-shadow(0 0 5px rgb(241 211 143 / 0.7));
+}
+
+@keyframes edge-draw {
+    from {
+        stroke-dashoffset: 1;
+    }
+}
+
+@keyframes star-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.2);
+    }
+}
+
+/* One path, lit in brass after each pricing (see main.js), flaring
+   along its length */
+.constellation .edges .is-lit {
+    stroke: var(--brass-light);
+    stroke-opacity: 0.9;
+    animation: edge-draw 0.35s ease-out calc(var(--k) * 0.07s) backwards;
+}
+
+.constellation .nodes .is-lit {
+    fill: var(--brass-light);
+    filter: drop-shadow(0 0 4px rgb(241 211 143 / 0.9));
+    animation: star-flare 0.6s ease-out calc(var(--k) * 0.07s) backwards;
+}
+
+@keyframes star-flare {
+    from {
+        transform: scale(2.4);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .constellation .edges line,
+    .constellation .nodes circle,
+    .constellation .is-lit {
+        animation: none;
+        transition: none;
+    }
+}
+
 .site-header h1 {
-    font-size: 1.75rem;
-}
-
-.title-tail {
-    white-space: nowrap;
-}
-
-/* Lattice graphic growing out of the right of the title */
-.title-lattice {
-    height: 2.5rem;
-    width: auto;
-    margin-left: 0.6rem;
-    vertical-align: middle;
-}
-
-.title-lattice .edges line {
-    stroke: var(--text-muted);
-    stroke-opacity: 0.45;
-    stroke-width: 1;
-}
-
-.title-lattice .nodes circle {
-    fill: var(--accent);
-}
-
-.title-lattice .nodes .root {
-    fill: var(--gild-light);
+    font-size: 2.7rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    /* A halo of sky, lifting the letters off the stars behind */
+    text-shadow:
+        0 0 18px var(--bg-high),
+        0 0 32px var(--bg-high),
+        0 0 14px rgb(167 139 250 / 0.35);
 }
 
 .subtitle {
@@ -204,24 +282,64 @@ h1, h2, h3 {
     /* Holds its line while the text loads */
     min-height: 1.5em;
     color: var(--text-muted);
+    font-size: 1.2rem;
+    font-style: italic;
+    text-shadow: 0 0 12px var(--bg-high);
 }
 
-/* Page links under the subtitle, as tabs on a rule */
+/* Page links as markers set on an arc, like signs round a chart */
 .site-nav {
+    position: relative;
     display: flex;
-    gap: 0.25rem;
-    margin-top: 1.25rem;
-    border-bottom: 1px solid var(--border);
+    justify-content: center;
+    gap: 3.5rem;
+    margin-top: 2.25rem;
+    padding-top: 1.1rem;
+}
+
+.site-nav::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: min(30rem, 92%);
+    height: 2.75rem;
+    transform: translateX(-50%);
+    border-top: 1px solid var(--brass-line);
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+    -webkit-mask: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+    mask: linear-gradient(90deg, transparent, #000 25%, #000 75%, transparent);
+    pointer-events: none;
 }
 
 .site-nav a {
-    margin-bottom: -1px;
-    padding: 0.45rem 0.85rem;
-    border-bottom: 2px solid transparent;
+    position: relative;
+    padding: 0.35rem 0.5rem;
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-family: var(--display);
+    font-size: 0.85rem;
     font-weight: 600;
+    letter-spacing: 0.18em;
     text-decoration: none;
+    text-transform: uppercase;
+}
+
+/* Each link's sign sits on the arc above it: a sun for the pricer, a
+   crescent moon for learning */
+.site-nav a::before {
+    content: "";
+    position: absolute;
+    top: calc(-1.1rem - 6px);
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    margin-left: -6px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--brass) 0 22%, transparent 26% 52%, var(--brass) 56% 70%, transparent 74%);
+}
+
+.site-nav a:nth-child(2)::before {
+    background: radial-gradient(circle at 68% 38%, var(--bg-high) 0 42%, transparent 45%), radial-gradient(circle, var(--brass) 0 66%, transparent 70%);
 }
 
 .site-nav a:hover {
@@ -229,20 +347,37 @@ h1, h2, h3 {
 }
 
 .site-nav a[aria-current="page"] {
-    border-bottom-color: var(--accent);
-    color: var(--accent);
+    color: var(--brass-light);
+}
+
+.site-nav a[aria-current="page"]::before {
+    filter: drop-shadow(0 0 4px rgb(241 211 143 / 0.9)) brightness(1.3);
 }
 
 .site-nav a:focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: -2px;
-    border-radius: 6px 6px 0 0;
+    outline-offset: 2px;
+    border-radius: 4px;
 }
 
 .site-footer {
-    padding: 1rem 1rem 2rem;
+    padding: 1.5rem 1rem 3rem;
     color: var(--text-muted);
-    font-size: 0.875rem;
+    font-size: 1.05rem;
+    font-style: italic;
+    text-align: center;
+}
+
+/* A star between two fading lines */
+.site-footer::before {
+    content: "";
+    display: block;
+    width: min(16rem, 100%);
+    height: 14px;
+    margin: 0 auto 1.25rem;
+    background:
+        var(--star4) center / 14px no-repeat,
+        linear-gradient(90deg, transparent, var(--brass-line) 30%, var(--brass-line) calc(50% - 12px), transparent calc(50% - 12px) calc(50% + 12px), var(--brass-line) calc(50% + 12px), var(--brass-line) 70%, transparent) center / 100% 1px no-repeat;
 }
 
 .site-footer p {
@@ -251,6 +386,26 @@ h1, h2, h3 {
 
 .site-footer p:last-child {
     margin-bottom: 0;
+}
+
+/* On a narrow screen the constellation keeps its size, running off the
+   right edge, rather than shrinking to a strip */
+@media (max-width: 760px) {
+    .site-header {
+        overflow-x: clip;
+        padding-top: 2.5rem;
+    }
+
+    .constellation {
+        top: 0.5rem;
+        left: -1rem;
+        width: 760px;
+        max-height: none;
+    }
+
+    .site-header h1 {
+        font-size: 2rem;
+    }
 }
 
 /* Dashboard grid */
