@@ -38,6 +38,14 @@
     --display: Cinzel, "EB Garamond", Georgia, serif;
     --mono: "Space Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 
+    /* Gilded corners: an astrolabe's quadrant, a brass bracket round the
+       corner with a degree-marked arc and a rivet, lit from the top left */
+    --corner-size: 40px;
+    --corner-tl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg transform='' fill='none' stroke='%23f1d38f'%3E%3Cpath d='M1 40V7A6 6 0 0 1 7 1H40' stroke-width='1.6'/%3E%3Cpath d='M9 40A31 31 0 0 1 40 9' stroke-width='1'/%3E%3Cpath d='M9.00 40.00L3.50 40.00M9.47 34.62L6.52 34.10M10.87 29.40L8.05 28.37M13.15 24.50L8.39 21.75M16.25 20.07L13.95 18.15M20.07 16.25L18.15 13.95M24.50 13.15L21.75 8.39M29.40 10.87L28.37 8.05M34.62 9.47L34.10 6.52M40.00 9.00L40.00 3.50' stroke-width='0.9'/%3E%3Ccircle cx='8.5' cy='8.5' r='2.4' fill='%23f1d38f' stroke='none'/%3E%3Ccircle cx='7.8' cy='7.8' r='0.8' fill='%23fff6dc' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+    --corner-tr: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg transform='translate(40 0) scale(-1 1)' fill='none' stroke='%23c99a52'%3E%3Cpath d='M1 40V7A6 6 0 0 1 7 1H40' stroke-width='1.6'/%3E%3Cpath d='M9 40A31 31 0 0 1 40 9' stroke-width='1'/%3E%3Cpath d='M9.00 40.00L3.50 40.00M9.47 34.62L6.52 34.10M10.87 29.40L8.05 28.37M13.15 24.50L8.39 21.75M16.25 20.07L13.95 18.15M20.07 16.25L18.15 13.95M24.50 13.15L21.75 8.39M29.40 10.87L28.37 8.05M34.62 9.47L34.10 6.52M40.00 9.00L40.00 3.50' stroke-width='0.9'/%3E%3Ccircle cx='8.5' cy='8.5' r='2.4' fill='%23c99a52' stroke='none'/%3E%3Ccircle cx='7.8' cy='7.8' r='0.8' fill='%23fff6dc' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+    --corner-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg transform='translate(0 40) scale(1 -1)' fill='none' stroke='%23c99a52'%3E%3Cpath d='M1 40V7A6 6 0 0 1 7 1H40' stroke-width='1.6'/%3E%3Cpath d='M9 40A31 31 0 0 1 40 9' stroke-width='1'/%3E%3Cpath d='M9.00 40.00L3.50 40.00M9.47 34.62L6.52 34.10M10.87 29.40L8.05 28.37M13.15 24.50L8.39 21.75M16.25 20.07L13.95 18.15M20.07 16.25L18.15 13.95M24.50 13.15L21.75 8.39M29.40 10.87L28.37 8.05M34.62 9.47L34.10 6.52M40.00 9.00L40.00 3.50' stroke-width='0.9'/%3E%3Ccircle cx='8.5' cy='8.5' r='2.4' fill='%23c99a52' stroke='none'/%3E%3Ccircle cx='7.8' cy='7.8' r='0.8' fill='%23fff6dc' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+    --corner-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg transform='translate(40 40) scale(-1 -1)' fill='none' stroke='%237d5a26'%3E%3Cpath d='M1 40V7A6 6 0 0 1 7 1H40' stroke-width='1.6'/%3E%3Cpath d='M9 40A31 31 0 0 1 40 9' stroke-width='1'/%3E%3Cpath d='M9.00 40.00L3.50 40.00M9.47 34.62L6.52 34.10M10.87 29.40L8.05 28.37M13.15 24.50L8.39 21.75M16.25 20.07L13.95 18.15M20.07 16.25L18.15 13.95M24.50 13.15L21.75 8.39M29.40 10.87L28.37 8.05M34.62 9.47L34.10 6.52M40.00 9.00L40.00 3.50' stroke-width='0.9'/%3E%3Ccircle cx='8.5' cy='8.5' r='2.4' fill='%237d5a26' stroke='none'/%3E%3Ccircle cx='7.8' cy='7.8' r='0.8' fill='%23fff6dc' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+
     /* Star field: dots tiled at unrelated sizes, so no pattern shows */
     --stars:
         radial-gradient(0.94px 0.94px at 82px 38px, #ffffff, transparent),
@@ -258,50 +266,45 @@ h1, h2, h3 {
 
 /* Tiles */
 
+/* Instrument plates: faintly see-through over the sky, with a bevelled
+   edge */
 .tile {
     background: var(--surface);
-    border: 1px solid var(--border);
+    -webkit-backdrop-filter: blur(1.5px);
+    backdrop-filter: blur(1.5px);
+    border: 1px solid color-mix(in srgb, var(--brass) 22%, var(--border));
     border-radius: var(--radius);
-    padding: 1.25rem;
+    box-shadow:
+        inset 1px 1px 0 rgb(255 255 255 / 0.05),
+        inset -1px -1px 0 rgb(0 0 0 / 0.4),
+        0 10px 30px rgb(0 0 0 / 0.25);
+    padding: 1.75rem 2rem;
     min-width: 0;
     position: relative;
 }
 
-/* Corner gilding: an outline over the tile border, masked down to the
-   four corners. Lighter top/left and darker bottom/right edges give a
-   lit-metal look. */
+/* Brass corners over the plate's own */
 .tile::before {
-    --corner: linear-gradient(#000 0 0) no-repeat;
-    --corner-size: var(--gild-size) var(--gild-size);
-
     content: "";
     position: absolute;
     inset: -1px;
-    border: var(--gild-width) solid;
-    border-color: var(--gild-light) var(--gild-dark) var(--gild-dark) var(--gild-light);
-    border-radius: calc(var(--radius) + 1px);
     pointer-events: none;
-
-    -webkit-mask:
-        var(--corner) top left / var(--corner-size),
-        var(--corner) top right / var(--corner-size),
-        var(--corner) bottom left / var(--corner-size),
-        var(--corner) bottom right / var(--corner-size);
-    mask:
-        var(--corner) top left / var(--corner-size),
-        var(--corner) top right / var(--corner-size),
-        var(--corner) bottom left / var(--corner-size),
-        var(--corner) bottom right / var(--corner-size);
+    background:
+        var(--corner-tl) top left / var(--corner-size) no-repeat,
+        var(--corner-tr) top right / var(--corner-size) no-repeat,
+        var(--corner-bl) bottom left / var(--corner-size) no-repeat,
+        var(--corner-br) bottom right / var(--corner-size) no-repeat;
 }
 
 .tile h2 {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
 }
 
 .tile-text {
     margin: 0.4rem 0 1rem;
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-size: 1.05rem;
+    font-style: italic;
 }
 
 /* Parameters drawer */
@@ -724,8 +727,11 @@ h1, h2, h3 {
 /* Notice: a small warning tile, gilded in amber rather than purple */
 
 .notice {
-    --gild-light: var(--warning);
-    --gild-dark: var(--warning-dark);
+    --corner-size: 32px;
+    --corner-tl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg transform='' fill='none' stroke='%23f6cf85'%3E%3Cpath d='M1 40V7A6 6 0 0 1 7 1H40' stroke-width='1.6'/%3E%3Cpath d='M9 40A31 31 0 0 1 40 9' stroke-width='1'/%3E%3Cpath d='M9.00 40.00L3.50 40.00M9.47 34.62L6.52 34.10M10.87 29.40L8.05 28.37M13.15 24.50L8.39 21.75M16.25 20.07L13.95 18.15M20.07 16.25L18.15 13.95M24.50 13.15L21.75 8.39M29.40 10.87L28.37 8.05M34.62 9.47L34.10 6.52M40.00 9.00L40.00 3.50' stroke-width='0.9'/%3E%3Ccircle cx='8.5' cy='8.5' r='2.4' fill='%23f6cf85' stroke='none'/%3E%3Ccircle cx='7.8' cy='7.8' r='0.8' fill='%23fff3d6' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+    --corner-tr: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg transform='translate(40 0) scale(-1 1)' fill='none' stroke='%23e9b65c'%3E%3Cpath d='M1 40V7A6 6 0 0 1 7 1H40' stroke-width='1.6'/%3E%3Cpath d='M9 40A31 31 0 0 1 40 9' stroke-width='1'/%3E%3Cpath d='M9.00 40.00L3.50 40.00M9.47 34.62L6.52 34.10M10.87 29.40L8.05 28.37M13.15 24.50L8.39 21.75M16.25 20.07L13.95 18.15M20.07 16.25L18.15 13.95M24.50 13.15L21.75 8.39M29.40 10.87L28.37 8.05M34.62 9.47L34.10 6.52M40.00 9.00L40.00 3.50' stroke-width='0.9'/%3E%3Ccircle cx='8.5' cy='8.5' r='2.4' fill='%23e9b65c' stroke='none'/%3E%3Ccircle cx='7.8' cy='7.8' r='0.8' fill='%23fff3d6' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+    --corner-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg transform='translate(0 40) scale(1 -1)' fill='none' stroke='%23e9b65c'%3E%3Cpath d='M1 40V7A6 6 0 0 1 7 1H40' stroke-width='1.6'/%3E%3Cpath d='M9 40A31 31 0 0 1 40 9' stroke-width='1'/%3E%3Cpath d='M9.00 40.00L3.50 40.00M9.47 34.62L6.52 34.10M10.87 29.40L8.05 28.37M13.15 24.50L8.39 21.75M16.25 20.07L13.95 18.15M20.07 16.25L18.15 13.95M24.50 13.15L21.75 8.39M29.40 10.87L28.37 8.05M34.62 9.47L34.10 6.52M40.00 9.00L40.00 3.50' stroke-width='0.9'/%3E%3Ccircle cx='8.5' cy='8.5' r='2.4' fill='%23e9b65c' stroke='none'/%3E%3Ccircle cx='7.8' cy='7.8' r='0.8' fill='%23fff3d6' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
+    --corner-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cg transform='translate(40 40) scale(-1 -1)' fill='none' stroke='%23a87a2a'%3E%3Cpath d='M1 40V7A6 6 0 0 1 7 1H40' stroke-width='1.6'/%3E%3Cpath d='M9 40A31 31 0 0 1 40 9' stroke-width='1'/%3E%3Cpath d='M9.00 40.00L3.50 40.00M9.47 34.62L6.52 34.10M10.87 29.40L8.05 28.37M13.15 24.50L8.39 21.75M16.25 20.07L13.95 18.15M20.07 16.25L18.15 13.95M24.50 13.15L21.75 8.39M29.40 10.87L28.37 8.05M34.62 9.47L34.10 6.52M40.00 9.00L40.00 3.50' stroke-width='0.9'/%3E%3Ccircle cx='8.5' cy='8.5' r='2.4' fill='%23a87a2a' stroke='none'/%3E%3Ccircle cx='7.8' cy='7.8' r='0.8' fill='%23fff3d6' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
 
     display: flex;
     align-items: flex-start;
