@@ -13,6 +13,7 @@
 
         <section id="parameters-panel" class="tile drawer-panel" aria-labelledby="inputs-heading" inert>
             <div class="drawer-body">
+                <span class="sheet-code" aria-hidden="true">SPEC 00</span>
                 <h2 id="inputs-heading">Model Parameters</h2>
 
                 <form id="pricing-form" novalidate>
@@ -97,6 +98,7 @@
         <div class="price-row">
             <!-- CRR option price -->
             <section class="tile" aria-labelledby="price-heading">
+                <span class="sheet-code" aria-hidden="true">SHT 01 &middot; CRR</span>
                 <h2 id="price-heading">CRR Option Price</h2>
                 <!-- Filled from texts/under_crr_price.md by main.js -->
                 <p id="crr-price-text" class="tile-text"></p>
@@ -114,30 +116,33 @@
             <section class="tile" aria-labelledby="black-scholes-heading">
                 <!-- Tags are shown when the last priced request had dividends on,
                      or was an American put -->
+                <span class="sheet-code" aria-hidden="true">SHT 02 &middot; B-S</span>
                 <h2 id="black-scholes-heading">Black-Scholes Price <span class="tag dividend-tag" hidden>Excludes dividends</span> <span class="tag american-put-tag" hidden>Excludes American puts</span></h2>
                 <!-- Filled from texts/under_black_scholes_price.md by main.js -->
                 <p id="black-scholes-price-text" class="tile-text"></p>
                 <output id="black-scholes-price" class="price-value" for="pricing-form">—</output>
 
+                <!-- Symbols are drawn from data-symbol, keeping each label's text
+                     as info.js looks it up -->
                 <dl class="details">
                     <div class="detail">
-                        <dt>Delta</dt>
+                        <dt data-symbol="Δ">Delta</dt>
                         <dd id="greek-delta">—</dd>
                     </div>
                     <div class="detail">
-                        <dt>Gamma</dt>
+                        <dt data-symbol="Γ">Gamma</dt>
                         <dd id="greek-gamma">—</dd>
                     </div>
                     <div class="detail">
-                        <dt>Theta</dt>
+                        <dt data-symbol="Θ">Theta</dt>
                         <dd id="greek-theta">—</dd>
                     </div>
                     <div class="detail">
-                        <dt>Vega</dt>
+                        <dt data-symbol="ν">Vega</dt>
                         <dd id="greek-vega">—</dd>
                     </div>
                     <div class="detail">
-                        <dt>Rho</dt>
+                        <dt data-symbol="ρ">Rho</dt>
                         <dd id="greek-rho">—</dd>
                     </div>
                 </dl>
@@ -155,6 +160,7 @@
 
         <!-- Lattice figures -->
         <section class="tile" aria-labelledby="figure-price-heading">
+            <span class="sheet-code" aria-hidden="true">FIG. 01</span>
             <h2 id="figure-price-heading">Price Lattice</h2>
             <div id="figure-price" class="figure"></div>
         </section>
@@ -164,15 +170,18 @@
             <summary class="tile disclosure-bar">
                 <span class="disclosure-icon" aria-hidden="true">›</span>
                 Delta and Leverage Lattice Figures
+                <span class="sheet-code" aria-hidden="true">FIG. 02&ndash;03</span>
             </summary>
 
             <div class="disclosure-body">
                 <section class="tile" aria-labelledby="figure-delta-heading">
+                    <span class="sheet-code" aria-hidden="true">FIG. 02</span>
                     <h2 id="figure-delta-heading">Delta Lattice</h2>
                     <div id="figure-delta" class="figure"></div>
                 </section>
 
                 <section class="tile" aria-labelledby="figure-leverage-heading">
+                    <span class="sheet-code" aria-hidden="true">FIG. 03</span>
                     <h2 id="figure-leverage-heading">Leverage Lattice</h2>
                     <div id="figure-leverage" class="figure"></div>
                 </section>
@@ -182,6 +191,7 @@
         <!-- Closed-form CRR price converging to Black-Scholes. Tags as for
              the prices above. -->
         <section class="tile" aria-labelledby="figure-convergence-heading">
+            <span class="sheet-code" aria-hidden="true">FIG. 04</span>
             <h2 id="figure-convergence-heading">Convergence to Black-Scholes <span class="tag dividend-tag" hidden>Excludes dividends</span> <span class="tag american-put-tag" hidden>Excludes American puts</span></h2>
             <div id="figure-convergence" class="figure"></div>
         </section>

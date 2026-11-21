@@ -404,8 +404,30 @@ h1, h2, h3 {
     font-size: 1.2rem;
 }
 
+/* Sheet code: a small cell boxed into the tile's top-right corner, like
+   the reference on a drawing sheet. Headings keep clear of it. */
+.sheet-code {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.2rem 0.6rem;
+    border-bottom: 1px solid var(--border-strong);
+    border-left: 1px solid var(--border-strong);
+    color: var(--text-muted);
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.tile:has(> .sheet-code) > h2,
+.drawer-body > h2 {
+    padding-right: 6.5rem;
+}
+
 .tile-text {
-    margin: 0.4rem 0 1rem;
+    margin: 0.4rem 0 1.1rem;
     color: var(--text-muted);
     font-size: 0.9rem;
 }
@@ -766,70 +788,138 @@ h1, h2, h3 {
     }
 }
 
+/* The price reads like a measurement: dimensioned by a line beneath it,
+   with extension lines at its ends and arrowheads pointing out to them */
 .price-value {
-    display: block;
+    --dim: var(--accent);
+    --arrow: 6px;
+
+    position: relative;
+    display: inline-block;
+    min-width: 5ch;
+    padding: 0 0.15rem 0.85rem;
     font-family: var(--mono);
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 2.75rem;
+    font-weight: 600;
+    line-height: 1.15;
     font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+}
+
+/* Extension lines and the dimension line between them */
+.price-value::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 0.7rem;
+    border-inline: 1px solid var(--dim);
+    background: linear-gradient(var(--dim) 0 0) center / 100% 1px no-repeat;
+    opacity: 0.75;
+}
+
+/* Arrowheads: two triangles in one shape, joined along the line */
+.price-value::before {
+    content: "";
+    position: absolute;
+    left: 1px;
+    right: 1px;
+    bottom: calc(0.35rem - 3px);
+    height: 6px;
+    background: var(--dim);
+    opacity: 0.75;
+    clip-path: polygon(
+        0 50%, var(--arrow) 0, var(--arrow) 100%, 0 50%,
+        100% 50%, calc(100% - var(--arrow)) 0, calc(100% - var(--arrow)) 100%, 100% 50%
+    );
 }
 
 /* Secondary values (closed form, greeks): deliberately quieter than the
-   price above them */
+   price above them, set out as ruled cells */
 
 .details {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(4.5rem, 1fr));
-    gap: 0.5rem 1rem;
-    margin: 1rem 0 0;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--border);
+    grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+    gap: 0.6rem 0;
+    margin: 1.1rem 0 0;
+    padding-top: 0.85rem;
+    border-top: 1px dashed var(--border-strong);
+}
+
+.detail {
+    padding: 0.05rem 0.75rem;
+    border-left: 1px solid var(--border-strong);
 }
 
 .detail dt {
     color: var(--text-muted);
-    font-size: 0.75rem;
+    font-family: var(--label);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+/* Greek symbol ahead of its name; drawn here so the name stays the
+   label's only text */
+.detail dt[data-symbol]::before {
+    content: attr(data-symbol);
+    display: inline-block;
+    min-width: 1.1em;
+    margin-right: 0.3rem;
+    color: var(--accent);
+    font-family: var(--font);
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0;
+    text-transform: none;
 }
 
 .detail dd {
-    margin: 0;
-    color: var(--text-muted);
+    margin: 0.1rem 0 0;
+    color: var(--text);
     font-family: var(--mono);
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     font-variant-numeric: tabular-nums;
 }
 
-/* Tag: a small amber label set beside a heading or term */
+/* Tag: a small amber stamp set beside a heading or term */
 
 /* Gap rather than margin, so a tag that wraps lines up with the text */
 :is(h2, dt):has(> .tag:not([hidden])) {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 0.3rem 0.5rem;
+    gap: 0.35rem 0.6rem;
 }
 
+/* Double ruled like a rubber stamp, set very slightly askew */
 .tag {
     display: inline-block;
-    padding: 0.1rem 0.45rem;
-    border: 1px solid color-mix(in srgb, var(--warning) 45%, var(--border));
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--warning) 10%, var(--surface));
+    padding: 0.05rem 0.4rem;
+    border: 1px solid var(--warning);
+    outline: 1px solid color-mix(in srgb, var(--warning) 55%, transparent);
+    outline-offset: 1px;
+    background: color-mix(in srgb, var(--warning) 8%, transparent);
     color: var(--warning);
-    font-family: var(--font);
-    font-size: 0.7rem;
-    font-weight: 600;
+    font-family: var(--label);
+    font-size: 0.72rem;
+    font-weight: 700;
     line-height: 1.3;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
     white-space: nowrap;
     vertical-align: middle;
+    transform: rotate(-1.5deg);
 }
 
 .tag[hidden] {
     display: none;
 }
 
-/* Notice: a small warning tile, gilded in amber rather than purple */
+/* Notice: a small warning tile, gilded in amber rather than violet, with
+   a hazard-hatched leading edge */
 
 .notice {
     --gild-light: var(--warning);
@@ -837,10 +927,12 @@ h1, h2, h3 {
 
     display: flex;
     align-items: flex-start;
-    gap: 0.75rem;
-    padding: 0.85rem 1.25rem;
-    border-color: color-mix(in srgb, var(--warning) 35%, var(--border));
-    background: color-mix(in srgb, var(--warning) 6%, var(--surface));
+    gap: 0.85rem;
+    padding: 0.85rem 1.25rem 0.85rem 2.1rem;
+    border-color: color-mix(in srgb, var(--warning) 40%, var(--border));
+    background:
+        repeating-linear-gradient(-45deg, var(--warning) 0 5px, transparent 5px 10px) left / 0.6rem 100% no-repeat,
+        color-mix(in srgb, var(--warning) 6%, var(--surface));
     animation: notice-in 0.25s ease;
 }
 
@@ -849,28 +941,32 @@ h1, h2, h3 {
 }
 
 .notice h2 {
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: var(--warning);
 }
 
 .notice-text {
     margin: 0.2rem 0 0;
     color: var(--text-muted);
-    font-size: 0.875rem;
+    font-family: var(--mono);
+    font-size: 0.82rem;
 }
 
+/* Warning triangle */
 .notice-icon {
     flex: none;
     display: grid;
-    place-items: center;
-    width: 1.35rem;
-    height: 1.35rem;
-    border-radius: 50%;
+    place-items: end center;
+    width: 1.5rem;
+    height: 1.3rem;
+    padding-bottom: 0.05rem;
     background: var(--warning);
     color: var(--accent-text);
-    font-size: 0.85rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
     font-weight: 700;
     line-height: 1;
+    clip-path: polygon(50% 0, 100% 100%, 0 100%);
 }
 
 @keyframes notice-in {
