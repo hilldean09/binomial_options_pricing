@@ -376,6 +376,12 @@ h1, h2, h3 {
     text-align: center;
 }
 
+@media (max-width: 560px) {
+    .tile {
+        padding: 1.4rem 1.25rem;
+    }
+}
+
 /* Written out rather than var(--ornament), for its own line length. A
    full row of its own when the heading is a flex row (with tags). */
 .tile h2::after {
@@ -1024,6 +1030,17 @@ h1, h2, h3 {
         linear-gradient(var(--gold-line) 0 0) center / calc(100% - 20px) 1px no-repeat;
 }
 
+/* Too narrow on a phone for the rules beside the text */
+@media (max-width: 560px) {
+    .disclosure-rule {
+        display: none;
+    }
+
+    .disclosure-text {
+        flex: 1;
+    }
+}
+
 .disclosure-icon {
     color: var(--gold);
     font-size: 1.3rem;
@@ -1317,6 +1334,13 @@ h1, h2, h3 {
 .prose > :not(.figure-card) {
     max-width: 66ch;
     margin-inline: auto;
+}
+
+@media (max-width: 760px) {
+    .prose {
+        padding: 1.75rem 1.25rem 1.5rem;
+        font-size: 1.15rem;
+    }
 }
 
 /* A part: its numeral over the title, and the tiles' ornamental rule
