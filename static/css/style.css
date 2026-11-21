@@ -955,7 +955,8 @@ h1, h2, h3 {
 
 .details {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(5rem, 1fr));
+    /* Wide enough for a symbol, name and info button on one line */
+    grid-template-columns: repeat(auto-fit, minmax(5.4rem, 1fr));
     gap: 0.6rem 0;
     margin: 1.1rem 0 0;
     padding-top: 0.85rem;
@@ -963,7 +964,7 @@ h1, h2, h3 {
 }
 
 .detail {
-    padding: 0.05rem 0.75rem;
+    padding: 0.05rem 0.3rem 0.05rem 0.6rem;
     border-left: 1px solid var(--border-strong);
 }
 
@@ -981,8 +982,8 @@ h1, h2, h3 {
 .detail dt[data-symbol]::before {
     content: attr(data-symbol);
     display: inline-block;
-    min-width: 1.1em;
-    margin-right: 0.3rem;
+    min-width: 1em;
+    margin-right: 0.2rem;
     color: var(--accent);
     font-family: var(--font);
     font-size: 0.9rem;
@@ -1138,6 +1139,21 @@ h1, h2, h3 {
     transform: translateY(-50%);
     border: none;
     right: 0.6rem;
+}
+
+.disclosure-bar:has(> .sheet-code) {
+    padding-right: 7.5rem;
+}
+
+/* No room for it beside the heading on a narrow screen */
+@media (max-width: 760px) {
+    .disclosure-bar .sheet-code {
+        display: none;
+    }
+
+    .disclosure-bar:has(> .sheet-code) {
+        padding-right: 1.25rem;
+    }
 }
 
 .disclosure-icon {
@@ -1416,6 +1432,16 @@ h1, h2, h3 {
 
 .prose > :not(.figure-card) {
     max-width: 72ch;
+}
+
+@media (max-width: 760px) {
+    .prose {
+        padding: 1.25rem 1.1rem;
+    }
+
+    .prose h2 {
+        font-size: 1.45rem;
+    }
 }
 
 /* Section headings: the section number set out ahead, over a full rule */
