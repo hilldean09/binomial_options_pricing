@@ -47,12 +47,17 @@
         return copy.textContent;
     }
 
-    // Copies the heading's rendered content, so any maths in it shows.
+    // Copies the heading's rendered content, so any maths in it shows. The
+    // copy is wrapped so it can be laid out as one piece beside the link's
+    // decoration (leader dots and a number).
     function contentsItem(heading) {
         const item = document.createElement("li");
         const link = document.createElement("a");
         link.href = "#" + heading.id;
-        link.append(...Array.from(heading.childNodes, (node) => node.cloneNode(true)));
+        const title = document.createElement("span");
+        title.className = "contents-title";
+        title.append(...Array.from(heading.childNodes, (node) => node.cloneNode(true)));
+        link.append(title);
         item.append(link);
         return item;
     }
