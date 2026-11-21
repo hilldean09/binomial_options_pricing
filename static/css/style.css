@@ -45,6 +45,12 @@
     --corner-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Cg transform='translate(0 34) scale(1 -1)' fill='none' stroke='%23d2ae68'%3E%3Cpath d='M1 33V1H33' stroke-width='2'/%3E%3Cpath d='M6 28V15H10.5V10.5H15V6H28' stroke-width='1.2'/%3E%3Cpath d='M1 1L6 6' stroke-width='1'/%3E%3Cpath d='M19 16L22 19L19 22L16 19Z' fill='%23d2ae68' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
     --corner-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 34'%3E%3Cg transform='translate(34 34) scale(-1 -1)' fill='none' stroke='%238a6a2f'%3E%3Cpath d='M1 33V1H33' stroke-width='2'/%3E%3Cpath d='M6 28V15H10.5V10.5H15V6H28' stroke-width='1.2'/%3E%3Cpath d='M1 1L6 6' stroke-width='1'/%3E%3Cpath d='M19 16L22 19L19 22L16 19Z' fill='%238a6a2f' stroke='none'/%3E%3C/g%3E%3C/svg%3E");
 
+    /* Ornamental rule: a gold line broken by a diamond at its centre */
+    --diamond: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M5 0L10 5L5 10L0 5Z' fill='%23d2ae68'/%3E%3C/svg%3E");
+    --ornament:
+        var(--diamond) center / 9px no-repeat,
+        linear-gradient(to right, transparent, var(--gold) 35%, var(--gold) calc(50% - 10px), transparent calc(50% - 10px) calc(50% + 10px), var(--gold) calc(50% + 10px), var(--gold) 65%, transparent) center / 100% 1px no-repeat;
+
     /* Engraved guilloché: crossing sine waves, as on a banknote */
     --guilloche: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 36' width='180' height='36'%3E%3Cg fill='none' stroke='%23d2ae68' stroke-opacity='0.085' stroke-width='0.7'%3E%3Cpolyline points='0,18.0 6,20.5 12,22.9 18,25.1 24,26.9 30,28.4 36,29.4 42,29.9 48,29.9 54,29.4 60,28.4 66,26.9 72,25.1 78,22.9 84,20.5 90,18.0 96,15.5 102,13.1 108,10.9 114,9.1 120,7.6 126,6.6 132,6.1 138,6.1 144,6.6 150,7.6 156,9.1 162,10.9 168,13.1 174,15.5 180,18.0'/%3E%3Cpolyline points='0,28.4 6,29.4 12,29.9 18,29.9 24,29.4 30,28.4 36,26.9 42,25.1 48,22.9 54,20.5 60,18.0 66,15.5 72,13.1 78,10.9 84,9.1 90,7.6 96,6.6 102,6.1 108,6.1 114,6.6 120,7.6 126,9.1 132,10.9 138,13.1 144,15.5 150,18.0 156,20.5 162,22.9 168,25.1 174,26.9 180,28.4'/%3E%3Cpolyline points='0,28.4 6,26.9 12,25.1 18,22.9 24,20.5 30,18.0 36,15.5 42,13.1 48,10.9 54,9.1 60,7.6 66,6.6 72,6.1 78,6.1 84,6.6 90,7.6 96,9.1 102,10.9 108,13.1 114,15.5 120,18.0 126,20.5 132,22.9 138,25.1 144,26.9 150,28.4 156,29.4 162,29.9 168,29.9 174,29.4 180,28.4'/%3E%3Cpolyline points='0,18.0 6,15.5 12,13.1 18,10.9 24,9.1 30,7.6 36,6.6 42,6.1 48,6.1 54,6.6 60,7.6 66,9.1 72,10.9 78,13.1 84,15.5 90,18.0 96,20.5 102,22.9 108,25.1 114,26.9 120,28.4 126,29.4 132,29.9 138,29.9 144,29.4 150,28.4 156,26.9 162,25.1 168,22.9 174,20.5 180,18.0'/%3E%3Cpolyline points='0,7.6 6,6.6 12,6.1 18,6.1 24,6.6 30,7.6 36,9.1 42,10.9 48,13.1 54,15.5 60,18.0 66,20.5 72,22.9 78,25.1 84,26.9 90,28.4 96,29.4 102,29.9 108,29.9 114,29.4 120,28.4 126,26.9 132,25.1 138,22.9 144,20.5 150,18.0 156,15.5 162,13.1 168,10.9 174,9.1 180,7.6'/%3E%3Cpolyline points='0,7.6 6,9.1 12,10.9 18,13.1 24,15.5 30,18.0 36,20.5 42,22.9 48,25.1 54,26.9 60,28.4 66,29.4 72,29.9 78,29.9 84,29.4 90,28.4 96,26.9 102,25.1 108,22.9 114,20.5 120,18.0 126,15.5 132,13.1 138,10.9 144,9.1 150,7.6 156,6.6 162,6.1 168,6.1 174,6.6 180,7.6'/%3E%3C/g%3E%3C/svg%3E");
 }
@@ -104,83 +110,216 @@ h1, h2, h3 {
 .site-footer {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 2rem 1rem 1rem;
+    padding: 2.5rem 1rem 1rem;
+    text-align: center;
 }
 
+/* Keeps the sunburst behind the title from widening the page */
+.site-header {
+    overflow-x: clip;
+}
+
+/* The title in gold capitals, over a fan of rays rising behind it */
 .site-header h1 {
-    font-size: 1.75rem;
+    position: relative;
+    isolation: isolate;
+    font-family: var(--display);
+    font-size: 2.6rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    line-height: 1.25;
+    background: linear-gradient(180deg, var(--gold-light) 20%, var(--gold) 80%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
 }
 
+.site-header h1::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    bottom: -1.75rem;
+    width: min(52rem, 100vw);
+    height: 22rem;
+    transform: translateX(-50%);
+    background: repeating-conic-gradient(from -90deg at 50% 100%, rgb(210 174 104 / 0.2) 0 0.35deg, transparent 0.35deg 5deg);
+    -webkit-mask: radial-gradient(farthest-side at 50% 100%, #000 10%, transparent);
+    mask: radial-gradient(farthest-side at 50% 100%, #000 10%, transparent);
+    pointer-events: none;
+}
+
+.title-head,
 .title-tail {
     white-space: nowrap;
 }
 
-/* Lattice graphic growing out of the right of the title */
+/* Lattice graphics framing the title: gold edges, gold nodes and a
+   violet root, the first mirrored so both grow outwards */
 .title-lattice {
     height: 2.5rem;
     width: auto;
-    margin-left: 0.6rem;
-    vertical-align: middle;
+    margin-left: 0.8rem;
+    vertical-align: -0.15em;
+}
+
+.title-lattice.is-mirrored {
+    margin: 0 0.8rem 0 0;
+    transform: scaleX(-1);
 }
 
 .title-lattice .edges line {
-    stroke: var(--text-muted);
-    stroke-opacity: 0.45;
-    stroke-width: 1;
+    stroke: var(--gold);
+    stroke-opacity: 0.6;
+    stroke-width: 0.9;
 }
 
 .title-lattice .nodes circle {
-    fill: var(--accent);
+    fill: var(--gold-light);
 }
 
 .title-lattice .nodes .root {
-    fill: var(--gild-light);
+    fill: var(--accent);
+}
+
+/* Not enough room to frame both sides on a phone */
+@media (max-width: 560px) {
+    .site-header h1 {
+        font-size: 2rem;
+    }
+
+    .title-lattice.is-mirrored {
+        display: none;
+    }
 }
 
 .subtitle {
-    margin: 0.5rem 0 0;
+    margin: 0.75rem 0 0;
     /* Holds its line while the text loads */
     min-height: 1.5em;
     color: var(--text-muted);
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-style: italic;
 }
 
-/* Page links under the subtitle, as tabs on a rule */
+/* Page links as engraved plaques with cut corners, between ornamental
+   rules */
 .site-nav {
     display: flex;
-    gap: 0.25rem;
-    margin-top: 1.25rem;
-    border-bottom: 1px solid var(--border);
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
 }
 
+.site-nav::before,
+.site-nav::after {
+    content: "";
+    flex: 1;
+    max-width: 22rem;
+    height: 9px;
+    background:
+        var(--diamond) var(--end) center / 9px no-repeat,
+        linear-gradient(var(--dir), transparent, var(--gold)) center / calc(100% - 14px) 1px no-repeat;
+}
+
+.site-nav::before {
+    --end: right;
+    --dir: to right;
+    background-position: right center, left center;
+}
+
+.site-nav::after {
+    --end: left;
+    --dir: to left;
+    background-position: left center, right center;
+}
+
+/* The plaque's outline and face are drawn behind the link, so the link
+   itself keeps a plain focus outline */
 .site-nav a {
-    margin-bottom: -1px;
-    padding: 0.45rem 0.85rem;
-    border-bottom: 2px solid transparent;
+    --chamfer: 9px;
+
+    position: relative;
+    isolation: isolate;
+    padding: 0.55rem 1.5rem 0.45rem;
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-size: 0.82rem;
     font-weight: 600;
+    letter-spacing: 0.22em;
     text-decoration: none;
+    text-transform: uppercase;
+}
+
+.site-nav a::before,
+.site-nav a::after {
+    content: "";
+    position: absolute;
+    clip-path: polygon(
+        var(--chamfer) 0, calc(100% - var(--chamfer)) 0, 100% var(--chamfer),
+        100% calc(100% - var(--chamfer)), calc(100% - var(--chamfer)) 100%,
+        var(--chamfer) 100%, 0 calc(100% - var(--chamfer)), 0 var(--chamfer)
+    );
+}
+
+.site-nav a::before {
+    inset: 0;
+    z-index: -2;
+    background: var(--gold-line);
+}
+
+.site-nav a::after {
+    --chamfer: 8.5px;
+
+    inset: 1px;
+    z-index: -1;
+    background: var(--surface-solid);
 }
 
 .site-nav a:hover {
-    color: var(--text);
+    color: var(--gold-light);
 }
 
 .site-nav a[aria-current="page"] {
-    border-bottom-color: var(--accent);
-    color: var(--accent);
+    color: var(--accent-text);
+}
+
+.site-nav a[aria-current="page"]::before {
+    background: linear-gradient(180deg, var(--gold-light), var(--gold));
+}
+
+.site-nav a[aria-current="page"]::after {
+    background: none;
 }
 
 .site-nav a:focus-visible {
     outline: 2px solid var(--accent);
-    outline-offset: -2px;
-    border-radius: 6px 6px 0 0;
+    outline-offset: 3px;
+}
+
+@media (max-width: 560px) {
+    .site-nav::before,
+    .site-nav::after {
+        display: none;
+    }
 }
 
 .site-footer {
-    padding: 1rem 1rem 2rem;
+    padding: 1.5rem 1rem 3rem;
     color: var(--text-muted);
-    font-size: 0.875rem;
+    font-family: var(--serif);
+    font-size: 1.05rem;
+}
+
+/* An ornamental rule closing the page */
+.site-footer::before {
+    content: "";
+    display: block;
+    width: min(18rem, 100%);
+    height: 9px;
+    margin: 0 auto 1.25rem;
+    background: var(--ornament);
 }
 
 .site-footer p {
