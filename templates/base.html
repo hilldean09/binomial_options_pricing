@@ -12,11 +12,25 @@
 </head>
 <body class="{% block body_class %}{% endblock %}">
     <header class="site-header">
-        <h1>
-            Binomial Options
-            <!-- Last word kept together with the decorative lattice (root on the
-                 left, growing rightwards) so the graphic always follows the title -->
-            <span class="title-tail">Pricing<svg class="title-lattice" viewBox="0 0 96 48" width="96" height="48" aria-hidden="true" focusable="false">
+        <!-- Laid out as a drawing's title block: the title on the left, and
+             decorative cells for the model, sheet and units on the right -->
+        <div class="tile title-block">
+            <div class="title-main">
+                <h1>
+                    Binomial Options
+                    <!-- Last word kept together with the decorative lattice (root on the
+                         left, growing rightwards) so the graphic always follows the title.
+                         Hovering a node names its (step, up-moves) coordinates. -->
+                    <span class="title-tail">Pricing<svg class="title-lattice" viewBox="0 0 96 48" width="96" height="48" aria-hidden="true" focusable="false">
+                    <!-- Dotted construction lines at each time step -->
+                    <g class="construction">
+                        <line x1="4" y1="0" x2="4" y2="48"/>
+                        <line x1="26" y1="0" x2="26" y2="48"/>
+                        <line x1="48" y1="0" x2="48" y2="48"/>
+                        <line x1="70" y1="0" x2="70" y2="48"/>
+                        <line x1="92" y1="0" x2="92" y2="48"/>
+                        <line x1="0" y1="24" x2="96" y2="24"/>
+                    </g>
                     <g class="edges">
                         <line x1="4" y1="24" x2="26" y2="29"/>
                         <line x1="4" y1="24" x2="26" y2="19"/>
@@ -40,26 +54,43 @@
                         <line x1="70" y1="9" x2="92" y2="4"/>
                     </g>
                     <g class="nodes">
-                        <circle class="root" cx="4" cy="24" r="3.5"/>
-                        <circle cx="26" cy="29" r="2.5"/>
-                        <circle cx="26" cy="19" r="2.5"/>
-                        <circle cx="48" cy="34" r="2.5"/>
-                        <circle cx="48" cy="24" r="2.5"/>
-                        <circle cx="48" cy="14" r="2.5"/>
-                        <circle cx="70" cy="39" r="2.5"/>
-                        <circle cx="70" cy="29" r="2.5"/>
-                        <circle cx="70" cy="19" r="2.5"/>
-                        <circle cx="70" cy="9" r="2.5"/>
-                        <circle cx="92" cy="44" r="2.5"/>
-                        <circle cx="92" cy="34" r="2.5"/>
-                        <circle cx="92" cy="24" r="2.5"/>
-                        <circle cx="92" cy="14" r="2.5"/>
-                        <circle cx="92" cy="4" r="2.5"/>
+                        <circle class="root" cx="4" cy="24" r="3.5"><title>(0, 0)</title></circle>
+                        <circle cx="26" cy="29" r="2.5"><title>(1, 0)</title></circle>
+                        <circle cx="26" cy="19" r="2.5"><title>(1, 1)</title></circle>
+                        <circle cx="48" cy="34" r="2.5"><title>(2, 0)</title></circle>
+                        <circle cx="48" cy="24" r="2.5"><title>(2, 1)</title></circle>
+                        <circle cx="48" cy="14" r="2.5"><title>(2, 2)</title></circle>
+                        <circle cx="70" cy="39" r="2.5"><title>(3, 0)</title></circle>
+                        <circle cx="70" cy="29" r="2.5"><title>(3, 1)</title></circle>
+                        <circle cx="70" cy="19" r="2.5"><title>(3, 2)</title></circle>
+                        <circle cx="70" cy="9" r="2.5"><title>(3, 3)</title></circle>
+                        <circle cx="92" cy="44" r="2.5"><title>(4, 0)</title></circle>
+                        <circle cx="92" cy="34" r="2.5"><title>(4, 1)</title></circle>
+                        <circle cx="92" cy="24" r="2.5"><title>(4, 2)</title></circle>
+                        <circle cx="92" cy="14" r="2.5"><title>(4, 3)</title></circle>
+                        <circle cx="92" cy="4" r="2.5"><title>(4, 4)</title></circle>
                     </g>
                 </svg></span>
-        </h1>
-        <!-- Filled from texts/under_title.txt -->
-        <p id="subtitle" class="subtitle"></p>
+                </h1>
+                <!-- Filled from texts/under_title.txt -->
+                <p id="subtitle" class="subtitle"></p>
+            </div>
+
+            <dl class="title-meta" aria-hidden="true">
+                <div class="title-cell">
+                    <dt>Model</dt>
+                    <dd>CRR &middot; B-S</dd>
+                </div>
+                <div class="title-cell">
+                    <dt>Sheet</dt>
+                    <dd>{% if request.endpoint == 'api_learn' %}02{% else %}01{% endif %} of 02</dd>
+                </div>
+                <div class="title-cell">
+                    <dt>Units</dt>
+                    <dd>USD &middot; months</dd>
+                </div>
+            </dl>
+        </div>
 
         <nav class="site-nav" aria-label="Pages">
             <a href="{{ url_for('api_index') }}"{% if request.endpoint == 'api_index' %} aria-current="page"{% endif %}>Pricer</a>
