@@ -26,7 +26,7 @@ BOP_DEFAULT_MAX_DRAW_DEPTH = 50
 
 BOP_COLOR_PALETTE = {
     "background" : "#121117",
-    "grid" : "#3b3848",
+    "grid" : "rgba(167,139,250,0.13)",
     "edge" : "#7c5bd6",
     "paper_bgcolor" : "rgba(0,0,0,0)",
     "plot_bgcolor" : "rgba(0,0,0,0)",
@@ -34,7 +34,7 @@ BOP_COLOR_PALETTE = {
     "text" : "#e8e6ef",
     "muted" : "#9d99ab",
     "panel" : "#1b1a22",
-    "border" : "#2c2a36",
+    "border" : "#464157",
     "strike_hline" : "#f2a7a7",
     "marker_1" : "#a78bfa",
     "node_highlights" : "#85d0b0",
@@ -46,8 +46,9 @@ BOP_NODE_MARKER_SIZE = 16
 BOP_NODE_MIN_MARKER_SIZE = 8
 BOP_NODE_MARKER_SCALING_START_N = 20
 BOP_EDGE_WIDTH = 1
-BOP_FIGURE_LAYOUT_TITLE_FONT_SIZE = 16
-BOP_FIGURE_LAYOUT_FONT_FAMILY_STRING = "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif"
+BOP_FIGURE_LAYOUT_TITLE_FONT_SIZE = 18
+BOP_FIGURE_LAYOUT_FONT_FAMILY_STRING = "'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace"
+BOP_FIGURE_LAYOUT_TITLE_FONT_FAMILY_STRING = "'Barlow Condensed', 'Arial Narrow', sans-serif"
 BOP_FIGURE_LAYOUT_MARGINS = {
     "l" : 60,
     "r" : 30,
@@ -96,7 +97,7 @@ class Environment_Variables:
 
 def _base_figure_layout( title : str ):
     return dict(
-        title = dict( text = title, font = dict( size = BOP_FIGURE_LAYOUT_TITLE_FONT_SIZE, color = BOP_COLOR_PALETTE[ "title" ] ) ),
+        title = dict( text = title, font = dict( size = BOP_FIGURE_LAYOUT_TITLE_FONT_SIZE, color = BOP_COLOR_PALETTE[ "title" ], family = BOP_FIGURE_LAYOUT_TITLE_FONT_FAMILY_STRING, weight = 600 ) ),
         paper_bgcolor = BOP_COLOR_PALETTE[ "paper_bgcolor" ],
         plot_bgcolor = BOP_COLOR_PALETTE[ "plot_bgcolor" ],
         font = dict( color = BOP_COLOR_PALETTE[ "text" ], family = BOP_FIGURE_LAYOUT_FONT_FAMILY_STRING ),
@@ -104,7 +105,7 @@ def _base_figure_layout( title : str ):
         hoverlabel = dict(
             bgcolor = BOP_COLOR_PALETTE[ "panel" ],
             bordercolor = BOP_COLOR_PALETTE[ "border" ],
-            font = dict( color = BOP_COLOR_PALETTE[ "text" ] )
+            font = dict( color = BOP_COLOR_PALETTE[ "text" ], family = BOP_FIGURE_LAYOUT_FONT_FAMILY_STRING )
         ),
         legend = dict(
             orientation = "h",
