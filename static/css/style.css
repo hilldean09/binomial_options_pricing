@@ -1,30 +1,41 @@
-/* Dark by default; neutrals carry a faint violet tint to sit with the accent. */
+/* Deco exchange: a 1920s trading hall and engraved banknote, in gold leaf
+   on aubergine. Dark by default; neutrals carry a violet tint to sit with
+   the accent, and gold is the ornament beside it. Amber stays for
+   warnings. */
 :root {
     color-scheme: dark;
 
-    --bg: #121117;
-    --surface: #1b1a22;
-    --border: #2c2a36;
-    --text: #e8e6ef;
-    --text-muted: #9d99ab;
+    --bg: #100c18;
+    --bg-glow: #261b3b;
+    --surface: #19131f;
+    --surface-solid: #19131f;
+    --surface-raised: #221a2c;
+    --field-bg: #0f0b15;
+    --border: #2e2540;
+    --text: #efe9f6;
+    --text-muted: #aaa0bb;
     --accent: #a78bfa;
     --accent-hover: #c4b5fd;
     --accent-text: #15121f;
-    --gild-light: #c4b5fd;
-    --gild-dark: #7c5bd6;
-    --gild-size: 14px;
-    --gild-width: 2px;
-    --scrollbar-thumb: #3b3848;
+    --gold-light: #f0d9a0;
+    --gold: #d2ae68;
+    --gold-dark: #8a6a2f;
+    --gold-line: color-mix(in srgb, var(--gold) 45%, var(--border));
+    --gild-light: var(--gold-light);
+    --gild-dark: var(--gold-dark);
+    --scrollbar-thumb: #3b3049;
     --error: #ef6f61;
     --warning: #e9b65c;
     --warning-dark: #a87a2a;
-    --radius: 10px;
+    --radius: 0;
     --drawer-width: min(20rem, calc(100vw - 3.5rem));
     --drawer-toggle-width: 2.25rem;
     --drawer-offset: 0.5rem;
-    --gap: 1.25rem;
-    --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+    --gap: 1.75rem;
+    --font: "Josefin Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --serif: "Cormorant Garamond", Garamond, Georgia, serif;
+    --display: Limelight, "Cormorant Garamond", Georgia, serif;
+    --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
 }
 
 /* Thin, themed scrollbars on a transparent track so they read as part
@@ -45,9 +56,12 @@
     box-sizing: border-box;
 }
 
+/* A glow falling from the top of the page, like light from a high window */
 body {
     margin: 0;
-    background: var(--bg);
+    background:
+        radial-gradient(ellipse 110% 55rem at 50% -12rem, var(--bg-glow), transparent 70%) no-repeat,
+        var(--bg);
     color: var(--text);
     font-family: var(--font);
     line-height: 1.5;
@@ -58,9 +72,19 @@ body.has-drawer {
     padding-left: calc(var(--drawer-toggle-width) - 0.5rem);
 }
 
+/* Headings in tracked-out geometric capitals */
 h1, h2, h3 {
     margin: 0;
+    font-weight: 600;
     line-height: 1.2;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+/* Maths keeps its own letter case and spacing inside headings */
+:is(h1, h2, h3) .katex {
+    letter-spacing: normal;
+    text-transform: none;
 }
 
 /* Header / footer */
