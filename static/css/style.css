@@ -285,13 +285,27 @@ h1, h2, h3 {
 }
 
 .subtitle {
-    margin: 0.5rem 0 0;
+    /* A small plate fitted to the text, so the stars behind don't run
+       through the letters */
+    width: fit-content;
+    margin: 0.5rem auto 0;
+    padding: 0.15rem 1rem;
     /* Holds its line while the text loads */
     min-height: 1.5em;
+    background: rgb(13 11 22 / 0.82);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+    border: 1px solid var(--brass-line);
+    border-radius: 1em;
+    box-shadow: 0 0 18px 6px rgb(13 11 22 / 0.6);
     color: var(--text-muted);
     font-size: 1.2rem;
     font-style: italic;
-    text-shadow: 0 0 12px var(--bg-high);
+}
+
+/* No empty plate before the text arrives */
+.subtitle:empty {
+    visibility: hidden;
 }
 
 /* Page links as markers set on an arc, like signs round a chart */
