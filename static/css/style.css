@@ -544,6 +544,29 @@ h1, h2, h3 {
     writing-mode: vertical-rl;
 }
 
+/* Drawn out, the knob sits over the header, so it gets a small backing
+   plate of its own, fading in as the drawer opens */
+.drawer-toggle {
+    isolation: isolate;
+}
+
+.drawer-toggle::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    inset: -0.35rem -0.3rem;
+    background: var(--surface-solid);
+    border: 1px solid var(--brass-line);
+    border-radius: 999px;
+    box-shadow: 0 6px 18px rgb(0 0 0 / 0.55);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.drawer.is-open .drawer-toggle::before {
+    opacity: 1;
+}
+
 .drawer-toggle:hover {
     color: var(--brass-light);
 }
@@ -599,7 +622,8 @@ h1, h2, h3 {
 
 @media (prefers-reduced-motion: reduce) {
     .drawer,
-    .drawer-toggle-icon {
+    .drawer-toggle-icon,
+    .drawer-toggle::before {
         transition: none;
     }
 }
