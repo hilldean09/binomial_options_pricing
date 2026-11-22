@@ -1413,6 +1413,10 @@ h1, h2, h3 {
     min-height: 0;
     overflow-y: auto;
     scrollbar-width: thin;
+    /* Room for the scrollbar, kept whether or not it shows, so titles
+       wrap clear of it rather than running under it */
+    scrollbar-gutter: stable;
+    padding-right: 0.85rem;
 }
 
 .learn-contents h2 {
